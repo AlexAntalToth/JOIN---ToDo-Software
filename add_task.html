@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Project Management Tool</title>
+    <link rel="stylesheet" href="addtask.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="./img/logo-white.png" alt="Logo" class="logo-icon">
+            </div>
+            <ul class="menu">
+                <li><a href="#" class="menu-item">Summary</a></li>
+                <li>
+                    <a href="#">
+                        <img src="./img/addTask.png" alt="Add Task">
+                        Add Task
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="./img/board.png" alt="Board">
+                        Board
+                    </a>
+                </li>
+                <li><a href="#" class="menu-item">Contacts</a></li>
+            </ul>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Legal Notice</a>
+            </div>
+        </div>
+        <div class="content">
+            <header>
+                <h2>Kanban Project Management Tool</h2>
+                <div class="profile">
+                    <span class="profile-icon">SM</span>
+                </div>
+            </header>
+            <main>
+                <h1>Add Task</h1>
+                <form>
+                    <div class="form-left">
+                        <div class="form-group">
+                            <label for="title">Title<span class="required">*</span></label>
+                            <input type="text" id="title" placeholder="Enter a title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" placeholder="Enter a Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignee">Assigned to</label>
+                            <select id="assignee">
+                                <option>Select contacts to assign</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-right">
+                        <div class="form-group">
+                            <label for="due-date">Due date<span class="required">*</span></label>
+                            <input type="date" id="due-date" required>
+                        </div>
+                        <div class="form-group priority">
+                            <label>Prio</label>
+                            <div class="priority-buttons">
+                                <button type="button" class="urgent">Urgent <img src="./img/urgent.png"
+                                        alt="Urgent"></button>
+                                <button type="button" class="medium active">Medium <img src="./img/medium-white.png"
+                                        alt="Medium"></button>
+                                <button type="button" class="low">Low <img src="./img/low.png" alt="Low"></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category<span class="required">*</span></label>
+                            <select id="category" required>
+                                <option>Select task category</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subtasks">Subtasks</label>
+                            <div class="subtask-container">
+                                <input type="text" id="subtasks" placeholder="Add new subtask">
+                                <button type="button" class="add-subtask"><img src="./img/plus.png" alt="Add"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="reset" class="clear">Clear</button>
+                        <button type="submit" class="create-task">Create Task <img src="./img/check.png"
+                                alt="Create"></button>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>
