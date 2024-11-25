@@ -11,10 +11,15 @@
 
 body {
   font-family: inter;
+  height: 100vh;
+}
+
+.legal-container {
   margin: 0;
   padding: 0 80px;
   padding-top: 100px;
   padding-bottom: 30px;
+  margin-left: 232px;
 }
 
 h1 {
@@ -49,8 +54,12 @@ p {
 .back {
   background-color: transparent;
   border: none;
+  padding: 4px;
+  border-radius: 100%;
 }
 
 .back:hover {
   cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.041);
+  transform: scale(1.1);
 }

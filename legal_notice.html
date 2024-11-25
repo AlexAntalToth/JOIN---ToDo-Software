@@ -6,9 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Legal Notice</title>
     <link rel="stylesheet" href="./styles/legal_notice.css">
+    <script src="./scripts/w3include.js"></script>
+    <style>
+        #sidebar-footer a[href="../../legal_notice.html"] {
+            background-color: #091931;
+            width: 100%;
+        }
+    </style>
 </head>
 
-<body>
+<body onload="includeHTML();">
+
+    <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
+    <div class="legal-container">
     <div class="legal-headline">
         <h1>Legal Notice</h1>
         <button class="back" onclick="history.back()"><img src="./assets/icons/back.svg" alt="Back-Button"></button>
@@ -93,6 +103,7 @@
     </p>
 
     <p><strong>Date:</strong> July 26, 2023</p>
+</div>
 </body>
 
 </html>
