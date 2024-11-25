@@ -63,3 +63,8 @@
   margin-bottom: 8px;
   padding: 8px;
 }
+
+#sidebar-footer a:hover {
+  font-weight: bold;
+  color: #29abe2;
+}

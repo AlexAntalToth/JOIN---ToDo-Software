@@ -17,12 +17,12 @@ body {
 .legal-container {
   margin: 0;
   padding: 0 80px;
-  padding-top: 100px;
+  padding-top: 196px;
   padding-bottom: 30px;
   margin-left: 232px;
 }
 
-h1 {
+.legal-headline h1 {
   margin-bottom: 30px;
   font-size: 61px;
 }
