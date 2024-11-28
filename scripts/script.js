@@ -15,13 +15,28 @@ function renderContactsList(contacts) {
     contactsAreaList.innerHTML = "";
 
     contacts.forEach(contact => {
+        let nameParts = contact.name.split(" ");
+        let firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+        let lastNameInitial = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() : "";
+        let firstLetter = contact.name.charAt(0).toUpperCase();
+        let initials = firstNameInitial + lastNameInitial;
         let contactElement = document.createElement("div");
+
         contactElement.classList.add("contact-item");
         contactElement.innerHTML = `
+            <div class="contact-header">
+                <span class="contact-first-letter">${firstLetter}</span>
+                <br>
+                <hr class="contact-divider">
+            </div>
+                <div class="contact-initials-circle">
+                    <span>${initials}</span>
+                </div>
             <h3>${contact.name}</h3>
             <p>${contact.phone}</p>
             <p>${contact.email}</p>
         `;
+
         contactsAreaList.appendChild(contactElement);
     });
 }
