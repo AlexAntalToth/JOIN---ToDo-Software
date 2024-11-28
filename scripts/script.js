@@ -10,6 +10,22 @@ async function loadSidebarAndHeader() {
     document.getElementById('header-container').innerHTML = headerContent;
 }
 
+function renderContactsList(contacts) {
+    let contactsAreaList = document.querySelector(".contacts-area-list");
+    contactsAreaList.innerHTML = "";
+
+    contacts.forEach(contact => {
+        let contactElement = document.createElement("div");
+        contactElement.classList.add("contact-item");
+        contactElement.innerHTML = `
+            <h3>${contact.name}</h3>
+            <p>${contact.phone}</p>
+            <p>${contact.email}</p>
+        `;
+        contactsAreaList.appendChild(contactElement);
+    });
+}
+
 
 
 

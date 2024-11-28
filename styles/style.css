@@ -132,6 +132,7 @@ main {
 }
 
 .contacts-list {
+    display: block;
     width: 456px;
     height: 928px;
     display: flex;
