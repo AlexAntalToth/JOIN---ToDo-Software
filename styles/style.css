@@ -182,10 +182,15 @@ main {
 }
 
 .contact-item {
-    margin: 16px;
+    margin-left: 52px;
+    margin-right: 52px;
     padding: 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 16px;
+    transition: background-color 0.1s ease;
+}
+
+.contact-item:hover {
+    background-color: rgba(247, 247, 247, 1);
 }
 
 .contact-header {
@@ -195,15 +200,22 @@ main {
 }
 
 .contact-first-letter {
+    padding-left: 52px;
+    padding-right: 52px;
+    margin-top: 20px;
+    height: 58px;
+    position: relative;
+    margin-left: 36px;
     font-size: 24px;
-    font-weight: bold;
-    color: #2A3647;
+    font-weight: normal;
+    color: rgba(0, 0, 0, 1);
 }
 
 .contact-divider {
-    flex-grow: 1;
-    border: 0;
-    border-top: 1px solid #ddd;
+    margin-left: 52px;
+    margin-right: 52px;
+    margin-bottom: 5px;
+    border-top: 1px solid rgba(209, 209, 209, 1);
 }
 
 .contact-initials-circle {

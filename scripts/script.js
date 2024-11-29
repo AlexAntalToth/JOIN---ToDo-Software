@@ -14,6 +14,8 @@ function renderContactsList(contacts) {
     let contactsAreaList = document.querySelector(".contacts-area-list");
     contactsAreaList.innerHTML = "";
 
+    let displayedLetters = new Set();
+
     contacts.forEach(contact => {
         let nameParts = contact.name.split(" ");
         let firstNameInitial = nameParts[0].charAt(0).toUpperCase();
@@ -23,17 +25,24 @@ function renderContactsList(contacts) {
         let contactElement = document.createElement("div");
 
         contactElement.classList.add("contact-item");
+        if (!displayedLetters.has(firstLetter)) {
+            displayedLetters.add(firstLetter);
+            let letterElement = document.createElement("div");
+            letterElement.classList.add("contact-first-letter");
+            letterElement.textContent = firstLetter;
+            let dividerElement = document.createElement("div");
+            dividerElement.classList.add("contact-divider");
+            contactsAreaList.appendChild(letterElement);
+            contactsAreaList.appendChild(dividerElement);
+        }
+
         contactElement.innerHTML = `
             <div class="contact-header">
-                <span class="contact-first-letter">${firstLetter}</span>
-                <br>
-                <hr class="contact-divider">
-            </div>
-                <div class="contact-initials-circle">
+                            <div class="contact-initials-circle">
                     <span>${initials}</span>
                 </div>
-            <h3>${contact.name}</h3>
-            <p>${contact.phone}</p>
+                <h3>${contact.name}</h3>
+            </div>
             <p>${contact.email}</p>
         `;
 
