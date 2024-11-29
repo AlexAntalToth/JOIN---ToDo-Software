@@ -1,5 +1,6 @@
 function init() {
     loadSidebarAndHeader();
+    loadData("/contacts");
 }
 
 async function loadSidebarAndHeader() {
@@ -17,41 +18,44 @@ function renderContactsList(contacts) {
     let displayedLetters = new Set();
 
     contacts.forEach(contact => {
-        let nameParts = contact.name.split(" ");
-        let firstNameInitial = nameParts[0].charAt(0).toUpperCase();
-        let lastNameInitial = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() : "";
-        let firstLetter = contact.name.charAt(0).toUpperCase();
-        let initials = firstNameInitial + lastNameInitial;
-        let contactElement = document.createElement("div");
+        let { initials, firstLetter } = getInitialsAndFirstLetter(contact);
 
-        contactElement.classList.add("contact-item");
         if (!displayedLetters.has(firstLetter)) {
             displayedLetters.add(firstLetter);
-            let letterElement = document.createElement("div");
-            letterElement.classList.add("contact-first-letter");
-            letterElement.textContent = firstLetter;
-            let dividerElement = document.createElement("div");
-            dividerElement.classList.add("contact-divider");
+            let { letterElement, dividerElement } = getLetterDivider(firstLetter);
             contactsAreaList.appendChild(letterElement);
             contactsAreaList.appendChild(dividerElement);
         }
 
-        contactElement.innerHTML = `
-            <div class="contact-header">
-                            <div class="contact-initials-circle">
-                    <span>${initials}</span>
-                </div>
-                <h3>${contact.name}</h3>
-            </div>
-            <p>${contact.email}</p>
-        `;
-
+        let contactElement = createContactElement(contact, initials);
         contactsAreaList.appendChild(contactElement);
     });
 }
 
+function getInitialsAndFirstLetter(contact) {
+    let nameParts = contact.name.split(" ");
+    let firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+    let lastNameInitial = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() : "";
+    let firstLetter = contact.name.charAt(0).toUpperCase();
+    let initials = firstNameInitial + lastNameInitial;
+    return { initials, firstLetter };
+}
 
+function getLetterDivider(letter) {
+    let letterElement = document.createElement("div");
+    letterElement.classList.add("contact-first-letter");
+    letterElement.textContent = letter;
+    let dividerElement = document.createElement("div");
+    dividerElement.classList.add("contact-divider");
+    return { letterElement, dividerElement };
+}
 
+function createContactElement(contact, initials) {
+    let contactElement = document.createElement("div");
+    contactElement.classList.add("contact-item");
+    contactElement.innerHTML = getContactsTemplate(contact, initials);
+    return contactElement;
+}
 
 
 /* FOLLOWING SETTINGS AT THE MOMENT NOT IN USE:*/

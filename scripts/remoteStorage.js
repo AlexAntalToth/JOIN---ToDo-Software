@@ -1,9 +1,5 @@
 const BASE_URL="https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
 
-function onloadFunc() {
-    loadData("/contacts");
-}
-
 async function loadData(path = "") {
     try {
         const response = await fetch(BASE_URL + path + ".json");
