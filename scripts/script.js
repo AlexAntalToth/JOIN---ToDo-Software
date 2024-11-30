@@ -15,13 +15,14 @@ function renderContactsList(contacts) {
     let contactsAreaList = document.querySelector(".contacts-area-list");
     contactsAreaList.innerHTML = "";
 
-    let displayedLetters = new Set();
+    let displayedLetters = [];
 
     contacts.forEach(contact => {
         let { initials, firstLetter } = getInitialsAndFirstLetter(contact);
 
-        if (!displayedLetters.has(firstLetter)) {
-            displayedLetters.add(firstLetter);
+        if (!displayedLetters.includes(firstLetter)) {
+            displayedLetters.push(firstLetter);
+
             let { letterElement, dividerElement } = getLetterDivider(firstLetter);
             contactsAreaList.appendChild(letterElement);
             contactsAreaList.appendChild(dividerElement);
