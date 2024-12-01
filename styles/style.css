@@ -1,8 +1,11 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    display: flex;
-}
+@font-face {
+    font-family: inter;
+    src: url(../assets/fonts/inter.ttf);
+  }
+  
+  body {
+    font-family: inter;
+  }
 
 .container {
     display: flex;
@@ -182,6 +185,7 @@ main {
 }
 
 .contact-item {
+    display: flex;
     margin-left: 52px;
     margin-right: 52px;
     padding: 16px;
@@ -193,7 +197,7 @@ main {
     background-color: rgba(247, 247, 247, 1);
 }
 
-.contact-header {
+.contact-info {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -230,18 +234,30 @@ main {
     font-size: 18px;
     font-weight: bold;
     border: 3px solid #2A3647;
+    gap: 10px;
 }
 
-.contact-item h3 {
-    margin: 8px 0;
-    font-size: 18px;
-    font-weight: bold;
+.contact-name-and-email {
+    gap: 5px;
 }
 
-.contact-item p {
-    margin: 4px 0;
-    color: #555;
+.contact-name-and-email h3 {
+    font-size: 20px;
+    font-weight: normal;
+    height: 24px;
+    margin-block-start: 0;
+    margin-block-end: 5px;
 }
+
+.contact-name-and-email p {
+    font-size: 16px;
+    font-weight: normal;
+    height: 19px;
+    color: rgba(0, 124, 238, 1);
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
 
 
 
