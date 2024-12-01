@@ -315,6 +315,19 @@ main {
     align-items: center;
 }
 
+.contacts-card-initials {
+    display: flex;
+    align-items: center;
+}
+
+.contacts-card-initials h3 {
+    font-size: 47px;
+    font-weight: normal;
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+
 .contacts-card-initials-circle {
     display: flex;
     justify-content: center;
@@ -327,10 +340,37 @@ main {
     font-size: 64px;
     font-weight: normal;
     border: 6px solid white;
+    margin-right: 54px;
 }
 
+.contact-edit-icon {
+    width: 24px;
+    height: 24px;
+    padding-right: 10px;
+}
 
+.contact-basket-icon {
+    width: 24px;
+    height: 24px;
+    padding-right: 10px;
+}
 
+.contacts-card-name-section2 {
+    display: flex;
+    align-items: center;
+}
+
+.contacts-card-name-section2 p {
+    padding-right: 15px;
+}
+
+.edit-delete-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
 
 /* FOLLOWING SETTINGS AT THE MOMENT NOT IN USE:*/
 

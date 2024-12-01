@@ -78,7 +78,19 @@ function createContactCard(contact) {
             <div class="contacts-card-initials-circle">
                 <span>${initials}</span>
             </div>
-            <h3>${contact.name}</h3>
+            <div class="contacts-card-name-section">
+                <h3>${contact.name}</h3>
+                <div class="contacts-card-name-section2">
+                    <button class="edit-delete-button"> 
+                    <img class="contact-edit-icon" src="../../assets/icons/contact_edit.png" alt="Contact Edit">
+                    <p>Edit</p>
+                    </button>
+                    <button class="edit-delete-button"> 
+                     <img class="contact-basket-icon" src="../../assets/icons/contact_basket.png" alt="Contact Delete">
+                    <p>Delete</p>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="contacts-card-details">
         </div>
