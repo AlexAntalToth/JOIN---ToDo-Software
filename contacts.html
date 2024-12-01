@@ -7,12 +7,14 @@
     <title>Contacts - Kanban Project Management Tool</title>
     <link rel="stylesheet" href="./styles/style.css">
     <link rel="stylesheet" href="./styles/responsive.css">
+    <link rel="stylesheet" href="./styles/header-tryout.css">
+    <link rel="stylesheet" href="./styles/sidebar-tryout.css">
 </head>
 
-<body onload="init()">
+<body onload="init();includeHTML()">
+    <div w3-include-html="./assets/templates/header-tryout.html"></div>
+    <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
     <div class="container">
-        <div id="sidebar-container"></div>
-        <div id="header-container"></div>
         <main>
             <section class="contacts-container">
                 <div class="contacts-list">
@@ -42,6 +44,7 @@
     <script src="./scripts/script.js"></script>
     <script src="./scripts/template.js"></script>
     <script src="./scripts/remoteStorage.js"></script>
+    <script src="./scripts/w3include.js"></script>
 </body>
 
 </html>

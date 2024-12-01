@@ -1,5 +1,5 @@
 function init() {
-    loadSidebarAndHeader();
+    // loadSidebarAndHeader();
     loadData("/contacts");
 }
 
