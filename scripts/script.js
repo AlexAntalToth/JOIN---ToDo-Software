@@ -55,7 +55,36 @@ function createContactElement(contact, initials) {
     let contactElement = document.createElement("div");
     contactElement.classList.add("contact-item");
     contactElement.innerHTML = getContactsTemplate(contact, initials);
+    contactElement.addEventListener("click", () => renderContactCard(contact));
     return contactElement;
+}
+
+function renderContactCard(contact) {
+    let contactCardContainer = document.querySelector(".contacts-card");
+    contactCardContainer.innerHTML = "";
+    let contactCard = createContactCard(contact);
+    contactCardContainer.appendChild(contactCard);
+}
+
+function createContactCard(contact) {
+    let { initials } = getInitialsAndFirstLetter(contact);
+
+    let contactCard = document.createElement("div");
+    contactCard.classList.add("contacts-card-content");
+
+    contactCard.innerHTML = `
+        <div class="contacts-card-header">
+            <div class="contacts-card-initials">
+            <div class="contacts-card-initials-circle">
+                <span>${initials}</span>
+            </div>
+            <h3>${contact.name}</h3>
+        </div>
+        <div class="contacts-card-details">
+        </div>
+    `;
+
+    return contactCard;
 }
 
 
