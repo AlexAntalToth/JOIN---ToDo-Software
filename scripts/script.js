@@ -82,17 +82,23 @@ function createContactCard(contact) {
                 <h3>${contact.name}</h3>
                 <div class="contacts-card-name-section2">
                     <button class="edit-delete-button"> 
-                    <img class="contact-edit-icon" src="../../assets/icons/contact_edit.png" alt="Contact Edit">
-                    <p>Edit</p>
+                        <img class="contact-edit-icon" src="../../assets/icons/contact_edit.png" alt="Contact Edit">
+                        <p>Edit</p>
                     </button>
                     <button class="edit-delete-button"> 
-                     <img class="contact-basket-icon" src="../../assets/icons/contact_basket.png" alt="Contact Delete">
-                    <p>Delete</p>
+                        <img class="contact-basket-icon" src="../../assets/icons/contact_basket.png" alt="Contact Delete">
+                        <p>Delete</p>
                     </button>
                 </div>
             </div>
         </div>
+        </div>
         <div class="contacts-card-details">
+            <h2>Contact information</h2>
+            <p>Email</p>
+            <h3>${contact.email}</h3>
+            <p>Phone</p>
+            <h4>${contact.phone}</h4>
         </div>
     `;
 
