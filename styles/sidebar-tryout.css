@@ -17,7 +17,7 @@
 
 .sidebar-logo {
   width: 100px;
-  height: 122 px;
+  height: 122px;
 }
 
 .sidebar-icons {
@@ -27,6 +27,16 @@
 
 .sidebar-categories {
   display: flex;
+  align-items: center;
+  padding-left: 58px;
+}
+
+.sidebar-categories:hover {
+  background-color: #2a3d59;
+}
+
+.sidebar nav {
+  width: 100%;
 }
 
 .sidebar nav ul {
