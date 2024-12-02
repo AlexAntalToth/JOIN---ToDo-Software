@@ -75,6 +75,19 @@ h2 {
   margin: 15px;
 }
 
+.badge:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  background-color: #2b3747;
+  transition: all 0.3s ease;
+  color: white;
+  box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.1);
+}
+
+.midsize-badge:hover img {
+  filter: invert(1) brightness(2);
+}
+
 .midsize-badge {
   width: 264px;
 }
@@ -106,7 +119,6 @@ h2 {
 .count-text {
   font-size: 20px;
   font-weight: 400;
-  color: #2a3647;
   text-align: center;
 }
 
