@@ -294,3 +294,46 @@
     margin-block-start: 5px;
     margin-block-end: 5px;
 }
+
+.modal-contact {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.modal-contact.show {
+    opacity: 1;
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-contact-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal-contact {
+    background-color: rgba(42, 54, 71, 1);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+}
+
+.close-modal-contact:hover {
+    background-color: rgba(32, 44, 59, 1);
+}

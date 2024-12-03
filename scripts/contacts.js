@@ -139,3 +139,25 @@ function createContactCard(contact) {
 
     return contactCard;
 }
+
+function openModalContact() {
+    let modalContact = document.getElementById('myModal-contact');
+    modalContact.style.display = 'flex';
+    modalContact.classList.add('show');
+}
+
+function closeModalContact() {
+    let modalContact = document.getElementById('myModal-contact');
+    modalContact.style.display = 'none';
+    modalContact.classList.remove('show');
+}
+
+document.querySelector('.contacts-button').addEventListener('click', openModalContact);
+
+document.querySelector('.close-modal-contact').addEventListener('click', closeModalContact);
+
+window.onclick = function(event) {
+    if (event.target === document.getElementById('myModal-contact')) {
+        closeModalContact();
+    }
+};
