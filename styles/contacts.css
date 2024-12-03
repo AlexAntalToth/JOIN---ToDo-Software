@@ -86,6 +86,19 @@
     background-color: rgba(247, 247, 247, 1);
 }
 
+.contact-item-active:hover {
+    background-color: rgba(42, 54, 71, 1);
+}
+
+.contact-item-active {
+    background-color: rgba(42, 54, 71, 1);
+}
+
+.contact-item-active h3 {
+    color: white;
+}
+
+
 .contact-info {
     display: flex;
     align-items: center;

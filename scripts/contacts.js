@@ -68,8 +68,19 @@ function createContactElement(contact, initials) {
     let contactElement = document.createElement("div");
     contactElement.classList.add("contact-item");
     contactElement.innerHTML = getContactsTemplate(contact, initials);
-    contactElement.addEventListener("click", () => renderContactCard(contact));
+
+    contactElement.addEventListener("click", () => {
+        ContactSelection(contactElement);
+        renderContactCard(contact);
+    });
     return contactElement;
+}
+
+function ContactSelection(selectedElement) {
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.classList.remove('contact-item-active');
+    });
+    selectedElement.classList.add('contact-item-active');
 }
 
 function renderContactCard(contact) {
