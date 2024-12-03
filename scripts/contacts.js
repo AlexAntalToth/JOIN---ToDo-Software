@@ -83,11 +83,22 @@ function ContactSelection(selectedElement) {
     selectedElement.classList.add('contact-item-active');
 }
 
+
 function renderContactCard(contact) {
     let contactCardContainer = document.querySelector(".contacts-card");
+
+    if (contactCardContainer.classList.contains('contacts-card-visible')) {
+        contactCardContainer.classList.remove('contacts-card-visible');
+    }
+
     contactCardContainer.innerHTML = "";
+
     let contactCard = createContactCard(contact);
     contactCardContainer.appendChild(contactCard);
+
+    setTimeout(() => {
+        contactCardContainer.classList.add('contacts-card-visible');
+    }, 600);
 }
 
 function createContactCard(contact) {
