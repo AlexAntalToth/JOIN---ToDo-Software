@@ -147,7 +147,6 @@
 }
 
 .contacts-details {
-    position: absolute;
     left: 688px;
     flex: 1;
     display: flex;
@@ -210,7 +209,7 @@
     border-radius: 50%;
     background-color: blue;
     color: white;
-    font-size: 64px;
+    font-size: 47px;
     font-weight: normal;
     border: 6px solid white;
     margin-right: 54px;
