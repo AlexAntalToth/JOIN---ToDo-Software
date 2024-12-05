@@ -193,7 +193,7 @@
     flex-direction: column;
     position: absolute;
     top: 350px;
-    transform: translateX(100%);
+    transform: translateX(200%);
     opacity: 0;
     transition: transform 0.6s ease-in-out;
 }
@@ -350,6 +350,8 @@
     padding-bottom: 66px;
     padding-left: 48px;
     gap: 12px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
 }
 
 .add-contact-logo {
@@ -375,13 +377,31 @@
     background-color: rgba(41, 171, 226, 1);
 }
 
+.add-contact-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+}
+
 .add-contact-details {
     width: 422px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 32px;
+    /* align-items: center; */
 }
 
-.add-contact-name-container {
+.add-contact-container {
+    position: relative;
+    display: inline-block;
+  }
+
+.add-contact-field {
+    width: 422px;
+    height: 50px;
+    font-size: 16px;
+    border-width: 0;
     position: relative;
     display: flex;
     align-items: center;
@@ -394,21 +414,17 @@
     gap: 10px;
 }
 
-.add-contact-name {
-    width: 380px;
-    padding-right: 30px;
-    padding-left: 10px;
-    height: 24px;
-    font-size: 16px;
-    border-width: 0;
+.add-contact-field:focus {
+    outline: 1px solid blue;
 }
 
-.add-contact-icons {
+.add-contact-icon {
     position: absolute;
     width: 16px;
     height: 16px;
-    right: 10px; /* Position des Icons am rechten Rand */
+    right: 21px;
     top: 50%;
-    transform: translateY(-50%); /* Vertikale Ausrichtung des Icons */
+    transform: translateY(-50%);
     pointer-events: none;
 }
+
