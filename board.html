@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board</title>
+    <link rel="stylesheet" href="./styles/board.css">
+    <script src="./scripts/w3include.js"></script>
+</head>
+
+<body onload="includeHTML()">
+    <div w3-include-html="./assets/templates/header-tryout.html"></div>
+    <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
+    <div class="container">
+        <div class="board-headline">
+            <h1>Board</h1>
+            <div class="find-and-add">
+                <div class="searchbar">
+                    <input type="text" placeholder="Find Task" />
+                    <div class="search-separator"></div>
+                    <span class="search-icon"><img src="./assets/icons/search.png" alt=""></span>
+                </div>
+                <button class="add-task">Add task +</button>
+            </div>
+        </div>
+        <div class="board">
+            <div class="row">
+                <h2>To Do <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
+                <div class="column" id="toDo">
+                    <div class="task-list"></div>
+                </div>
+            </div>
+            <div class="row">
+                <h2>In Progress <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button>
+                </h2>
+                <div class="column" id="inProgress">
+                    <div class="task-list"></div>
+                </div>
+            </div>
+            <div class="row">
+                <h2>Await Feedback <button class="add-task-btn"><img src="./assets/icons/plus.svg"
+                            alt="Add Task"></button></h2>
+                <div class="column" id="awaitFeedback">
+                    <div class="task-list">
+                        <h4>title</h4>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h2>Done <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
+                <div class="column" id="done">
+                    <div class="task-list"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>
