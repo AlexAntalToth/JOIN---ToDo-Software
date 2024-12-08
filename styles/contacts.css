@@ -325,6 +325,7 @@
     height: 592px;
     max-width: 90%;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    /* z-index: 10; */
 }
 
 .close-modal-contact {
@@ -389,7 +390,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-   
 }
 
 .add-contact-details {
@@ -397,7 +397,6 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
-    /* align-items: center; */
 }
 
 .add-contact-container {
@@ -434,5 +433,11 @@
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
+}
+
+.add-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 

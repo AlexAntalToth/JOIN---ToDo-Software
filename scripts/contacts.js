@@ -83,7 +83,6 @@ function ContactSelection(selectedElement) {
     selectedElement.classList.add('contact-item-active');
 }
 
-
 function renderContactCard(contact) {
     let contactCardContainer = document.querySelector(".contacts-card");
 
@@ -152,12 +151,82 @@ function closeModalContact() {
     modalContact.classList.remove('show');
 }
 
-document.querySelector('.contacts-button').addEventListener('click', openModalContact);
+let contactsButton = document.querySelector('.contacts-button');
+if (contactsButton) {
+    contactsButton.addEventListener('click', () => {
+        renderAddContactCard();
+        attachCloseListeners();
+        openModalContact();
+    });
+}
 
-document.querySelector('.close-modal-contact').addEventListener('click', closeModalContact);
+let closeModalButton = document.querySelector('.close-modal-contact');
+if (closeModalButton) {
+    closeModalButton.addEventListener('click', closeModalContact);
+}
 
 window.onclick = function(event) {
     if (event.target === document.getElementById('myModal-contact')) {
         closeModalContact();
     }
 };
+
+function renderAddContactCard(contact) {
+    let addContactCardContainer = document.querySelector(".add-contact-card");
+
+    if (!addContactCardContainer) {
+        console.error("Container .add-contact-card nicht gefunden!");
+        return;
+    }
+
+    addContactCardContainer.innerHTML = "";
+    addContactCardContainer.classList.remove('add-contact-card-visible');
+
+    let addContactCard = createAddContactCard(contact || { name: "", email: "", phone: "" });
+    addContactCardContainer.appendChild(addContactCard);
+
+    setTimeout(() => {
+        addContactCardContainer.classList.add('add-contact-card-visible');
+    }, 600);
+}
+
+function createAddContactCard(contact) {
+    let { initials } = getInitialsAndFirstLetter(contact);
+
+    let addContactCard = document.createElement("div");
+    addContactCard.classList.add("add-card-content");
+
+    addContactCard.innerHTML = `
+            <div class="contacts-card-initials">
+                <div class="contacts-card-initials-circle">
+                    <img class="add-contact-initials_blank" src="../../assets/icons/contact_initials_blank.png"
+                    alt="Logo Contact Blank">
+                    <span>${initials}</span>
+            </div>
+            <div class="add-contact-details">
+                <button class="close-modal-contact">x</button>
+            <div class="add-contact-container">
+                <input class="add-contact-field" id="contact-name" placeholder="Name">
+                <img class="add-contact-icon" src="../../assets/icons/contact_name.png"
+                alt="Logo Contact Name">
+            </div>
+            <div class="add-contact-container">
+                <input class="add-contact-field" id="contact-email" placeholder="Email">
+                <img class="add-contact-icon" src="../../assets/icons/contact_email.png"
+                alt="Logo Contact Phone">
+            </div>
+            <div class="add-contact-container">
+                <input class="add-contact-field" id="contact-phone" placeholder="Phone">
+                <img class="add-contact-icon" src="../../assets/icons/contact_phone.png"
+                alt="Logo Contact Phone">
+            </div>
+            </div>
+    `;
+    return addContactCard;
+}
+
+function attachCloseListeners() {
+    document.querySelectorAll('.close-modal-contact').forEach(button => {
+        button.addEventListener('click', closeModalContact);
+    });
+}
