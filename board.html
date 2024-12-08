@@ -27,30 +27,59 @@
         <div class="board">
             <div class="row">
                 <h2>To Do <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
-                <div class="column" id="toDo">
-                    <div class="task-list"></div>
+                <div id="toDo">
+                    <div class="task-list">
+                        <div class="task">
+                            <div class="task-badge bg-blue">User Story</div>
+                            <div class="task-title">Optimize Website Performance</div>
+                            <div class="task-desc">Analyze the website's loading speed and identify areas for
+                                improvement. Implement techniques such as image compression, code minification, and
+                                caching to enhance performance and user experience.</div>
+                            <div class="subtask-bar"></div>
+                            <div class="assigned-to"></div>
+                        </div>
+                        <div class="task">
+                            <div class="task-badge bg-green">Technical Task</div>
+                            <div class="task-title"> Design Social Media Campaign</div>
+                            <div class="task-desc">Create a creative and engaging social media campaign to promote the
+                                upcoming product launch. Prepare visuals, write captions, and schedule posts across
+                                platforms to maximize audience reach.</div>
+                            <div class="subtask-bar">
+                                <div class="pb-bg">
+                                    <div class="pb-blue"></div>
+                                </div>
+                                <span>1/2 Subtasks</span>
+                            </div>
+                            <div class="assigned-to">
+                                <div class="contacts">
+                                    <img src="./assets/icons/profile.png" alt="profile picture">
+                                    <img src="./assets/icons/profile.png" alt="profile picture">
+                                    <img src="./assets/icons/profile.png" alt="profile picture">
+                                </div>
+                                <div class="priority"><img src="./assets/icons/priority_high.png" alt="Priority"></div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <h2>In Progress <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button>
                 </h2>
-                <div class="column" id="inProgress">
+                <div id="inProgress">
                     <div class="task-list"></div>
                 </div>
             </div>
             <div class="row">
                 <h2>Await Feedback <button class="add-task-btn"><img src="./assets/icons/plus.svg"
                             alt="Add Task"></button></h2>
-                <div class="column" id="awaitFeedback">
-                    <div class="task-list">
-                        <h4>title</h4>
-                        
-                    </div>
+                <div id="awaitFeedback">
+                    <div class="task-list"></div>
                 </div>
             </div>
             <div class="row">
                 <h2>Done <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
-                <div class="column" id="done">
+                <div id="done">
                     <div class="task-list"></div>
                 </div>
             </div>
