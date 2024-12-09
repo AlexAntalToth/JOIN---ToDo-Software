@@ -141,15 +141,29 @@ function createContactCard(contact) {
 
 function openModalContact() {
     let modalContact = document.getElementById('myModal-contact');
+    let modalContactContent = document.getElementById('myModal-contact-content');
+
     modalContact.style.display = 'flex';
-    modalContact.classList.add('show');
+    requestAnimationFrame(() => {
+        modalContact.classList.add('show');
+        modalContactContent.classList.add('show');
+    });
 }
 
 function closeModalContact() {
     let modalContact = document.getElementById('myModal-contact');
-    modalContact.style.display = 'none';
+    let modalContactContent = document.getElementById('myModal-contact-content');
+    
+    modalContactContent.classList.remove('show');
+    modalContactContent.classList.add('hide');
     modalContact.classList.remove('show');
+
+    setTimeout(() => {
+        modalContactContent.classList.remove('hide');
+        modalContact.style.display = 'none';
+    }, 600);
 }
+
 
 let contactsButton = document.querySelector('.contacts-button');
 if (contactsButton) {
