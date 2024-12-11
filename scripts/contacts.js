@@ -67,7 +67,14 @@ function getContactsTemplate(contact, initials) {
 function createContactElement(contact, initials) {
     let contactElement = document.createElement("div");
     contactElement.classList.add("contact-item");
-    contactElement.innerHTML = getContactsTemplate(contact, initials);
+
+    let template = getContactsTemplate(contact, initials);
+    contactElement.innerHTML = template;
+
+    let initialsCircle = contactElement.querySelector('.contact-initials-circle');
+    if (!initials.trim()) {
+        initialsCircle.classList.add('grey');
+    }
 
     contactElement.addEventListener("click", () => {
         ContactSelection(contactElement);

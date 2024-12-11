@@ -236,6 +236,10 @@
     margin-right: 54px;
 }
 
+.contacts-card-initials-circle.grey {
+    background-color: grey;
+}
+
 .contact-edit-icon {
     width: 24px;
     height: 24px;
