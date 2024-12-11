@@ -156,14 +156,13 @@ function closeModalContact() {
     
     modalContactContent.classList.remove('show');
     modalContactContent.classList.add('hide');
-    modalContact.classList.remove('show');
 
     setTimeout(() => {
-        modalContactContent.classList.remove('hide');
+        modalContact.classList.remove('show');
         modalContact.style.display = 'none';
+        modalContactContent.classList.remove('hide');
     }, 600);
 }
-
 
 let contactsButton = document.querySelector('.contacts-button');
 if (contactsButton) {
