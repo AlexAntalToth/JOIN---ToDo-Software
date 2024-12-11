@@ -241,8 +241,10 @@ function createAddContactCard(contact) {
                     <img class="add-contact-icon" src="../../assets/icons/contact_phone.png"
                     alt="Logo Contact Phone">
                 </div>
-                <div>
-                    <button class="cancel-contact-button">Cancel</button>
+                <div class="add-contact-buttons">
+                    <button class="cancel-contact-button"><h2>Cancel</h2>
+                        <img class="cancel-contact-icon" src="../../assets/icons/contact_cancel.png" alt="Icon Cancel Contact">
+                    </button>
                     <button class="save-contact-button"><h2>Create contact</h2>
                         <img class="create-contact-icon" src="../../assets/icons/contact_create.png" alt="Icon Create Contact">
                     </button>
