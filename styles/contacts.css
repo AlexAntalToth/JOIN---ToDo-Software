@@ -461,11 +461,6 @@
     gap: 24px;
 }
 
-.cancel-contact-icon {
-    width: 24px;
-    height: 24px;
-}
-
 .cancel-contact-button h2 {
     font-size: 21px;
     font-weight: normal;
@@ -497,6 +492,9 @@
     color: rgba(41, 171, 226);
 }
 
+.cancel-contact-button:hover .cancel-contact-icon path {
+    stroke: rgba(41, 171, 226);
+}
 
 .create-contact-icon {
     width: 24px;
