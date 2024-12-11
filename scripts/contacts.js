@@ -198,7 +198,6 @@ function renderAddContactCard(contact) {
     let addContactCardContainer = document.querySelector(".add-contact-card");
 
     if (!addContactCardContainer) {
-        console.error("Container .add-contact-card nicht gefunden!");
         return;
     }
 
@@ -217,7 +216,6 @@ function createAddContactCard(contact) {
     let { initials } = getInitialsAndFirstLetter(contact);
     let addContactCard = document.createElement("div");
     addContactCard.classList.add("add-card-content");
-
 
     addContactCard.innerHTML = `
             <div class="contacts-card-initials">
@@ -243,7 +241,12 @@ function createAddContactCard(contact) {
                     <img class="add-contact-icon" src="../../assets/icons/contact_phone.png"
                     alt="Logo Contact Phone">
                 </div>
-                    <button class="save-contact-button">Speichern</button>
+                <div>
+                    <button class="cancel-contact-button">Cancel</button>
+                    <button class="save-contact-button"><h2>Create contact</h2>
+                        <img class="create-contact-icon" src="../../assets/icons/contact_create.png" alt="Icon Create Contact">
+                    </button>
+                </div>
             </div>
     `;
     let saveButton = addContactCard.querySelector(".save-contact-button");

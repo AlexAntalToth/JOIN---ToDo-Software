@@ -358,7 +358,7 @@
 }
 
 .close-modal-contact:hover {
-    background-color: rgba(238,238,238);
+    background-color: rgba(238, 238, 238);
 
 }
 
@@ -416,7 +416,7 @@
 .add-contact-container {
     position: relative;
     display: inline-block;
-  }
+}
 
 .add-contact-field {
     width: 422px;
@@ -455,3 +455,33 @@
     justify-content: center;
 }
 
+.create-contact-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.save-contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(42, 54, 71, 1);
+    width: 214px;
+    height: 57px;
+    padding: 16px;
+    gap: 4px;
+    border-radius: 10px;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.save-contact-button h2 {
+    font-size: 21px;
+    font-weight: bold;
+    color: white;
+}
+
+.save-contact-button:hover {
+    background-color: rgba(41, 171, 226);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+}
