@@ -208,13 +208,6 @@ function renderAddContactCard(contact) {
     let addContactCard = createAddContactCard(contact || { name: "", email: "", phone: "" });
     addContactCardContainer.appendChild(addContactCard);
 
-    let saveButton = document.createElement("button");
-    saveButton.textContent = "Speichern";
-    saveButton.classList.add("save-contact-button");
-    saveButton.addEventListener("click", saveNewContact);
-
-    addContactCardContainer.appendChild(saveButton);
-
     setTimeout(() => {
         addContactCardContainer.classList.add('add-contact-card-visible');
     }, 600);
@@ -222,9 +215,9 @@ function renderAddContactCard(contact) {
 
 function createAddContactCard(contact) {
     let { initials } = getInitialsAndFirstLetter(contact);
-
     let addContactCard = document.createElement("div");
     addContactCard.classList.add("add-card-content");
+
 
     addContactCard.innerHTML = `
             <div class="contacts-card-initials">
@@ -235,23 +228,26 @@ function createAddContactCard(contact) {
             </div>
             <div class="add-contact-details">
                 <button class="close-modal-contact">x</button>
-            <div class="add-contact-container">
-                <input class="add-contact-field" id="contact-name" placeholder="Name">
-                <img class="add-contact-icon" src="../../assets/icons/contact_name.png"
-                alt="Logo Contact Name">
-            </div>
-            <div class="add-contact-container">
-                <input class="add-contact-field" id="contact-email" placeholder="Email">
-                <img class="add-contact-icon" src="../../assets/icons/contact_email.png"
-                alt="Logo Contact Phone">
-            </div>
-            <div class="add-contact-container">
-                <input class="add-contact-field" id="contact-phone" placeholder="Phone">
-                <img class="add-contact-icon" src="../../assets/icons/contact_phone.png"
-                alt="Logo Contact Phone">
-            </div>
+                <div class="add-contact-container">
+                    <input class="add-contact-field" id="contact-name" placeholder="Name">
+                    <img class="add-contact-icon" src="../../assets/icons/contact_name.png"
+                    alt="Logo Contact Name">
+                </div>
+                <div class="add-contact-container">
+                    <input class="add-contact-field" id="contact-email" placeholder="Email">
+                    <img class="add-contact-icon" src="../../assets/icons/contact_email.png"
+                    alt="Logo Contact Phone">
+                </div>
+                <div class="add-contact-container">
+                    <input class="add-contact-field" id="contact-phone" placeholder="Phone">
+                    <img class="add-contact-icon" src="../../assets/icons/contact_phone.png"
+                    alt="Logo Contact Phone">
+                </div>
+                    <button class="save-contact-button">Speichern</button>
             </div>
     `;
+    let saveButton = addContactCard.querySelector(".save-contact-button");
+    saveButton.addEventListener("click", saveNewContact);
     return addContactCard;
 }
 
