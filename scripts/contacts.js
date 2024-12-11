@@ -126,7 +126,7 @@ function createContactCard(contact) {
                         <img class="contact-edit-icon" src="../../assets/icons/contact_edit.png" alt="Contact Edit">
                         <p>Edit</p>
                     </button>
-                    <button class="edit-delete-button"> 
+                    <button class="edit-delete-button delete-contact-button" data-id="${contact.id}"> 
                         <img class="contact-basket-icon" src="../../assets/icons/contact_basket.png" alt="Contact Delete">
                         <p>Delete</p>
                     </button>
@@ -142,6 +142,9 @@ function createContactCard(contact) {
             <h4>${contact.phone}</h4>
         </div>
     `;
+
+    let deleteButton = contactCard.querySelector(".delete-contact-button");
+    deleteButton.addEventListener("click", () => deleteContact(contact.id));
 
     return contactCard;
 }
@@ -205,6 +208,13 @@ function renderAddContactCard(contact) {
     let addContactCard = createAddContactCard(contact || { name: "", email: "", phone: "" });
     addContactCardContainer.appendChild(addContactCard);
 
+    let saveButton = document.createElement("button");
+    saveButton.textContent = "Speichern";
+    saveButton.classList.add("save-contact-button");
+    saveButton.addEventListener("click", saveNewContact);
+
+    addContactCardContainer.appendChild(saveButton);
+
     setTimeout(() => {
         addContactCardContainer.classList.add('add-contact-card-visible');
     }, 600);
@@ -249,4 +259,78 @@ function attachCloseListeners() {
     document.querySelectorAll('.close-modal-contact').forEach(button => {
         button.addEventListener('click', closeModalContact);
     });
+}
+
+async function saveNewContact() {
+    let nameField = document.getElementById("contact-name");
+    let emailField = document.getElementById("contact-email");
+    let phoneField = document.getElementById("contact-phone");
+
+    let name = nameField.value.trim();
+    let email = emailField.value.trim();
+    let phone = phoneField.value.trim();
+
+    if (!name || !email || !phone) {
+        alert("Bitte alle Felder ausfüllen.");
+        return;
+    }
+
+    if (name.split(" ").length < 2) {
+        alert("Bitte geben Sie mindestens zwei Wörter im Namen ein.");
+        return;
+    }
+
+    let newContact = {
+        name,
+        email,
+        phone,
+    };
+
+    try {
+        const response = await fetch(BASE_URL + "/contacts.json", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newContact),
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            newContact.id = result.name;
+            alert("Kontakt erfolgreich hinzugefügt!");
+            closeModalContact();
+            loadData("/contacts");
+        } else {
+            alert("Fehler beim Speichern des Kontakts.");
+        }
+    } catch (error) {
+        console.error("Fehler beim Speichern des Kontakts:", error);
+        alert("Ein unerwarteter Fehler ist aufgetreten.");
+    }
+}
+
+async function deleteContact(contactId) {
+    try {
+        const response = await fetch(`${BASE_URL}/contacts/${contactId}.json`, {
+            method: "DELETE",
+        });
+
+        if (response.ok) {
+            console.log("Kontakt erfolgreich gelöscht!");
+
+            let contactCardContainer = document.querySelector(".contacts-card");
+            if (contactCardContainer) {
+                contactCardContainer.innerHTML = "";
+                contactCardContainer.classList.remove("contacts-card-visible");
+            }
+            loadData("/contacts");
+        } else {
+            console.error("Fehler beim Löschen des Kontakts.");
+            alert("Fehler beim Löschen des Kontakts.");
+        }
+    } catch (error) {
+        console.error("Fehler beim Löschen des Kontakts:", error);
+        alert("Ein unerwarteter Fehler ist aufgetreten.");
+    }
 }

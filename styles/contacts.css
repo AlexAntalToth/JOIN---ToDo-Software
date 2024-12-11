@@ -1,7 +1,5 @@
 .contacts-container {
     display: flex;
-    /* align-items: center; */
-    /* position: relative; */
     margin-top: 96px;
     height: calc(100vh - 96px);
 }
