@@ -163,7 +163,7 @@ function openModalContact() {
 function closeModalContact() {
     let modalContact = document.getElementById('myModal-contact');
     let modalContactContent = document.getElementById('myModal-contact-content');
-    
+
     modalContactContent.classList.remove('show');
     modalContactContent.classList.add('hide');
 
@@ -188,7 +188,7 @@ if (closeModalButton) {
     closeModalButton.addEventListener('click', closeModalContact);
 }
 
-window.onclick = function(event) {
+window.onclick = function (event) {
     if (event.target === document.getElementById('myModal-contact')) {
         closeModalContact();
     }
@@ -271,12 +271,12 @@ async function saveNewContact() {
     let phone = phoneField.value.trim();
 
     if (!name || !email || !phone) {
-        alert("Bitte alle Felder ausfüllen.");
+        alert("Please complete all fields.");
         return;
     }
 
     if (name.split(" ").length < 2) {
-        alert("Bitte geben Sie mindestens zwei Wörter im Namen ein.");
+        alert("Please enter your first and last name.");
         return;
     }
 
@@ -298,15 +298,11 @@ async function saveNewContact() {
         if (response.ok) {
             const result = await response.json();
             newContact.id = result.name;
-            alert("Kontakt erfolgreich hinzugefügt!");
             closeModalContact();
             loadData("/contacts");
-        } else {
-            alert("Fehler beim Speichern des Kontakts.");
         }
     } catch (error) {
-        console.error("Fehler beim Speichern des Kontakts:", error);
-        alert("Ein unerwarteter Fehler ist aufgetreten.");
+        alert("Error");
     }
 }
 
@@ -317,20 +313,14 @@ async function deleteContact(contactId) {
         });
 
         if (response.ok) {
-            console.log("Kontakt erfolgreich gelöscht!");
-
             let contactCardContainer = document.querySelector(".contacts-card");
             if (contactCardContainer) {
                 contactCardContainer.innerHTML = "";
                 contactCardContainer.classList.remove("contacts-card-visible");
             }
             loadData("/contacts");
-        } else {
-            console.error("Fehler beim Löschen des Kontakts.");
-            alert("Fehler beim Löschen des Kontakts.");
         }
     } catch (error) {
-        console.error("Fehler beim Löschen des Kontakts:", error);
-        alert("Ein unerwarteter Fehler ist aufgetreten.");
+        alert("Error");
     }
 }
