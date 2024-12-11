@@ -7,9 +7,10 @@
     <title>Board</title>
     <link rel="stylesheet" href="./styles/board.css">
     <script src="./scripts/w3include.js"></script>
+    <script src="./scripts/board.js"></script>
 </head>
 
-<body onload="includeHTML()">
+<body onload="includeHTML(); onloadFunc()">
     <div w3-include-html="./assets/templates/header-tryout.html"></div>
     <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
     <div class="container">
@@ -30,15 +31,6 @@
                 <div id="toDo">
                     <div class="task-list">
                         <div class="task">
-                            <div class="task-badge bg-blue">User Story</div>
-                            <div class="task-title">Optimize Website Performance</div>
-                            <div class="task-desc">Analyze the website's loading speed and identify areas for
-                                improvement. Implement techniques such as image compression, code minification, and
-                                caching to enhance performance and user experience.</div>
-                            <div class="subtask-bar"></div>
-                            <div class="assigned-to"></div>
-                        </div>
-                        <div class="task">
                             <div class="task-badge bg-green">Technical Task</div>
                             <div class="task-title"> Design Social Media Campaign</div>
                             <div class="task-desc">Create a creative and engaging social media campaign to promote the
@@ -50,7 +42,7 @@
                                 </div>
                                 <span>1/2 Subtasks</span>
                             </div>
-                            <div class="assigned-to">
+                            <div class="task-footer">
                                 <div class="contacts">
                                     <img src="./assets/icons/profile.png" alt="profile picture">
                                     <img src="./assets/icons/profile.png" alt="profile picture">
@@ -59,7 +51,6 @@
                                 <div class="priority"><img src="./assets/icons/priority_high.png" alt="Priority"></div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

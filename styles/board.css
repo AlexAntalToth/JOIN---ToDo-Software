@@ -18,6 +18,7 @@ body {
   min-height: 100vh;
   padding: 0 80px;
   padding-top: 196px;
+  padding-bottom: 30px;
   margin-left: 232px;
 }
 
@@ -137,6 +138,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding-right: 8px;
 }
 
 .task {
@@ -209,14 +211,14 @@ body {
   border-radius: 30px;
 }
 
-.assigned-to {
+.task-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 32px;
 }
 
-.assigned-to img {
+.priority img {
   height: 32px;
   width: 32px;
 }
@@ -228,4 +230,19 @@ body {
 
 .contacts img {
   margin-left: -10px;
+}
+
+.profile-circle {
+  width: 32px;
+  height: 32px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border-radius: 50%;  
+  border: solid 1px white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: -10px;
+  text-transform: uppercase;  
 }
