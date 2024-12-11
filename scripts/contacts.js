@@ -171,7 +171,7 @@ function closeModalContact() {
     }, 600);
 }
 
-let contactsButton = document.querySelector('.contacts-button');
+let contactsButton = document.querySelector('.add-contact');
 if (contactsButton) {
     contactsButton.addEventListener('click', () => {
         renderAddContactCard();

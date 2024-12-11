@@ -13,7 +13,7 @@
     background-color: white;
 }
 
-.contacts-button {
+.add-contact {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,7 +27,7 @@
     cursor: pointer;
 }
 
-.contacts-button h2 {
+.add-contact h2 {
     color: white;
 }
 
