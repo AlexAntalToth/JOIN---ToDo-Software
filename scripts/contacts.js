@@ -317,6 +317,9 @@ async function saveNewContact() {
             newContact.id = result.name;
             closeModalContact();
             loadData("/contacts");
+
+            // Overlay anzeigen
+            showContactCreatedOverlay();
         }
     } catch (error) {
         alert("Error");
@@ -340,4 +343,27 @@ async function deleteContact(contactId) {
     } catch (error) {
         alert("Error");
     }
+}
+
+function showContactCreatedOverlay() {
+    // Overlay erstellen
+    const overlay = document.createElement("div");
+    overlay.className = "contact-created-overlay";
+    overlay.textContent = "Contact created successfully!";
+
+    // Overlay zum Body hinzufügen
+    document.body.appendChild(overlay);
+
+    // Sicherstellen, dass die Klasse nach DOM-Einfügung hinzugefügt wird
+    setTimeout(() => {
+        overlay.classList.add("show");
+    }, 10); // Ein minimaler Timeout für die Transition
+
+    // Overlay nach 3 Sekunden entfernen
+    setTimeout(() => {
+        overlay.classList.remove("show");
+        setTimeout(() => {
+            overlay.remove();
+        }, 500); // Warten, bis die Animation beendet ist
+    }, 3000);
 }
