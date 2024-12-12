@@ -137,7 +137,7 @@ function createContactCard(contact) {
                             <img class="contact-edit-icon" src="../../assets/icons/contact_edit.png" alt="Contact Edit">
                             <p>Edit</p>
                         </button>
-                        <button class="delete-button delete-contact-button" data-id="${contact.id}"> 
+                        <button class="delete-button" data-id="${contact.id}">
                             <img class="contact-basket-icon" src="../../assets/icons/contact_basket.png" alt="Contact Delete">
                             <p>Delete</p>
                         </button>
@@ -153,10 +153,6 @@ function createContactCard(contact) {
             <h4>${contact.phone}</h4>
         </div>
     `;
-
-    let deleteButton = contactCard.querySelector(".delete-contact-button");
-    deleteButton.addEventListener("click", () => deleteContact(contact.id));
-
     return contactCard;
 }
 
@@ -219,12 +215,22 @@ if (addButton) {
 }
 
 let editButton = document.querySelector('.edit-button');
-
 document.addEventListener('click', (event) => {
     if (event.target.closest('.edit-button')) {
         renderEditContactCard();
         attachCloseListeners();
         openModalEditContact();
+    }
+});
+
+let deleteButton = document.querySelector('.delete-button');
+document.addEventListener('click', (event) => {
+    const deleteButton = event.target.closest('.delete-button');
+    if (deleteButton) {
+        const contactId = deleteButton.getAttribute('data-id');
+        if (contactId) {
+            deleteContact(contactId);
+        }
     }
 });
 
@@ -387,7 +393,6 @@ function attachCloseListeners() {
     document.querySelectorAll('.close-modal-edit-contact').forEach(button => {
         button.addEventListener('click', closeModalEditContact);
     });
-
 }
 
 async function saveNewContact() {
