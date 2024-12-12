@@ -82,6 +82,7 @@
 
 .contact-item:hover {
     background-color: rgba(247, 247, 247, 1);
+    cursor: pointer;
 }
 
 .contact-item-active:hover {
@@ -392,7 +393,25 @@
 
 .close-modal-contact:hover {
     background-color: rgba(238, 238, 238);
+}
 
+.close-modal-edit-contact {
+    position: absolute;
+    top: 40px;
+    right: 100px;
+    background-color: transparent;
+    color: black;
+    font-size: 24px;
+    font-weight: normal;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.close-modal-edit-contact:hover {
+    background-color: rgba(238, 238, 238);
 }
 
 .add-contact-left {

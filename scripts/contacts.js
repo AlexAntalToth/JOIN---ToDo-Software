@@ -225,7 +225,6 @@ document.addEventListener('click', (event) => {
         renderEditContactCard();
         attachCloseListeners();
         openModalEditContact();
-        // createEditContactCard();
     }
 });
 
@@ -347,7 +346,7 @@ function createEditContactCard(contact) {
                     <span>${initials}</span>
             </div>
             <div class="add-contact-details">
-                <button class="close-modal-contact">x</button>
+                <button class="close-modal-edit-contact">x</button>
                 <div class="add-contact-container">
                     <input class="add-contact-field" id="contact-name" placeholder="Name">
                     <img class="add-contact-icon" src="../../assets/icons/contact_name.png"
@@ -385,6 +384,10 @@ function attachCloseListeners() {
     document.querySelectorAll('.close-modal-contact').forEach(button => {
         button.addEventListener('click', closeModalContact);
     });
+    document.querySelectorAll('.close-modal-edit-contact').forEach(button => {
+        button.addEventListener('click', closeModalEditContact);
+    });
+
 }
 
 async function saveNewContact() {
