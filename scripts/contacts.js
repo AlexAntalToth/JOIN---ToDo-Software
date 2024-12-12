@@ -67,7 +67,7 @@ function getContactsTemplate(contact, initials) {
 function createContactElement(contact, initials) {
     let contactElement = document.createElement("div");
     contactElement.classList.add("contact-item");
-    contactElement.setAttribute("data-id", contact.id); // ID des Kontakts hier hinzufügen
+    contactElement.setAttribute("data-id", contact.id); 
 
     let template = getContactsTemplate(contact, initials);
     contactElement.innerHTML = template;
@@ -110,7 +110,7 @@ function renderContactCard(contact) {
 
     contactCardContainer.innerHTML = "";
 
-    let contactCard = createContactCard(contact); // Hier übergibst du das komplette `contact`-Objekt
+    let contactCard = createContactCard(contact); 
     contactCardContainer.appendChild(contactCard);
 
     setTimeout(() => {
@@ -298,12 +298,11 @@ async function saveNewContact() {
         return;
     }
 
-    // Erstelle den neuen Kontakt
     let newContact = {
         name,
         email,
         phone,
-        color: generateRandomColor() // Hier wird eine zufällige Farbe hinzugefügt
+        color: generateRandomColor()
     };
 
     try {
@@ -317,27 +316,21 @@ async function saveNewContact() {
 
         if (response.ok) {
             const result = await response.json();
-            newContact.id = result.name; // Die ID des neuen Kontakts
-            closeModalContact(); // Modal schließen
-            loadData("/contacts"); // Kontakte neu laden
+            newContact.id = result.name;
+            closeModalContact();
+            loadData("/contacts");
 
-            // Overlay anzeigen
             showContactCreatedOverlay();
             renderContactCard(newContact);
 
-            // Nach dem Overlay die Kontaktkarte des neuen Kontakts anzeigen
             setTimeout(() => {
-                // Zuerst die Kontaktkarte rendern
-
-                // Kontakt-Element in der Liste aktiv setzen
                 let newContactElement = document.querySelector(`.contact-item[data-id="${newContact.id}"]`);
                 if (newContactElement) {
-                    ContactSelection(newContactElement); // Hier wird der neue Kontakt als aktiv gesetzt
+                    ContactSelection(newContactElement);
 
-                    // Scrollen zum neuen Kontakt
                     newContactElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-            }, 1600); // Warten, bis das Overlay verschwunden ist
+            }, 1600);
         }
     } catch (error) {
         alert("Error");
@@ -363,24 +356,20 @@ async function deleteContact(contactId) {
 }
 
 function showContactCreatedOverlay() {
-    // Overlay erstellen
-    const overlay = document.createElement("div");
+    let overlay = document.createElement("div");
     overlay.className = "contact-created-overlay";
     overlay.textContent = "Contact successfully created";
 
-    // Overlay zum Body hinzufügen
     document.body.appendChild(overlay);
 
-    // Sicherstellen, dass die Klasse nach DOM-Einfügung hinzugefügt wird
     setTimeout(() => {
         overlay.classList.add("show");
     }, 10);
 
-    // Overlay nach 3 Sekunden entfernen
     setTimeout(() => {
         overlay.classList.remove("show");
         setTimeout(() => {
             overlay.remove();
-        }, 600); // Warten, bis die Animation beendet ist
+        }, 600);
     }, 1500);
 }
