@@ -67,6 +67,7 @@ function getContactsTemplate(contact, initials) {
 function createContactElement(contact, initials) {
     let contactElement = document.createElement("div");
     contactElement.classList.add("contact-item");
+    contactElement.setAttribute("data-id", contact.id); // ID des Kontakts hier hinzufügen
 
     let template = getContactsTemplate(contact, initials);
     contactElement.innerHTML = template;
@@ -109,7 +110,7 @@ function renderContactCard(contact) {
 
     contactCardContainer.innerHTML = "";
 
-    let contactCard = createContactCard(contact);
+    let contactCard = createContactCard(contact); // Hier übergibst du das komplette `contact`-Objekt
     contactCardContainer.appendChild(contactCard);
 
     setTimeout(() => {
@@ -297,10 +298,12 @@ async function saveNewContact() {
         return;
     }
 
+    // Erstelle den neuen Kontakt
     let newContact = {
         name,
         email,
         phone,
+        color: generateRandomColor() // Hier wird eine zufällige Farbe hinzugefügt
     };
 
     try {
@@ -314,19 +317,30 @@ async function saveNewContact() {
 
         if (response.ok) {
             const result = await response.json();
-            newContact.id = result.name; // Hier bekommst du die ID des neuen Kontakts
-            closeModalContact();
-            loadData("/contacts"); // Kontakte neu laden, um die Liste zu aktualisieren
+            newContact.id = result.name; // Die ID des neuen Kontakts
+            closeModalContact(); // Modal schließen
+            loadData("/contacts"); // Kontakte neu laden
 
             // Overlay anzeigen
             showContactCreatedOverlay();
+            renderContactCard(newContact);
 
             // Nach dem Overlay die Kontaktkarte des neuen Kontakts anzeigen
             setTimeout(() => {
-                renderContactCard(newContact); // Hier wird die neue Kontaktkarte angezeigt
-            }, 1600); // Warten, bis das Overlay verschwindet (1500ms) und dann die Karte anzeigen
+                // Zuerst die Kontaktkarte rendern
+
+                // Kontakt-Element in der Liste aktiv setzen
+                let newContactElement = document.querySelector(`.contact-item[data-id="${newContact.id}"]`);
+                if (newContactElement) {
+                    ContactSelection(newContactElement); // Hier wird der neue Kontakt als aktiv gesetzt
+
+                    // Scrollen zum neuen Kontakt
+                    newContactElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 1600); // Warten, bis das Overlay verschwunden ist
         }
     } catch (error) {
+        alert("Error");
     }
 }
 
