@@ -133,11 +133,11 @@ function createContactCard(contact) {
                 <div class="contacts-card-name-section">
                     <h3>${contact.name}</h3>
                     <div class="contacts-card-name-section2">
-                        <button class="edit-delete-button"> 
+                        <button class="edit-button"> 
                             <img class="contact-edit-icon" src="../../assets/icons/contact_edit.png" alt="Contact Edit">
                             <p>Edit</p>
                         </button>
-                        <button class="edit-delete-button delete-contact-button" data-id="${contact.id}"> 
+                        <button class="delete-button delete-contact-button" data-id="${contact.id}"> 
                             <img class="contact-basket-icon" src="../../assets/icons/contact_basket.png" alt="Contact Delete">
                             <p>Delete</p>
                         </button>
@@ -162,7 +162,18 @@ function createContactCard(contact) {
 
 function openModalContact() {
     let modalContact = document.getElementById('myModal-contact');
-    let modalContactContent = document.getElementById('myModal-contact-content');
+    let modalContactContent = document.getElementById('myModal-contact-content-add');
+
+    modalContact.style.display = 'flex';
+    requestAnimationFrame(() => {
+        modalContact.classList.add('show');
+        modalContactContent.classList.add('show');
+    });
+}
+
+function openModalEditContact() {
+    let modalContact = document.getElementById('myModal-contact');
+    let modalContactContent = document.getElementById('myModal-contact-content-edit');
 
     modalContact.style.display = 'flex';
     requestAnimationFrame(() => {
@@ -173,7 +184,7 @@ function openModalContact() {
 
 function closeModalContact() {
     let modalContact = document.getElementById('myModal-contact');
-    let modalContactContent = document.getElementById('myModal-contact-content');
+    let modalContactContent = document.getElementById('myModal-contact-content-add');
 
     modalContactContent.classList.remove('show');
     modalContactContent.classList.add('hide');
@@ -185,23 +196,54 @@ function closeModalContact() {
     }, 600);
 }
 
-let contactsButton = document.querySelector('.add-contact');
-if (contactsButton) {
-    contactsButton.addEventListener('click', () => {
+function closeModalEditContact() {
+    let modalContact = document.getElementById('myModal-contact');
+    let modalContactContent = document.getElementById('myModal-contact-content-edit');
+
+    modalContactContent.classList.remove('show');
+    modalContactContent.classList.add('hide');
+
+    setTimeout(() => {
+        modalContact.classList.remove('show');
+        modalContact.style.display = 'none';
+        modalContactContent.classList.remove('hide');
+    }, 600);
+}
+
+let addButton = document.querySelector('.add-contact');
+if (addButton) {
+    addButton.addEventListener('click', () => {
         renderAddContactCard();
         attachCloseListeners();
         openModalContact();
     });
 }
 
+let editButton = document.querySelector('.edit-button');
+
+document.addEventListener('click', (event) => {
+    if (event.target.closest('.edit-button')) {
+        renderAddContactCard();
+        attachCloseListeners();
+        openModalEditContact();
+    }
+});
+
 let closeModalButton = document.querySelector('.close-modal-contact');
 if (closeModalButton) {
     closeModalButton.addEventListener('click', closeModalContact);
 }
 
+let deleteModalButton = document.querySelector('.delete-modal-contact');
+if (deleteModalButton) {
+    deleteModalButton.addEventListener('click', closeModalEditContact);
+}
+
+
 window.onclick = function (event) {
     if (event.target === document.getElementById('myModal-contact')) {
         closeModalContact();
+        closeModalEditContact();
     }
 };
 
@@ -271,6 +313,53 @@ function createAddContactCard(contact) {
     cancelButton.addEventListener("click", closeModalContact);
     
     return addContactCard;
+}
+
+function createEditContactCard(contact) {
+    let { initials } = getInitialsAndFirstLetter(contact);
+    let editContactCard = document.createElement("div");
+    editContactCard.classList.add("edit-card-content");
+
+    editContactCard.innerHTML = `
+            <div class="contacts-card-initials">
+                <div class="contacts-card-initials-circle">
+                    <img class="add-contact-initials_blank" src="../../assets/icons/contact_initials_blank.png"
+                    alt="Logo Contact Blank">
+                    <span>${initials}</span>
+            </div>
+            <div class="add-contact-details">
+                <button class="close-modal-contact">x</button>
+                <div class="add-contact-container">
+                    <input class="add-contact-field" id="contact-name" placeholder="Name">
+                    <img class="add-contact-icon" src="../../assets/icons/contact_name.png"
+                    alt="Logo Contact Name">
+                </div>
+                <div class="add-contact-container">
+                    <input class="add-contact-field" id="contact-email" placeholder="Email">
+                    <img class="add-contact-icon" src="../../assets/icons/contact_email.png"
+                    alt="Logo Contact Phone">
+                </div>
+                <div class="add-contact-container">
+                    <input class="add-contact-field" id="contact-phone" placeholder="Phone">
+                    <img class="add-contact-icon" src="../../assets/icons/contact_phone.png"
+                    alt="Logo Contact Phone">
+                </div>
+                <div class="edit-contact-buttons">
+                    <button class="delete-contact-button">
+                        <h2>Delete</h2>
+                    </button>
+                    <button class="save-contact-button"><h2>Save</h2>
+                        <img class="create-contact-icon" src="../../assets/icons/contact_create.png" alt="Icon Create Contact">
+                    </button>
+                </div>
+            </div>
+    `;
+    let saveButton = editContactCard.querySelector(".save-contact-button");
+    saveButton.addEventListener("click", saveNewContact);
+    let deleteButton = editContactCard.querySelector(".delete-contact-button");
+    deleteButton.addEventListener("click", deleteContact);
+    
+    return editContactCard;
 }
 
 function attachCloseListeners() {

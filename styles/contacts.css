@@ -259,13 +259,22 @@
     padding-right: 15px;
 }
 
-.edit-delete-button {
+.edit-button {
     all: unset;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
 }
+
+.delete-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
 
 .contacts-card-details h2 {
     font-size: 20px;
@@ -333,7 +342,7 @@
 }
 
 .modal-contact-content.show {
-    transform: translateX(0);
+    transform: translateX(50%);
     opacity: 1;
 }
 
@@ -546,4 +555,47 @@
 .contact-created-overlay.show {
     transform: translate(-50%, -50%) translateX(0); /* Zielposition: sichtbar */
     opacity: 1;
+}
+
+.edit-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-contact-buttons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.delete-contact-button h2 {
+    font-size: 21px;
+    font-weight: normal;
+    color: rgba(42, 54, 71);
+}
+
+.delete-contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    width: 126px;
+    height: 57px;
+    padding: 16px;
+    gap: 4px;
+    border-radius: 10px;
+    border: 1px solid;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.delete-contact-button:hover {
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid;
+    border-color: rgba(41, 171, 226);
+}
+
+.delete-contact-button:hover h2 {
+    color: rgba(41, 171, 226);
 }
