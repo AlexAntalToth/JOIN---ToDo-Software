@@ -314,15 +314,19 @@ async function saveNewContact() {
 
         if (response.ok) {
             const result = await response.json();
-            newContact.id = result.name;
+            newContact.id = result.name; // Hier bekommst du die ID des neuen Kontakts
             closeModalContact();
-            loadData("/contacts");
+            loadData("/contacts"); // Kontakte neu laden, um die Liste zu aktualisieren
 
             // Overlay anzeigen
             showContactCreatedOverlay();
+
+            // Nach dem Overlay die Kontaktkarte des neuen Kontakts anzeigen
+            setTimeout(() => {
+                renderContactCard(newContact); // Hier wird die neue Kontaktkarte angezeigt
+            }, 1600); // Warten, bis das Overlay verschwindet (1500ms) und dann die Karte anzeigen
         }
     } catch (error) {
-        alert("Error");
     }
 }
 
@@ -341,7 +345,6 @@ async function deleteContact(contactId) {
             loadData("/contacts");
         }
     } catch (error) {
-        alert("Error");
     }
 }
 
@@ -349,7 +352,7 @@ function showContactCreatedOverlay() {
     // Overlay erstellen
     const overlay = document.createElement("div");
     overlay.className = "contact-created-overlay";
-    overlay.textContent = "Contact created successfully!";
+    overlay.textContent = "Contact successfully created";
 
     // Overlay zum Body hinzufügen
     document.body.appendChild(overlay);
@@ -357,13 +360,13 @@ function showContactCreatedOverlay() {
     // Sicherstellen, dass die Klasse nach DOM-Einfügung hinzugefügt wird
     setTimeout(() => {
         overlay.classList.add("show");
-    }, 10); // Ein minimaler Timeout für die Transition
+    }, 10);
 
     // Overlay nach 3 Sekunden entfernen
     setTimeout(() => {
         overlay.classList.remove("show");
         setTimeout(() => {
             overlay.remove();
-        }, 500); // Warten, bis die Animation beendet ist
-    }, 3000);
+        }, 600); // Warten, bis die Animation beendet ist
+    }, 1500);
 }

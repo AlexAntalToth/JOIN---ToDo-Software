@@ -527,21 +527,23 @@
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Overlay für "Contact Created" */
 .contact-created-overlay {
-    position: fixed;
-    top: 20px;
-    right: -300px; /* Start außerhalb des Bildschirms */
-    background-color: #28a745;
+    position: absolute;
+    top: 70%; /* Mittig vertikal */
+    left: 50%; /* Mittig horizontal */
+    transform: translate(-50%, -50%) translateX(200%); /* Startposition: rechts außerhalb des Bildschirms */
+    background-color: rgba(42, 54, 71);
     color: white;
-    padding: 15px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: right 0.5s ease;
-    z-index: 1000;
+    font-size: 20px;
+    font-weight: normal;
+    padding: 20px 40px;
+    border-radius: 10px;
+    opacity: 0;
+    z-index: 3; /* Über `contacts-card` */
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
 }
 
 .contact-created-overlay.show {
-    right: 20px; /* Position innerhalb des Bildschirms */
+    transform: translate(-50%, -50%) translateX(0); /* Zielposition: sichtbar */
+    opacity: 1;
 }
