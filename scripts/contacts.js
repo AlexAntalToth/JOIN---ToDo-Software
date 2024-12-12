@@ -67,7 +67,13 @@ function getContactsTemplate(contact, initials) {
 function createContactElement(contact, initials) {
     let contactElement = document.createElement("div");
     contactElement.classList.add("contact-item");
-    contactElement.setAttribute("data-id", contact.id); 
+    contactElement.setAttribute("data-id", contact.id);
+    contactElement.setAttribute("data-name", contact.name);
+    contactElement.setAttribute("data-email", contact.email);
+    contactElement.setAttribute("data-phone", contact.phone);
+    if (contact.color) {
+        contactElement.setAttribute("data-color", contact.color);
+    }
 
     let template = getContactsTemplate(contact, initials);
     contactElement.innerHTML = template;
@@ -214,12 +220,30 @@ if (addButton) {
     });
 }
 
-let editButton = document.querySelector('.edit-button');
 document.addEventListener('click', (event) => {
-    if (event.target.closest('.edit-button')) {
-        renderEditContactCard();
-        attachCloseListeners();
-        openModalEditContact();
+    let editButton = event.target.closest('.edit-button');
+    if (editButton) {
+        // Hole die Kontakt-ID aus dem Button-Attribut
+        let contactId = editButton.getAttribute('data-id');
+        console.log('Edit button clicked, contact ID:', contactId);
+
+        // Hole das Kontakt-Element anhand der ID
+        let contactElement = document.querySelector(`.contact-item[data-id="${contactId}"]`);
+        console.log('Contact element:', contactElement);
+
+        if (contactElement) {
+            let contact = {
+                id: contactElement.getAttribute('data-id'),
+                name: contactElement.getAttribute('data-name'),
+                email: contactElement.getAttribute('data-email'),
+                phone: contactElement.getAttribute('data-phone'),
+                color: contactElement.getAttribute('data-color')
+            };
+
+            renderEditContactCard(contact);
+            attachCloseListeners();
+            openModalEditContact();
+        }
     }
 });
 
@@ -280,7 +304,7 @@ function renderEditContactCard(contact) {
     editContactCardContainer.innerHTML = "";
     editContactCardContainer.classList.remove('edit-contact-card-visible');
 
-    let editContactCard = createEditContactCard(contact || { name: "", email: "", phone: "" });
+    let editContactCard = createEditContactCard(contact);
     editContactCardContainer.appendChild(editContactCard);
 
     setTimeout(() => {
@@ -341,48 +365,46 @@ function createAddContactCard(contact) {
 
 function createEditContactCard(contact) {
     let { initials } = getInitialsAndFirstLetter(contact);
+
     let editContactCard = document.createElement("div");
     editContactCard.classList.add("edit-card-content");
 
     editContactCard.innerHTML = `
-            <div class="contacts-card-initials">
-                <div class="contacts-card-initials-circle">
-                    <img class="add-contact-initials_blank" src="../../assets/icons/contact_initials_blank.png"
-                    alt="Logo Contact Blank">
-                    <span>${initials}</span>
+        <div class="contacts-card-initials">
+            <div class="contacts-card-initials-circle" ${contact.color ? `style="background-color: ${contact.color}"` : ''}>
+                <span>${initials}</span>
             </div>
-            <div class="add-contact-details">
-                <button class="close-modal-edit-contact">x</button>
-                <div class="add-contact-container">
-                    <input class="add-contact-field" id="contact-name" placeholder="Name">
-                    <img class="add-contact-icon" src="../../assets/icons/contact_name.png"
-                    alt="Logo Contact Name">
-                </div>
-                <div class="add-contact-container">
-                    <input class="add-contact-field" id="contact-email" placeholder="Email">
-                    <img class="add-contact-icon" src="../../assets/icons/contact_email.png"
-                    alt="Logo Contact Phone">
-                </div>
-                <div class="add-contact-container">
-                    <input class="add-contact-field" id="contact-phone" placeholder="Phone">
-                    <img class="add-contact-icon" src="../../assets/icons/contact_phone.png"
-                    alt="Logo Contact Phone">
-                </div>
-                <div class="edit-contact-buttons">
-                    <button class="delete-contact-button">
-                        <h2>Delete</h2>
-                    </button>
-                    <button class="save-contact-button"><h2>Save</h2>
-                        <img class="create-contact-icon" src="../../assets/icons/contact_create.png" alt="Icon Create Contact">
-                    </button>
-                </div>
+        </div>
+        <div class="add-contact-details">
+            <button class="close-modal-edit-contact">x</button>
+            <div class="add-contact-container">
+                <input class="add-contact-field" id="contact-name" value="${contact.name}" placeholder="Name">
+                <img class="add-contact-icon" src="../../assets/icons/contact_name.png" alt="Logo Contact Name">
             </div>
+            <div class="add-contact-container">
+                <input class="add-contact-field" id="contact-email" value="${contact.email}" placeholder="Email">
+                <img class="add-contact-icon" src="../../assets/icons/contact_email.png" alt="Logo Contact Email">
+            </div>
+            <div class="add-contact-container">
+                <input class="add-contact-field" id="contact-phone" value="${contact.phone}" placeholder="Phone">
+                <img class="add-contact-icon" src="../../assets/icons/contact_phone.png" alt="Logo Contact Phone">
+            </div>
+            <div class="edit-contact-buttons">
+                <button class="delete-contact-button">
+                    <h2>Delete</h2>
+                </button>
+                <button class="save-contact-button"><h2>Save</h2>
+                    <img class="create-contact-icon" src="../../assets/icons/contact_create.png" alt="Icon Save Contact">
+                </button>
+            </div>
+        </div>
     `;
+
     let saveButton = editContactCard.querySelector(".save-contact-button");
-    saveButton.addEventListener("click", saveNewContact);
+    saveButton.addEventListener("click", saveNewContact); 
     let deleteButton = editContactCard.querySelector(".delete-contact-button");
-    deleteButton.addEventListener("click", deleteContact);
-    
+    deleteButton.addEventListener("click", deleteContact); 
+
     return editContactCard;
 }
 
