@@ -174,7 +174,6 @@ function openModalContact() {
 function openModalEditContact() {
     let modalContact = document.getElementById('myModal-contact');
     let modalContactContent = document.getElementById('myModal-contact-content-edit');
-
     modalContact.style.display = 'flex';
     requestAnimationFrame(() => {
         modalContact.classList.add('show');
@@ -223,9 +222,10 @@ let editButton = document.querySelector('.edit-button');
 
 document.addEventListener('click', (event) => {
     if (event.target.closest('.edit-button')) {
-        renderAddContactCard();
+        renderEditContactCard();
         attachCloseListeners();
         openModalEditContact();
+        // createEditContactCard();
     }
 });
 
@@ -264,6 +264,25 @@ function renderAddContactCard(contact) {
         addContactCardContainer.classList.add('add-contact-card-visible');
     }, 600);
 }
+
+function renderEditContactCard(contact) {
+    let editContactCardContainer = document.querySelector(".edit-contact-card");
+
+    if (!editContactCardContainer) {
+        return;
+    }
+
+    editContactCardContainer.innerHTML = "";
+    editContactCardContainer.classList.remove('edit-contact-card-visible');
+
+    let editContactCard = createEditContactCard(contact || { name: "", email: "", phone: "" });
+    editContactCardContainer.appendChild(editContactCard);
+
+    setTimeout(() => {
+        editContactCardContainer.classList.add('edit-contact-card-visible');
+    }, 600);
+}
+
 
 function createAddContactCard(contact) {
     let { initials } = getInitialsAndFirstLetter(contact);
