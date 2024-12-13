@@ -537,12 +537,12 @@ async function saveExistingContact(contactId) {
         let existingContact = await responseGet.json();
 
         let updatedContact = {
+            id: contactId,
             ...existingContact,
             name,
             email,
             phone
         };
-
         let responsePut = await fetch(`${BASE_URL}/contacts/${contactId}.json`, {
             method: "PUT",
             headers: {
