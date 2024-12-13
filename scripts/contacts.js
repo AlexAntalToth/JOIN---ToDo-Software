@@ -139,7 +139,7 @@ function createContactCard(contact) {
                 <div class="contacts-card-name-section">
                     <h3>${contact.name}</h3>
                     <div class="contacts-card-name-section2">
-                        <button class="edit-button"> 
+                        <button class="edit-button" data-id="${contact.id}"> 
                             <img class="contact-edit-icon" src="../../assets/icons/contact_edit.png" alt="Contact Edit">
                             <p>Edit</p>
                         </button>
