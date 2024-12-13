@@ -1,5 +1,5 @@
-function init() {
-    loadData("/contacts");
+async function init() {
+    await loadData("/contacts");
 }
 
 async function loadSidebarAndHeader() {
@@ -30,6 +30,7 @@ function renderContactsList(contacts) {
         let contactElement = createContactElement(contact, initials);
         contactsAreaList.appendChild(contactElement);
     });
+
 }
 
 function getInitialsAndFirstLetter(contact) {
@@ -159,6 +160,32 @@ function createContactCard(contact) {
             <h4>${contact.phone}</h4>
         </div>
     `;
+    console.log('Creating contact card with ID:', contact.id);
+    let editButton = contactCard.querySelector('.edit-button');
+    if (editButton) {
+        editButton.addEventListener('click', () => {
+            let contactId = editButton.getAttribute('data-id');
+            console.log('Edit button clicked, contact ID:', contactId);
+
+            let contactElement = document.querySelector(`.contact-item[data-id="${contactId}"]`);
+            console.log('Contact element:', contactElement);
+
+            if (contactElement) {
+                let contact = {
+                    id: contactElement.getAttribute('data-id'),
+                    name: contactElement.getAttribute('data-name'),
+                    email: contactElement.getAttribute('data-email'),
+                    phone: contactElement.getAttribute('data-phone'),
+                    color: contactElement.getAttribute('data-color')
+                };
+
+                renderEditContactCard(contact);
+                attachCloseListeners();
+                openModalEditContact();
+            }
+        });
+    }
+
     return contactCard;
 }
 
@@ -220,33 +247,6 @@ if (addButton) {
     });
 }
 
-document.addEventListener('click', (event) => {
-    let editButton = event.target.closest('.edit-button');
-    if (editButton) {
-        // Hole die Kontakt-ID aus dem Button-Attribut
-        let contactId = editButton.getAttribute('data-id');
-        console.log('Edit button clicked, contact ID:', contactId);
-
-        // Hole das Kontakt-Element anhand der ID
-        let contactElement = document.querySelector(`.contact-item[data-id="${contactId}"]`);
-        console.log('Contact element:', contactElement);
-
-        if (contactElement) {
-            let contact = {
-                id: contactElement.getAttribute('data-id'),
-                name: contactElement.getAttribute('data-name'),
-                email: contactElement.getAttribute('data-email'),
-                phone: contactElement.getAttribute('data-phone'),
-                color: contactElement.getAttribute('data-color')
-            };
-
-            renderEditContactCard(contact);
-            attachCloseListeners();
-            openModalEditContact();
-        }
-    }
-});
-
 let deleteButton = document.querySelector('.delete-button');
 document.addEventListener('click', (event) => {
     const deleteButton = event.target.closest('.delete-button');
@@ -267,7 +267,6 @@ let deleteModalButton = document.querySelector('.delete-modal-contact');
 if (deleteModalButton) {
     deleteModalButton.addEventListener('click', closeModalEditContact);
 }
-
 
 window.onclick = function (event) {
     if (event.target === document.getElementById('myModal-contact')) {
@@ -401,13 +400,12 @@ function createEditContactCard(contact) {
     `;
 
     let saveButton = editContactCard.querySelector(".save-contact-button");
-    saveButton.addEventListener("click", saveNewContact); 
+    saveButton.addEventListener("click", () => saveExistingContact(contact.id));
     let deleteButton = editContactCard.querySelector(".delete-contact-button");
     deleteButton.addEventListener("click", deleteContact); 
 
     return editContactCard;
 }
-
 function attachCloseListeners() {
     document.querySelectorAll('.close-modal-contact').forEach(button => {
         button.addEventListener('click', closeModalContact);
@@ -453,7 +451,7 @@ async function saveNewContact() {
         });
 
         if (response.ok) {
-            const result = await response.json();
+            let result = await response.json();
             newContact.id = result.name;
             closeModalContact();
             loadData("/contacts");
@@ -471,7 +469,6 @@ async function saveNewContact() {
             }, 1600);
         }
     } catch (error) {
-        alert("Error");
     }
 }
 
@@ -511,3 +508,64 @@ function showContactCreatedOverlay() {
         }, 600);
     }, 1500);
 }
+
+async function saveExistingContact(contactId) {
+    let nameField = document.getElementById("contact-name");
+    let emailField = document.getElementById("contact-email");
+    let phoneField = document.getElementById("contact-phone");
+
+    let name = nameField.value.trim();
+    let email = emailField.value.trim();
+    let phone = phoneField.value.trim();
+
+    if (!name || !email || !phone) {
+        alert("Please complete all fields.");
+        return;
+    }
+
+    if (name.split(" ").length < 2) {
+        alert("Please enter your first and last name.");
+        return;
+    }
+
+    try {
+        const responseGet = await fetch(`${BASE_URL}/contacts/${contactId}.json`);
+        if (!responseGet.ok) {
+            throw new Error("Failed to fetch existing contact");
+        }
+
+        let existingContact = await responseGet.json();
+
+        let updatedContact = {
+            ...existingContact,
+            name,
+            email,
+            phone
+        };
+
+        let responsePut = await fetch(`${BASE_URL}/contacts/${contactId}.json`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedContact),
+        });
+
+        if (responsePut.ok) {
+            closeModalEditContact();
+            loadData("/contacts");
+            renderContactCard(updatedContact);
+
+            setTimeout(() => {
+                let updatedContactElement = document.querySelector(`.contact-item[data-id="${contactId}"]`);
+                if (updatedContactElement) {
+                    ContactSelection(updatedContactElement);
+                    updatedContactElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 1600);
+        } else {
+        }
+    } catch (error) {
+    }
+}
+
