@@ -13,6 +13,30 @@
 <body onload="includeHTML(); onloadFunc()">
     <div w3-include-html="./assets/templates/header-tryout.html"></div>
     <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
+
+    <div id="taskPopup" class="popup hidden">
+
+        <div class="popup-content">
+
+            <div class="popup-header">
+                <div id="taskBadge"></div>
+                <button onclick="closePopup()" class="close-btn">X</button>
+            </div>
+
+            <h1 id="taskTitle"></h1>
+            <p id="taskDescription"></p>
+
+            <p><span class="details">Due date: </span><span id="taskDueDate"></span></p>
+            <p class="task-priority gap-8"><span class="details">Priority: </span><span class="task-priority" id="taskPriority"></span></p>
+            <p><span class="details">Assigned To: </span><span class="task-contacts" id="taskContacts"></span></p>
+            <p><span class="details">Subtasks</span></p>
+
+            <ul id="subtasksList"></ul>
+        </div>
+    </div>
+
+
+
     <div class="container">
         <div class="board-headline">
             <h1>Board</h1>

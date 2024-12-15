@@ -13,7 +13,7 @@ async function onloadFunc(){
         });
     }
     for (let i = 0; i < tasks.length; i++) {
-        insertTaskIntoDOM(tasks[i].task);
+        insertTaskIntoDOM(tasks[i].task, i);
     }
 };
 
@@ -22,9 +22,9 @@ async function getAllTasks(path) {
     return data = await response.json();
 }
 
-function insertTaskIntoDOM(task){
+function insertTaskIntoDOM(task, index){
     let catContainer = getCatContainerId(task);
-    let taskHTML = generateTaskHtml(task);
+    let taskHTML = generateTaskHtml(task, index);
     const taskList = catContainer.querySelector(".task-list");
     if (taskList) {
         taskList.innerHTML += taskHTML;
@@ -47,12 +47,10 @@ function getCatContainerId(task){
     return catContainer;
 }
 
-function generateTaskHtml(task){
+function generateTaskHtml(task, index){
     return `
-        <div class="task">
-            <div class="task-badge ${task.badge === "User Story" ? "bg-blue" : task.badge === "Technical Task" ? "bg-green" : ""}">
-                ${task.badge}
-            </div>
+        <div onclick="openTaskPopup(${index})" class="task">
+             ${generateTaskBadge(task.badge)}
             <div class="task-title">${task.title}</div>
             <div class="task-desc">${task.description}</div>
             <div class="subtask-bar">
@@ -80,6 +78,56 @@ function generateTaskHtml(task){
                     <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">
                 </div>
             </div>
+        </div>
+    `;
+}
+
+function openTaskPopup(index){
+    const task = tasks[index].task;
+    document.getElementById("taskBadge").innerHTML = generateTaskBadge(task.badge);
+    document.getElementById("taskTitle").innerText = task.title;
+    document.getElementById("taskDescription").innerText = task.description;
+    document.getElementById("taskDueDate").innerText = task.dueDate;
+    document.getElementById("taskPriority").innerHTML = `
+    <p>${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}</p>
+    <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">
+    `;
+    document.getElementById("taskContacts").innerHTML = generateContactsHtml(task.assignedTo);
+    
+    document.getElementById("taskPopup").classList.remove("hidden");
+}
+
+function closePopup() {
+    document.getElementById("taskPopup").classList.add("hidden");
+}
+
+function generateContactsHtml(assignedTo) {
+    if (!assignedTo) return "";
+    let contactsHtml = "";
+    Object.keys(assignedTo).forEach(contactKey => {
+        const contact = assignedTo[contactKey];
+        contactsHtml += `
+        <div class="task-contact">
+            <div class="profile-circle">
+                ${contact.firstName[0]}${contact.lastName[0]}
+            </div>
+            <span>${contact.firstName} ${contact.lastName}</span>
+            </div>
+        `;
+    });
+    return contactsHtml;
+}
+
+function generateTaskBadge(badgeType) {
+    let badgeClass = "bg-orange";
+    if (badgeType === "User Story") {
+        badgeClass = "bg-blue";
+    } else if (badgeType === "Technical Task") {
+        badgeClass = "bg-green";
+    }
+    return `
+        <div class="task-badge ${badgeClass}">
+            ${badgeType}
         </div>
     `;
 }
