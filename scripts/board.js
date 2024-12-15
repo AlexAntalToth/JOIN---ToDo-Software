@@ -15,7 +15,30 @@ async function onloadFunc(){
     for (let i = 0; i < tasks.length; i++) {
         insertTaskIntoDOM(tasks[i].task, i);
     }
+    checkEmptyCategories();
 };
+
+function checkEmptyCategories() {
+    const categories = ["toDo", "inProgress", "awaitFeedback", "done"];
+    categories.forEach(categoryId => {
+        const categoryElement = document.getElementById(categoryId);
+        const taskList = categoryElement.querySelector(".task-list");
+        if (!taskList || taskList.children.length === 0) {
+            taskList.innerHTML = emptyCategoryHTML(categoryId);
+        }
+    });
+}
+
+function emptyCategoryHTML(categoryId) {
+    return `
+        <div class="no-tasks">
+            No tasks ${categoryId === "toDo" ? "to do" : 
+                        categoryId === "inProgress" ? "in progress" : 
+                        categoryId === "awaitFeedback" ? "await feedback" : 
+                        "done"}.
+        </div>
+    `
+}
 
 async function getAllTasks(path) {
     const response = await fetch(BASE_URL + path + ".json");
@@ -97,8 +120,10 @@ function openTaskPopup(index){
     document.getElementById("taskPopup").classList.add("show");
 }
 
-function closePopup() {
-    document.getElementById("taskPopup").classList.remove("show");
+function closeTaskPopup(event) {
+    if (event.target === document.getElementById("taskPopup") || event.target.classList.contains("close-btn")) {
+        document.getElementById("taskPopup").classList.remove("show");
+    }
 }
 
 function generateContactsHtml(assignedTo) {
