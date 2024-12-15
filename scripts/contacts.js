@@ -125,6 +125,20 @@ function renderContactCard(contact) {
     }, 600);
 }
 
+function renderEditedContactCard(contact) {
+    let contactCardContainer = document.querySelector(".contacts-card");
+
+    if (contactCardContainer.classList.contains('contacts-card-visible')) {
+        contactCardContainer.classList.remove('contacts-card-visible');
+    }
+
+    contactCardContainer.innerHTML = "";
+
+    let contactCard = createContactCard(contact); 
+    contactCardContainer.appendChild(contactCard);
+    contactCardContainer.classList.add('contacts-card-visible');
+}
+
 function createContactCard(contact) {
     let { initials } = getInitialsAndFirstLetter(contact);
 
@@ -555,7 +569,7 @@ async function saveExistingContact(contactId) {
         if (responsePut.ok) {
             closeModalEditContact();
             loadData("/contacts");
-            renderContactCard(updatedContact);
+            renderEditedContactCard(updatedContact);
 
             setTimeout(() => {
                 let updatedContactElement = document.querySelector(`.contact-item[data-id="${contactId}"]`);
