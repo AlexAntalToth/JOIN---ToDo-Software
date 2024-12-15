@@ -94,11 +94,11 @@ function openTaskPopup(index){
     `;
     document.getElementById("taskContacts").innerHTML = generateContactsHtml(task.assignedTo);
     
-    document.getElementById("taskPopup").classList.remove("hidden");
+    document.getElementById("taskPopup").classList.add("show");
 }
 
 function closePopup() {
-    document.getElementById("taskPopup").classList.add("hidden");
+    document.getElementById("taskPopup").classList.remove("show");
 }
 
 function generateContactsHtml(assignedTo) {
