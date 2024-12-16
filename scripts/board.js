@@ -23,7 +23,7 @@ function checkEmptyCategories() {
     categories.forEach(categoryId => {
         const categoryElement = document.getElementById(categoryId);
         const taskList = categoryElement.querySelector(".task-list");
-        if (!taskList || taskList.children.length === 0) {
+        if (taskList.children.length === 0) {
             taskList.innerHTML = emptyCategoryHTML(categoryId);
         }
     });
