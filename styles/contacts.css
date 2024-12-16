@@ -239,24 +239,13 @@
     background-color: grey;
 }
 
-.contact-edit-icon {
-    width: 24px;
-    height: 24px;
-    padding-right: 10px;
-}
-
-.contact-basket-icon {
-    width: 24px;
-    height: 24px;
-    padding-right: 10px;
-}
-
 .contacts-card-name-section2 {
     display: flex;
     align-items: center;
 }
 
 .contacts-card-name-section2 p {
+    padding-left: 5px;
     padding-right: 15px;
 }
 
@@ -581,9 +570,9 @@
 
 .contact-created-overlay {
     position: absolute;
-    top: 70%; /* Mittig vertikal */
-    left: 50%; /* Mittig horizontal */
-    transform: translate(-50%, -50%) translateX(200%); /* Startposition: rechts außerhalb des Bildschirms */
+    top: 70%; 
+    left: 50%; 
+    transform: translate(-50%, -50%) translateX(200%);
     background-color: rgba(42, 54, 71);
     color: white;
     font-size: 20px;
@@ -591,12 +580,12 @@
     padding: 20px 40px;
     border-radius: 10px;
     opacity: 0;
-    z-index: 3; /* Über `contacts-card` */
+    z-index: 3;
     transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
 }
 
 .contact-created-overlay.show {
-    transform: translate(-50%, -50%) translateX(0); /* Zielposition: sichtbar */
+    transform: translate(-50%, -50%) translateX(0);
     opacity: 1;
 }
 
@@ -610,6 +599,24 @@
     display: flex;
     align-items: center;
     gap: 24px;
+}
+
+.edit-button:hover p {
+    color: rgba(41,171, 226);
+    font-weight: bold;
+}
+
+.edit-button:hover .edit-contact-icon path {
+    fill: rgba(41, 171, 226);
+}
+
+.delete-button:hover p {
+    color: rgba(41, 171, 226);
+    font-weight: bold;
+}
+
+.delete-button:hover .delete-contact-icon path {
+    fill: rgba(41, 171, 226);
 }
 
 .delete-contact-button h2 {
