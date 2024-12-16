@@ -11,7 +11,6 @@ async function loadSidebarAndHeader() {
 }
 
 function renderContactsList(contacts) {
-    console.log("Rendering Contacts:", contacts);
     let contactsAreaList = document.querySelector(".contacts-area-list");
     contactsAreaList.innerHTML = "";
 
@@ -111,7 +110,7 @@ function ContactSelection(selectedElement) {
 
 function renderContactCard(contact) {
     let contactCardContainer = document.querySelector(".contacts-card");
-
+    console.log('Selected Contact:', contact);
     if (contactCardContainer.classList.contains('contacts-card-visible')) {
         contactCardContainer.classList.remove('contacts-card-visible');
     }
@@ -145,6 +144,7 @@ function createContactCard(contact) {
 
     let contactCard = document.createElement("div");
     contactCard.classList.add("contacts-card-content");
+    contactCard.setAttribute("data-id", contact.id);
 
     contactCard.innerHTML = `
         <div class="contacts-card-header">
@@ -542,10 +542,12 @@ async function saveExistingContact(contactId) {
     let nameField = document.getElementById("contact-name");
     let emailField = document.getElementById("contact-email");
     let phoneField = document.getElementById("contact-phone");
+    let colorField = document.getElementById("contact-color"); // Wenn das Farbfeld vorhanden ist
 
     let name = nameField.value.trim();
     let email = emailField.value.trim();
     let phone = phoneField.value.trim();
+    let color = colorField ? colorField.value.trim() : ''; // Wenn das Farbfeld leer ist, bleibt es leer, ansonsten wird die Farbe übernommen
 
     if (!name || !email || !phone) {
         alert("Please complete all fields.");
@@ -565,12 +567,14 @@ async function saveExistingContact(contactId) {
 
         let existingContact = await responseGet.json();
 
+        // Hier wird das Feld 'color' zu den bestehenden Kontaktinformationen hinzugefügt, wenn es geändert wurde
         let updatedContact = {
             id: contactId,
             ...existingContact,
             name,
             email,
-            phone
+            phone,
+            color: color || existingContact.color // Wenn keine Farbe angegeben wurde, bleibt die bestehende erhalten
         };
         
         let responsePut = await fetch(`${BASE_URL}/contacts/${contactId}.json`, {
@@ -584,7 +588,6 @@ async function saveExistingContact(contactId) {
         if (responsePut.ok) {
             closeModalEditContact();
             loadData("/contacts");
-            // renderContactCard(updatedContact);
             renderEditedContactCard(updatedContact);
 
             setTimeout(() => {
@@ -595,8 +598,9 @@ async function saveExistingContact(contactId) {
                 }
             }, 1600);
         } else {
+            console.error('Failed to update contact');
         }
     } catch (error) {
+        console.error('Error saving contact:', error);
     }
 }
-
