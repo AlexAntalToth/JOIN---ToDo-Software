@@ -1,0 +1,240 @@
+body {
+  margin: 0;
+  font-family: myFont;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.animation-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.join_image {
+  position: absolute;
+  width: 150px;
+  height: auto;
+  animation: moveToTopLeft 2s forwards;
+}
+
+.move-to-position {
+  animation: moveToTopLeft 2s forwards;
+}
+
+@keyframes moveToTopLeft {
+  0% {
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+  }
+  100% {
+    transform: none;
+    top: 80px;
+    left: 77px;
+  }
+}
+
+h1 {
+  text-align: center;
+  font-weight: 700px;
+  font-size: 61px;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.separator {
+  width: 150px;
+  border: 3px solid rgba(41, 171, 226, 1);
+}
+
+.join_image {
+  position: absolute;
+  height: 122px;
+  width: 100px;
+  top: 80px;
+  left: 77px;
+}
+
+.signup_div {
+  font-size: 20px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 48px;
+  right: 98px;
+  padding-bottom: 50px;
+  gap: 32px;
+}
+
+.login_div {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 449px;
+  width: 652px;
+  border-radius: 30px;
+  gap: 32px;
+  border-radius: 30px;
+  padding: 48px 115px 48px 115px;
+  margin-top: 250px;
+}
+
+.email_password {
+  width: 422px;
+  height: 152px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input1 {
+  background-image: url(imgs/mail.png);
+  background-repeat: no-repeat;
+  background-position: right;
+  width: 422px;
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid #2a3647;
+  padding: 12px 21px 12px 21px;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 400;
+  transition: all 0.3s ease;
+}
+
+.input2 {
+  background-image: url(imgs/lock.png);
+  background-repeat: no-repeat;
+  background-position: right;
+  width: 422px;
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid #2a3647;
+  padding: 12px 21px 12px 21px;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 400;
+  transition: all 0.3s ease;
+}
+
+.login_guestlogin {
+  display: flex;
+  padding-top: 24px;
+  gap: 32px;
+}
+
+.blue_button1 {
+  font-weight: 700px;
+  font-size: 21px;
+  background-color: #2a3647;
+  width: 107px;
+  height: 49px;
+  padding: 15px 16px 15px 16px;
+  gap: 10px;
+  border-radius: 8px;
+  color: white;
+  transition: 0.3s;
+}
+
+.dataprotection_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 400px;
+  font-size: 16px;
+  gap: 32px;
+  margin-top: 150px;
+}
+
+a {
+  font-size: 16px;
+  font-weight: 400px;
+  text-decoration: none;
+  color: rgba(168, 168, 168, 1);
+}
+
+a:hover {
+  text-decoration: none;
+  cursor: pointer;
+  color: rgb(41, 171, 226);
+}
+
+.blue_button2 {
+  font-weight: 700px;
+  font-size: 21px;
+  background-color: #2a3647;
+  width: 110px;
+  height: 48px;
+  padding: 15px 24px 15px 24px;
+  gap: 10px;
+  border-radius: 8px;
+  color: white;
+  transition: 0.3s;
+}
+
+.white_button {
+  font-weight: 700px;
+  font-size: 21px;
+  border: 1px solid #2a3647;
+  background-color: white;
+  height: 48px;
+  width: 177px;
+  padding: 15px 24px 15px 24px;
+  gap: 10px;
+  border-radius: 8px;
+  color: #2a3647;
+  transition: 0.3s;
+}
+
+.blue_button1:hover {
+  cursor: pointer;
+  background-color: rgb(41, 171, 226);
+  border-color: rgb(41, 171, 226);
+}
+
+.blue_button2:hover {
+  cursor: pointer;
+  background-color: rgb(41, 171, 226);
+  border-color: rgb(41, 171, 226);
+}
+
+.white_button:hover {
+  cursor: pointer;
+  border-color: rgb(41, 171, 226);
+  color: rgb(41, 171, 226);
+}
+
+.input1:focus,
+.input2:focus {
+  border: 2px solid rgb(41, 171, 226);
+  outline: none;
+}
+
+.input1:not(:focus),
+.input2:not(:focus) {
+  border: 1px solid black;
+}
