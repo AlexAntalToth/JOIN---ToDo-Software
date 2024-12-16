@@ -572,7 +572,7 @@
     position: absolute;
     top: 70%; 
     left: 50%; 
-    transform: translate(-50%, -50%) translateX(200%);
+    transform: translate(-50%, -50%) translateX(0%);
     background-color: rgba(42, 54, 71);
     color: white;
     font-size: 20px;
@@ -585,7 +585,7 @@
 }
 
 .contact-created-overlay.show {
-    transform: translate(-50%, -50%) translateX(0);
+    transform: translate(-50%, -50%) translateX(var(--translate-x-target));
     opacity: 1;
 }
 

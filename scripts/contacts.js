@@ -406,15 +406,15 @@ function createEditContactCard(contact) {
         <div class="add-contact-details">
             <button class="close-modal-edit-contact">x</button>
             <div class="add-contact-container">
-                <input class="add-contact-field" id="contact-name" value="${contact.name}" placeholder="Name">
+                <input class="add-contact-field" id="contact-name2" value="${contact.name}" placeholder="Name">
                 <img class="add-contact-icon" src="../../assets/icons/contact_name.png" alt="Logo Contact Name">
             </div>
             <div class="add-contact-container">
-                <input class="add-contact-field" id="contact-email" value="${contact.email}" placeholder="Email">
+                <input class="add-contact-field" id="contact-email2" value="${contact.email}" placeholder="Email">
                 <img class="add-contact-icon" src="../../assets/icons/contact_email.png" alt="Logo Contact Email">
             </div>
             <div class="add-contact-container">
-                <input class="add-contact-field" id="contact-phone" value="${contact.phone}" placeholder="Phone">
+                <input class="add-contact-field" id="contact-phone2" value="${contact.phone}" placeholder="Phone">
                 <img class="add-contact-icon" src="../../assets/icons/contact_phone.png" alt="Logo Contact Phone">
             </div>
             <div class="edit-contact-buttons">
@@ -539,15 +539,13 @@ function showContactCreatedOverlay() {
 }
 
 async function saveExistingContact(contactId) {
-    let nameField = document.getElementById("contact-name");
-    let emailField = document.getElementById("contact-email");
-    let phoneField = document.getElementById("contact-phone");
-    let colorField = document.getElementById("contact-color"); // Wenn das Farbfeld vorhanden ist
+    let nameField = document.getElementById("contact-name2");
+    let emailField = document.getElementById("contact-email2");
+    let phoneField = document.getElementById("contact-phone2");
 
     let name = nameField.value.trim();
     let email = emailField.value.trim();
     let phone = phoneField.value.trim();
-    let color = colorField ? colorField.value.trim() : ''; // Wenn das Farbfeld leer ist, bleibt es leer, ansonsten wird die Farbe übernommen
 
     if (!name || !email || !phone) {
         alert("Please complete all fields.");
@@ -567,14 +565,12 @@ async function saveExistingContact(contactId) {
 
         let existingContact = await responseGet.json();
 
-        // Hier wird das Feld 'color' zu den bestehenden Kontaktinformationen hinzugefügt, wenn es geändert wurde
         let updatedContact = {
             id: contactId,
             ...existingContact,
             name,
             email,
-            phone,
-            color: color || existingContact.color // Wenn keine Farbe angegeben wurde, bleibt die bestehende erhalten
+            phone
         };
         
         let responsePut = await fetch(`${BASE_URL}/contacts/${contactId}.json`, {
@@ -604,3 +600,25 @@ async function saveExistingContact(contactId) {
         console.error('Error saving contact:', error);
     }
 }
+
+function updateTranslateX() {
+    let overlay = document.querySelector('.contact-created-overlay');
+    let sidebar = document.querySelector('.sidebar');
+    let contactList = document.querySelector('.contacts-list');
+
+    let sidebarWidth = sidebar ? sidebar.offsetWidth : 0;
+    let contactListWidth = contactList ? contactList.offsetWidth : 0;
+
+    let screenWidth = window.innerWidth;
+    // let overlayWidth = overlay.offsetWidth;
+
+    // let translateXValue = (screenWidth / 2) - (sidebarWidth + contactListWidth / 2);
+
+    let translateXValue = sidebarWidth + contactListWidth;
+    console.log(translateXValue);
+    document.documentElement.style.setProperty('--translate-x-target', `${translateXValue}px`);
+    // overlay.style.transform = `translate(-50%, -50%) translateX(${translateXValue}px)`;
+}
+
+window.addEventListener('resize', updateTranslateX);
+updateTranslateX();
