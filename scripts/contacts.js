@@ -11,6 +11,7 @@ async function loadSidebarAndHeader() {
 }
 
 function renderContactsList(contacts) {
+    console.log("Rendering Contacts:", contacts);
     let contactsAreaList = document.querySelector(".contacts-area-list");
     contactsAreaList.innerHTML = "";
 
@@ -583,6 +584,7 @@ async function saveExistingContact(contactId) {
         if (responsePut.ok) {
             closeModalEditContact();
             loadData("/contacts");
+            // renderContactCard(updatedContact);
             renderEditedContactCard(updatedContact);
 
             setTimeout(() => {
