@@ -520,11 +520,13 @@ async function deleteContact(contactId) {
 }
 
 function showContactCreatedOverlay() {
+    let parentContainer = document.querySelector(".contacts-details");
+
     let overlay = document.createElement("div");
     overlay.className = "contact-created-overlay";
     overlay.textContent = "Contact successfully created";
 
-    document.body.appendChild(overlay);
+    parentContainer.appendChild(overlay);
 
     setTimeout(() => {
         overlay.classList.add("show");
@@ -600,25 +602,3 @@ async function saveExistingContact(contactId) {
         console.error('Error saving contact:', error);
     }
 }
-
-function updateTranslateX() {
-    let overlay = document.querySelector('.contact-created-overlay');
-    let sidebar = document.querySelector('.sidebar');
-    let contactList = document.querySelector('.contacts-list');
-
-    let sidebarWidth = sidebar ? sidebar.offsetWidth : 0;
-    let contactListWidth = contactList ? contactList.offsetWidth : 0;
-
-    let screenWidth = window.innerWidth;
-    // let overlayWidth = overlay.offsetWidth;
-
-    // let translateXValue = (screenWidth / 2) - (sidebarWidth + contactListWidth / 2);
-
-    let translateXValue = sidebarWidth + contactListWidth;
-    console.log(translateXValue);
-    document.documentElement.style.setProperty('--translate-x-target', `${translateXValue}px`);
-    // overlay.style.transform = `translate(-50%, -50%) translateX(${translateXValue}px)`;
-}
-
-window.addEventListener('resize', updateTranslateX);
-updateTranslateX();

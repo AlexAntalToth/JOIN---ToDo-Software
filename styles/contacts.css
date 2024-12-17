@@ -568,11 +568,15 @@
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
 }
 
+.contacts-details {
+    position: relative; /* Referenzpunkt für das Overlay */
+}
+
 .contact-created-overlay {
     position: absolute;
     top: 70%; 
-    left: 50%; 
-    transform: translate(-50%, -50%) translateX(0%);
+    left: 50px; 
+    transform: translateY(-50%) translateX(200%);
     background-color: rgba(42, 54, 71);
     color: white;
     font-size: 20px;
@@ -585,7 +589,7 @@
 }
 
 .contact-created-overlay.show {
-    transform: translate(-50%, -50%) translateX(var(--translate-x-target));
+    transform: translateY(-50%) translateX(0);
     opacity: 1;
 }
 
