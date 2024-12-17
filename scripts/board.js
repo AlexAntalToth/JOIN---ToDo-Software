@@ -116,7 +116,7 @@ function openTaskPopup(index){
     <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">
     `;
     document.getElementById("taskContacts").innerHTML = generateContactsHtml(task.assignedTo);
-    
+    document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks);
     document.getElementById("taskPopup").classList.add("show");
 }
 
@@ -155,4 +155,21 @@ function generateTaskBadge(badgeType) {
             ${badgeType}
         </div>
     `;
+}
+
+function generateSubtasksHtml(subtasks) {
+    if (!subtasks) return "";
+
+    let subtasksHtml = "";
+    Object.keys(subtasks).forEach(subtaskKey => {
+        const subtask = subtasks[subtaskKey];
+        subtasksHtml += `
+            <label class="label-container">
+                ${subtask.name}
+                <input type="checkbox" ${subtask.completed ? "checked" : ""} />
+                <span class="checkmark"></span>
+            </label>
+        `;
+    });
+    return subtasksHtml;
 }

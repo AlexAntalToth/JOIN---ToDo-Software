@@ -25,6 +25,7 @@ header h1 {
   display: flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
 }
 
 .header-left {
@@ -58,6 +59,7 @@ header h1 {
   color: #29abe2;
   font-size: 24px;
   font-weight: bold;
+  text-decoration: none;
 }
 
 @media (max-width: 500px) {
