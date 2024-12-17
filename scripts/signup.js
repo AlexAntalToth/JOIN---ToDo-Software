@@ -2,9 +2,9 @@ function renderSignup() {
   let wrapDiv = document.getElementById("wrapDiv");
 
   wrapDiv.innerHTML = `
-    <img class="join_image" src="imgs/Capa 2 (1).png" alt="Join img" />
+    <img class="join_image" src="assets/img/logo_grey.png" alt="Join img" />
     <div class="signup_div">
-      <img onclick="navigateToLogin()" class="arrow-img" src="imgs/arrow-left-line.png" alt="">
+      <img onclick="navigateToLogin()" class="arrow-img" src="assets/icons/arrow-left-line.png" alt="">
       <div class="signup_titel">
         <h1>Sign up</h1>
       </div>

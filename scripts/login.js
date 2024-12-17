@@ -7,7 +7,7 @@ function renderLogin() {
   wrapDivRef.innerHTML = `
    <div id="wrapDiv">
   <div class="animation-wrapper">
-    <img id="joinImage" class="join_image" src="imgs/Capa 2 (1).png" alt="Join img" />
+    <img id="joinImage" class="join_image" src="img/logo_grey.png" alt="Join img" />
   </div>
 
   <div class="signup_div">
