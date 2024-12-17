@@ -569,7 +569,7 @@
 }
 
 .contacts-details {
-    position: relative; /* Referenzpunkt für das Overlay */
+    position: relative;
 }
 
 .contact-created-overlay {
@@ -652,4 +652,27 @@
 
 .delete-contact-button:hover h2 {
     color: rgba(41, 171, 226);
+}
+
+.error-message-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ff4d4d; /* Rot für Fehler */
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0;
+    z-index: 1000;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.error-message-box.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }

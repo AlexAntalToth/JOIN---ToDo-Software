@@ -396,6 +396,7 @@ function createEditContactCard(contact) {
 
     let editContactCard = document.createElement("div");
     editContactCard.classList.add("edit-card-content");
+    editContactCard.setAttribute("data-id", contact.id);
 
     editContactCard.innerHTML = `
         <div class="contacts-card-initials">
@@ -418,7 +419,7 @@ function createEditContactCard(contact) {
                 <img class="add-contact-icon" src="../../assets/icons/contact_phone.png" alt="Logo Contact Phone">
             </div>
             <div class="edit-contact-buttons">
-                <button class="delete-contact-button">
+                <button class="delete-contact-button" data-id="${contact.id}">
                     <h2>Delete</h2>
                 </button>
                 <button class="save-contact-button"><h2>Save</h2>
@@ -431,10 +432,17 @@ function createEditContactCard(contact) {
     let saveButton = editContactCard.querySelector(".save-contact-button");
     saveButton.addEventListener("click", () => saveExistingContact(contact.id));
     let deleteButton = editContactCard.querySelector(".delete-contact-button");
-    deleteButton.addEventListener("click", deleteContact); 
+    deleteButton.addEventListener("click", () => {
+        let contactId = deleteButton.getAttribute("data-id");
+        if (contactId) {
+            deleteContact(contactId);
+            closeModalEditContact();
+        }
+    });
 
     return editContactCard;
 }
+
 function attachCloseListeners() {
     document.querySelectorAll('.close-modal-contact').forEach(button => {
         button.addEventListener('click', closeModalContact);
@@ -454,12 +462,12 @@ async function saveNewContact() {
     let phone = phoneField.value.trim();
 
     if (!name || !email || !phone) {
-        alert("Please complete all fields.");
+        showErrorMessage("Please complete all fields.");
         return;
     }
 
     if (name.split(" ").length < 2) {
-        alert("Please enter your first and last name.");
+        showErrorMessage("Please enter your first and last name.");
         return;
     }
 
@@ -550,12 +558,12 @@ async function saveExistingContact(contactId) {
     let phone = phoneField.value.trim();
 
     if (!name || !email || !phone) {
-        alert("Please complete all fields.");
+        showErrorMessage("Please complete all fields.");
         return;
     }
 
     if (name.split(" ").length < 2) {
-        alert("Please enter your first and last name.");
+        showErrorMessage("Please enter your first and last name.");
         return;
     }
 
@@ -601,4 +609,14 @@ async function saveExistingContact(contactId) {
     } catch (error) {
         console.error('Error saving contact:', error);
     }
+}
+
+function showErrorMessage(message) {
+    let errorBox = document.getElementById("error-message-box");
+    errorBox.textContent = message;
+    errorBox.classList.add("show");
+
+    setTimeout(() => {
+        errorBox.classList.remove("show");
+    }, 2500);
 }
