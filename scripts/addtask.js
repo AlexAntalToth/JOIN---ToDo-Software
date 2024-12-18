@@ -1,5 +1,5 @@
 async function init() {
-    await loadData("/contacts");
+    await loadTasks();
 }
 
 async function loadSidebarAndHeader() {

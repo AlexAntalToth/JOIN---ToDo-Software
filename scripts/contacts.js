@@ -1,5 +1,5 @@
 async function init() {
-    await loadData("/contacts");
+    await loadContacts();
 }
 
 async function loadSidebarAndHeader() {
@@ -494,7 +494,7 @@ async function saveNewContact() {
             let result = await response.json();
             newContact.id = result.name;
             closeModalContact();
-            loadData("/contacts");
+            loadContacts();
 
             showContactCreatedOverlay();
             renderContactCard(newContact);
@@ -524,7 +524,7 @@ async function deleteContact(contactId) {
                 contactCardContainer.innerHTML = "";
                 contactCardContainer.classList.remove("contacts-card-visible");
             }
-            loadData("/contacts");
+            loadContacts();
         }
     } catch (error) {
     }
@@ -592,7 +592,7 @@ async function saveExistingContact(contactId) {
 
         if (responsePut.ok) {
             closeModalEditContact();
-            loadData("/contacts");
+            loadContacts();
             renderEditedContactCard(updatedContact);
 
             setTimeout(() => {

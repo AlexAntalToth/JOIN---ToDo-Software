@@ -1,12 +1,12 @@
 const BASE_URL="https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
 
-async function loadData(path = "") {
+async function loadContacts() {
     try {
-        const response = await fetch(BASE_URL + path + ".json");
-        const data = await response.json();
+        let response = await fetch(BASE_URL + "contacts.json");
+        let data = await response.json();
 
         if (data) {
-            const sortedContacts = Object.entries(data)
+            let sortedContacts = Object.entries(data)
                 .map(([id, contact]) => ({
                     id,
                     ...contact,
@@ -14,7 +14,7 @@ async function loadData(path = "") {
                 }))
                 .sort((a, b) => a.name.localeCompare(b.name));
 
-            for (const contact of sortedContacts) {
+            for (let contact of sortedContacts) {
                 if (!data[contact.id].color) {
                     await saveColorToDatabase(contact.id, contact.color);
                 }
@@ -35,6 +35,16 @@ async function saveColorToDatabase(contactId, color) {
             },
             body: JSON.stringify({ color })
         });
+    } catch (error) {
+    }
+}
+
+async function loadTasks() {
+    try {
+        let response = await fetch(BASE_URL + "tasks.json");
+        let data = await response.json();
+
+        return data;
     } catch (error) {
     }
 }
