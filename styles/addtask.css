@@ -1,0 +1,26 @@
+.addTask-container {
+    display: flex;
+    margin-top: 96px;
+    height: calc(100vh - 96px);
+}
+
+.addTask-container {
+    width: 456px;
+    margin-left: 232px;
+    position: relative;
+}
+
+.addTask-container h1 {
+    font-size: 61px;
+    width: 278px;
+}
+
+.addTask-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.addTask-right {
+    display: flex;
+    flex-direction: column;
+}

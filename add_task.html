@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Task - Kanban Project Management Tool</title>
+    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="stylesheet" href="./styles/addtask.css">
+    <link rel="stylesheet" href="./styles/responsive.css">
+    <link rel="stylesheet" href="./styles/header-tryout.css">
+    <link rel="stylesheet" href="./styles/sidebar-tryout.css">
+</head>
+
+<body onload="init();includeHTML()">
+    <div w3-include-html="./assets/templates/header-tryout.html"></div>
+    <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
+    <div class="container">
+        <main>
+            <section class="addTask-container">
+                <div class="addTask-header">
+                    <h1>Add Task</h1>
+                </div>
+                <div class="addTask-left">
+                    <div class="addTask-title">
+                        <h2>Title</h2>
+                        <p>*</p>
+                    </div>
+                    <div class="addTask-description">
+                        <h2>Description</h2>
+                    </div>
+                    <div class="addTask-assignedTo">
+                        <h2>Assigned to</h2>
+                    </div>
+                </div>
+                <div class="addTask-right">
+                    <div class="addTask-dueDate">
+                        <h2>Due date</h2>
+                        <p>*</p>
+                    </div>
+                    <div class="addTask-prio">
+                        <h2>Prio</h2>
+                    </div>
+                    <div class="addTask-category">
+                        <h2>Assigned to</h2>
+                        <p>*</p>
+                    </div>
+                    <div class="addTask-subtasks">
+                        <h2>Subtasks</h2>
+                    </div>
+                </div>
+                <footer>
+                    <div class="footer-left">
+                        <p>*</p>
+                        <h2>This field is required</h2>
+                    </div>
+                    <div class="footer-right">
+                    </div>
+                </footer>
+            </section>
+        </main>
+    </div>
+    <div id="error-message-box" class="error-message-box"></div>
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/addtask.js"></script>
+    <script src="./scripts/template.js"></script>
+    <script src="./scripts/remoteStorage.js"></script>
+    <script src="./scripts/w3include.js"></script>
+</body>
+
+</html>
