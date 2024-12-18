@@ -282,7 +282,7 @@ body {
   height: 32px;
   background-color: #007bff;
   color: white;
-  font-size: 16px;
+  font-size: 12px;
   border-radius: 50%;
   border: solid 1px white;
   display: flex;
@@ -292,7 +292,6 @@ body {
   text-transform: uppercase;
 }
 
-/* Popup Styling */
 .popup {
   display: flex;
   justify-content: center;
