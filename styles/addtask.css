@@ -1,7 +1,10 @@
 .addTask-container {
     display: flex;
+    flex-direction: column;
     margin-top: 96px;
     height: calc(100vh - 96px);
+    margin-left: 232px;
+    position: relative;
 }
 
 .addTask-container {
@@ -18,9 +21,68 @@
 .addTask-left {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+}
+
+.addTask-vertical-line {
+    width: 1px;
+    height: 424px;
+    background-color: rgba(209, 209, 209, 1);
+    margin: 0 auto;
 }
 
 .addTask-right {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+}
+
+.addTask-content {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding: 50px;
+}
+
+.addTask-content h2 {
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.addTask-content p {
+    color: red;
+}
+
+.addTask-title {
+    display: flex;
+}
+
+.addTask-dueDate {
+    display: flex;
+}
+
+.addTask-category {
+    display: flex;
+}
+
+.addTask-header {
+    padding: 50px;
+}
+
+footer {
+    padding: 50px;
+}
+
+.footer-left {
+    display: flex;
+}
+
+.footer-left p {
+    color: red;
+    font-size: 16px;
+}
+
+.footer-left h2 {
+    font-size: 16px;
+    font-weight: normal;
 }
