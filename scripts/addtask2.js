@@ -11,7 +11,7 @@ async function loadSidebarAndHeader() {
     document.getElementById('header-container').innerHTML = headerContent;
 }
 
-function renderAddTaskCard(task) {
+async function renderAddTaskCard(task) {
     let addTaskContainer = document.querySelector(".addTask-content");
 
     if (!addTaskContainer) {
@@ -20,11 +20,22 @@ function renderAddTaskCard(task) {
 
     addTaskContainer.innerHTML = "";
 
-    let addTaskCard = createAddTaskCard(task || { title: "", description: "", dueDate: "", priority: "" });
-    addTaskContainer.appendChild(addTaskCard);
+    let addTaskCardHTML = await generateAddTaskCardHTML(task || { title: "", description: "", dueDate: "", priority: "" });
+    addTaskContainer.innerHTML = addTaskCardHTML;
+
+    let saveButton = document.querySelector(".save-task-button");
+    saveButton.addEventListener("click", saveNewTask);
+
+    let cancelButton = document.querySelector(".cancel-task-button");
+    cancelButton.addEventListener("click", clearTaskForm);
 }
 
-function generateAddTaskCardHTML(task) {
+async function generateAddTaskCardHTML(task) {
+    let contacts = await loadContacts();
+    let contactOptions = contacts
+        .map(contact => `<option value="${contact.id}">${contact.name}</option>`)
+        .join("");
+
     return `
         <div class="addTask-left">
             <div class="addTask-title">
@@ -38,6 +49,15 @@ function generateAddTaskCardHTML(task) {
                 <h2>Description</h2>
                 <textarea class="addTask-description-field" id="task-description" placeholder="Enter a description">${task.description}</textarea>
             </div>
+            <div class="addTask-assignedTo">
+                <h2>Assigned to</h2>
+                <select class="addTask-assignedTo-field" id="task-assignedTo">
+                    <option value="" disabled selected>Select contacts to assign</option>
+                    ${contactOptions}
+                </select>
+            </div>
+        </div>
+        <div class="addTask-vertical-line">
         </div>
         <div class="addTask-right">
             <div class="addTask-dueDate">

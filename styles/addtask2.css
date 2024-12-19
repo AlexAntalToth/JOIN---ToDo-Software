@@ -100,7 +100,21 @@
     font-family: 'inter';
 }
 
-
+.addTask-assignedTo-field {
+    width: 440px;
+    height: 48px;
+    font-size: 20px;
+    border-width: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding-top: 12px;
+    padding-right: 16px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+}
 
 .addTask-dueDate {
     display: flex;
