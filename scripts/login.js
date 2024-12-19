@@ -1,13 +1,11 @@
-
+                    
 function renderLogin() {
   let wrapDivRef = document.getElementById("wrapDiv");
-
-
 
   wrapDivRef.innerHTML = `
    <div id="wrapDiv">
   <div class="animation-wrapper">
-    <img id="joinImage" class="join_image" src="img/logo_grey.png" alt="Join img" />
+    <img id="joinImage" class="join_image" <img src="assets/img/logo_grey.png" alt="join_img">
   </div>
 
   <div class="signup_div">
@@ -15,7 +13,7 @@ function renderLogin() {
     <button onclick="navigateToSignup()" class="blue_button1">Sign up</button>
   </div>
 
-  <div class="content ">
+  <div class="content">
     <div class="login_div">
       <div class="login">
         <h1>Log in</h1>
@@ -23,8 +21,8 @@ function renderLogin() {
       </div>
 
       <div class="email_password">
-        <input class="input1" placeholder="Email" type="text" />
-        <input class="input2" placeholder="Password" type="password" />
+        <input class="input1" placeholder="Email" type="text"/>
+        <input class="input2" placeholder="Password" type="password"/>
       </div>
 
       <div class="login_guestlogin">
@@ -43,24 +41,22 @@ function renderLogin() {
   startAnimation();
 }
 
+
+
 function startAnimation() {
   const joinImage = document.getElementById("joinImage");
   const content = document.querySelector(".content");
 
-  
   joinImage.classList.add("move-to-position");
 
- 
   joinImage.addEventListener("animationend", () => {
     setTimeout(() => {
       if (content) {
-        content.classList.add("visible"); 
+        content.classList.add("visible");
       }
-    }, 200); 
+    }, 200);
   });
 }
-
-
 
 function navigateToSignup() {
   window.location.href = "signup.html";
