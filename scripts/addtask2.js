@@ -61,8 +61,14 @@ async function generateAddTaskCardHTML(task) {
         </div>
         <div class="addTask-right">
             <div class="addTask-dueDate">
-                <h2>Due Date</h2>
-                <input class="addTask-input" id="task-dueDate" type="date" value="${task.dueDate}">
+                <div class="addTask-dueDate-header">
+                    <h2>Due Date</h2>
+                    <p>*</p>
+                </div>
+                <div class="addTask-dueDate-field">
+                    <input id="task-dueDate" type="text" value="${task.dueDate}" placeholder="dd/mm/yyyy">
+                    <img class="addTask-date-icon" src="../../assets/icons/addTask_date.png" alt="Logo Due Date">
+                </div>
             </div>
             <div class="addTask-prio">
                 <h2>Priority</h2>
@@ -95,12 +101,10 @@ function createAddTaskCard(task) {
     return addTaskCard;
 }
 
-// Hilfsfunktion: Formulardaten löschen
 function clearTaskForm() {
     document.querySelector(".addTask-content").innerHTML = "";
 }
 
-// Hilfsfunktion: Task speichern
 async function saveNewTask() {
     let title = document.getElementById("task-title").value;
     let description = document.getElementById("task-description").value;
@@ -119,7 +123,7 @@ async function saveNewTask() {
         });
 
         alert("Task saved successfully!");
-        clearTaskForm(); // Formular leeren
+        clearTaskForm();
     } catch (error) {
         console.error("Error saving task:", error);
         alert("Failed to save task.");
