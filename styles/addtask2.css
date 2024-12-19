@@ -84,7 +84,7 @@
     width: 440px;
     height: 120px;
     font-size: 20px;
-    line-height:24px;
+    line-height: 24px;
     border-width: 0;
     position: relative;
     display: flex;
@@ -111,9 +111,31 @@
     border-radius: 10px;
     border: 1px solid rgba(209, 209, 209, 1);
     padding-top: 12px;
-    padding-right: 16px;
+    padding-right: 40px;
     padding-bottom: 12px;
     padding-left: 16px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.addTask-assignedTo-container {
+    position: relative;
+}
+
+.addTask-assignedTo-icon {
+    position: absolute;
+    width: 7.21px;
+    height: 4.6px;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    cursor: pointer;
+    z-index: 1;
+}
+
+.addTask-assignedTo-field:focus+.addTask-assignedTo-icon,
+.addTask-assignedTo-field.open+.addTask-assignedTo-icon {
+    transform: translateY(-50%) rotate(180deg);
 }
 
 .addTask-dueDate {
