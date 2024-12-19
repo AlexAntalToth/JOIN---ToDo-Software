@@ -1,13 +1,13 @@
 body {
   margin: 0;
-  font-family: myFont;
+  font-family: inter;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 @font-face {
-  font-family: myFont;
-  src: url(assets/font/Inter.ttf);
+  font-family: inter;
+  src: url(../assets/fonts/inter.ttf);
 }
 
 .join_image {

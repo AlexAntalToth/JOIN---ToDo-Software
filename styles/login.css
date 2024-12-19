@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: myFont;
+  font-family: inter;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -8,9 +8,10 @@ body {
 }
 
 @font-face {
-  font-family: myFont;
-  src: url(assets/font/Inter.ttf);
+  font-family: inter;
+  src: url(../assets/fonts/inter.ttf);
 }
+
 
 
 .content {
@@ -29,7 +30,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .join_image {
