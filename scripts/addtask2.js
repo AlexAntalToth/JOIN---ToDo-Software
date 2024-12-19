@@ -51,10 +51,13 @@ async function generateAddTaskCardHTML(task) {
             </div>
             <div class="addTask-assignedTo">
                 <h2>Assigned to</h2>
-                <select class="addTask-assignedTo-field" id="task-assignedTo">
+                <div class="addTask-assignedTo-container">
+                    <select class="addTask-assignedTo-field" id="task-assignedTo">
                     <option value="" disabled selected>Select contacts to assign</option>
                     ${contactOptions}
-                </select>
+                    </select>
+                    <img class="addTask-assignedTo-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Logo Arrow Down">
+                </div>
             </div>
         </div>
         <div class="addTask-vertical-line">
