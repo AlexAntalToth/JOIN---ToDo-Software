@@ -80,6 +80,28 @@
     margin-bottom: 12px;
 }
 
+.addTask-description-field {
+    width: 440px;
+    height: 120px;
+    font-size: 20px;
+    line-height:24px;
+    border-width: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding-top: 18px;
+    padding-right: 16px;
+    padding-bottom: 18px;
+    padding-left: 16px;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: 'inter';
+}
+
+
+
 .addTask-dueDate {
     display: flex;
 }

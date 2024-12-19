@@ -36,7 +36,7 @@ function generateAddTaskCardHTML(task) {
             </div>
             <div class="addTask-description">
                 <h2>Description</h2>
-                <textarea class="addTask-input" id="task-description" placeholder="Enter a description">${task.description}</textarea>
+                <textarea class="addTask-description-field" id="task-description" placeholder="Enter a description">${task.description}</textarea>
             </div>
         </div>
         <div class="addTask-right">
