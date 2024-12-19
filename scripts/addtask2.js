@@ -74,7 +74,9 @@ async function generateAddTaskCardHTML(task) {
                 </div>
             </div>
             <div class="addTask-prio">
-                <h2>Prio</h2>
+                <div class="addTask-prio-header">
+                    <h2>Prio</h2>
+                </div>
                 <div class="addTask-prio-field" id="task-priority" ${task.priority}>
                     <button class= "addTask-prio-button"
                         <h2>Urgent</h2>
@@ -99,6 +101,20 @@ async function generateAddTaskCardHTML(task) {
                         </button>
                 </div>
             </div>
+            <div class="addTask-category">
+                <div class="addTask-category-header">
+                    <h2>Category</h2>
+                    <p>*</p>
+                </div>
+                <div class="addTask-category-container">
+                    <select class="addTask-category-field" id="task-category">
+                    <option value="" disabled selected>Select task category</option>
+                    ${task.category}
+                    </select>
+                    <img class="addTask-category-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Logo Arrow Down">
+                </div>
+            </div>
+
         </div>
         <div class="addTask-buttons">
             <button class="cancel-task-button">Cancel</button>

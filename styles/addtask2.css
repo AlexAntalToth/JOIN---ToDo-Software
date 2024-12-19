@@ -21,7 +21,7 @@
 .addTask-left {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 16px;
 }
 
 .addTask-vertical-line {
@@ -34,7 +34,7 @@
 .addTask-right {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 16px;
 }
 
 .addTask-content {
@@ -138,8 +138,8 @@
     transform: translateY(-50%) rotate(180deg);
 }
 
-.addtask-prio {
-    gap: 8px;
+.addTask-prio-header {
+    padding-bottom: 8px;
 }
 
 .addTask-prio-field {
@@ -174,6 +174,7 @@
 
 .addTask-dueDate-header {
     display: flex;
+    padding-bottom: 8px;
 }
 
 .addTask-dueDate-field {
@@ -218,6 +219,50 @@
 
 .addTask-category {
     display: flex;
+    flex-direction: column;
+}
+
+.addTask-category-header {
+    display: flex;
+    padding-bottom: 8px;
+}
+
+.addTask-category-container {
+    position: relative;
+}
+
+.addTask-category-field {
+    width: 440px;
+    height: 48px;
+    font-size: 20px;
+    border-width: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding-top: 12px;
+    padding-right: 40px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.addTask-category-icon {
+    position: absolute;
+    width: 7.21px;
+    height: 4.6px;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    cursor: pointer;
+    z-index: 1;
+}
+
+.addTask-category-field:focus+.addTask-category-icon,
+.addTask-category-field.open+.addTask-category-icon {
+    transform: translateY(-50%) rotate(180deg);
 }
 
 .addTask-header {
