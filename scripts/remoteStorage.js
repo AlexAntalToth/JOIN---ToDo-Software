@@ -21,8 +21,10 @@ async function loadContacts() {
             }
 
             renderContactsList(sortedContacts);
+            return [];
         }
     } catch (error) {
+        return [];
     }
 }
 
