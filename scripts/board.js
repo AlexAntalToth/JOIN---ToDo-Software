@@ -1,6 +1,5 @@
 let tasks = [];
 let contacts = {};
-const BASE_URL="https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
 
 async function onloadFunc(){
     contacts = await getData("/contacts");
@@ -19,11 +18,6 @@ async function onloadFunc(){
     }
     checkEmptyCategories();
 };
-
-async function getData(path) {
-    const response = await fetch(BASE_URL + path + ".json");
-    return data = await response.json();
-}
 
 function checkEmptyCategories() {
     const categories = ["toDo", "inProgress", "awaitFeedback", "done"];
