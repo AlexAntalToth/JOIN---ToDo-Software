@@ -1,12 +1,81 @@
-let ToDoCount = 1;
-let doneCount = 1;
-let urgencyCount = 1;
-let taskCount = 4;
-let progressCount = 2;
-let feedbackCount = 2;
+let ToDoCount = 0;
+let doneCount = 0;
+let urgencyCount = 0;
+let taskCount = 0;
+let progressCount = 0;
+let feedbackCount = 0;
 let currentUser = "Sofia Müller";
-let greeting = getGreeting();
-let deadlineDate = "October 16, 2022"
+let greeting = getGreeting(currentUser);
+let dueDate = "";
+let tasks = [];
+
+async function onloadFunc(){
+    let userResponse = await getData("/tasks");
+    let UserKeysArray = Object.keys(userResponse);
+    for (let i = 0; i < UserKeysArray.length; i++) {
+        const key = UserKeysArray[i];
+        tasks.push({
+            id: key,
+            task: userResponse[key],
+        });
+    }
+    dueDate = getUrgentDueDate(tasks);
+    updateCount(tasks);
+    renderHTML();
+    renderGreeting();
+}
+
+function getToday(){
+    let year = new Date().getFullYear();
+    let month = String(new Date().getMonth() + 1).padStart(2, '0');
+    let day = String(new Date().getDate()).padStart(2, '0');
+    return today = `${year}-${month}-${day}`; 
+}
+
+function calculateDateDifference(dueDate, today) {
+    return (new Date(dueDate) - today) / (1000 * 60 * 60 * 24);
+}
+
+function findClosestDueDate(tasks, today) {
+    let closestDueDate = null;
+    let smallestDifference = Infinity;
+    for (let i = 0; i < tasks.length; i++) {
+        const task = tasks[i].task;
+        const dueDate = task.dueDate;
+        if (dueDate) {
+            const difference = calculateDateDifference(dueDate, today);
+            if (difference < smallestDifference) {
+                smallestDifference = difference;
+                closestDueDate = dueDate;
+            }
+        }
+    }
+    return closestDueDate || "No Deadlines";
+}
+
+function getUrgentDueDate(tasks) {
+    const today = new Date(getToday());
+    return findClosestDueDate(tasks, today);
+}
+
+function updateCount(tasks) {
+    tasks.forEach(taskObj => {
+        const task = taskObj.task;
+        taskCount++;
+        if (task.category === "To-Do") {
+            ToDoCount++;
+        } else if (task.category === "Done") {
+            doneCount++;
+        } else if (task.category === "In Progress") {
+            progressCount++;
+        } else if (task.category === "Await Feedback") {
+            feedbackCount++;
+        }
+        if (task.priority === "high") {
+            urgencyCount++;
+        }
+    });
+}
 
 function renderHTML(){
     let content = document.getElementById('content');
@@ -42,7 +111,7 @@ function generateSummaryHTML(){
                     </div>
                     <div class="separator-grey"></div>
                     <div class="deadline">
-                        <span class="date">${deadlineDate}</span>
+                        <span class="date">${dueDate}</span>
                         <p>Upcoming Deadline</p>
                     </div>
                 </div>
@@ -62,19 +131,27 @@ function generateSummaryHTML(){
                 </div>
             </div>
             <div class="greet">
-                <p>${greeting}</p>
-                <span>${currentUser}</span>
             </div>
     `
 }
 
-function getGreeting(){
+function getGreeting(currentUser) {
     const hour = new Date().getHours();
+    let greeting;
     if (hour < 12) {
-        return "Good Morning,";
+        greeting = "Good Morning";
     } else if (hour < 18) {
-        return "Good Afternoon,";
+        greeting = "Good Afternoon";
     } else {
-        return "Good Evening,";
+        greeting = "Good Evening";
     }
+    return currentUser !== "guest" ? `${greeting},` : greeting;
+}
+
+function renderGreeting() {
+    const greetingElement = document.querySelector('.greet');
+    greetingElement.innerHTML = `
+        <p>${getGreeting(currentUser)}</p>
+        ${currentUser !== "guest" ? `<span>${currentUser}</span>` : ""}
+    `;
 }

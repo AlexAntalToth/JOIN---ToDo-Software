@@ -1,11 +1,8 @@
+const BASE_URL="https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
 
 function getCurrentPage(){ 
     let currentPage = window.location.pathname.replace(".html","").replace("/","");
-    console.log(currentPage);
-    
     let activeCategory = document.querySelector(`.sidebar-categories[data-category="${currentPage}"]`);
-    console.log(activeCategory);
-    
     if (activeCategory) {
         activeCategory.classList.add("active-category");
     }
@@ -23,3 +20,8 @@ function waitForSidebar() {
 document.addEventListener("DOMContentLoaded", () => {
     waitForSidebar();
 });
+
+async function getData(path) {
+    const response = await fetch(BASE_URL + path + ".json");
+    return data = await response.json();
+}
