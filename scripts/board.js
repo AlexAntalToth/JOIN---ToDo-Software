@@ -1,5 +1,6 @@
 let tasks = [];
 let contacts = {};
+let currentDraggedElement;
 
 async function onloadFunc(){
     contacts = await getData("/contacts");
@@ -20,7 +21,7 @@ async function onloadFunc(){
 };
 
 function checkEmptyCategories() {
-    const categories = ["toDo", "inProgress", "awaitFeedback", "done"];
+    const categories = ["To-Do", "In Progress", "Await Feedback", "Done"];
     categories.forEach(categoryId => {
         const categoryElement = document.getElementById(categoryId);
         const taskList = categoryElement.querySelector(".task-list");
@@ -33,9 +34,9 @@ function checkEmptyCategories() {
 function emptyCategoryHTML(categoryId) {
     return `
         <div class="no-tasks">
-            No tasks ${categoryId === "toDo" ? "to do" : 
-                        categoryId === "inProgress" ? "in progress" : 
-                        categoryId === "awaitFeedback" ? "await feedback" : 
+            No tasks ${categoryId === "To-Do" ? "to do" : 
+                        categoryId === "In Progress" ? "in progress" : 
+                        categoryId === "Await Feedback" ? "await feedback" : 
                         "done"}.
         </div>
     `
@@ -51,24 +52,12 @@ function insertTaskIntoDOM(task, index){
 }
 
 function getCatContainerId(task){
-    let catContainerId;
-
-    if (task.category === "To-Do") {
-        catContainerId = "toDo";
-    } else if (task.category === "In Progress") {
-        catContainerId = "inProgress";
-    } else if (task.category === "Await Feedback") {
-        catContainerId = "awaitFeedback";
-    } else if (task.category === "Done") {
-        catContainerId = "done";
-    }
-    const catContainer = document.getElementById(catContainerId);
-    return catContainer;
+    return document.getElementById(task.category);
 }
 
 function generateTaskHtml(task, index, contacts){
     return `
-        <div onclick="openTaskPopup(${index})" class="task">
+        <div onclick="openTaskPopup(${index})" class="task" draggable="true" ondragstart="startDragging(${index})">
              ${generateTaskBadge(task.badge)}
             <div class="task-title">${task.title}</div>
             <div class="task-desc">${task.description}</div>
@@ -177,4 +166,39 @@ function generateSubtasksHtml(subtasks) {
         `;
     });
     return subtasksHtml;
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function startDragging(id){
+    currentDraggedElement = id;
+}
+
+function moveTo(category){
+    tasks[currentDraggedElement].task['category'] = category;
+    removeHighlight(category);
+    document.querySelectorAll(".task-list").forEach(taskList => taskList.innerHTML = "");
+    tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
+    checkEmptyCategories();
+}
+
+function highlight(categoryId) {
+    let taskList = document.getElementById(categoryId).querySelector(".task-list");
+    let existingHighlight = taskList.querySelector(".highlight");
+    if (existingHighlight) {
+        existingHighlight.remove();
+    }
+    const highlightElement = document.createElement("div");
+    highlightElement.classList.add("highlight");
+    taskList.appendChild(highlightElement);
+}
+
+function removeHighlight(categoryId) {
+    const taskList = document.getElementById(categoryId).querySelector(".task-list");
+    const highlightElement = taskList.querySelector(".highlight");
+    if (highlightElement) {
+        highlightElement.remove();
+    }
 }

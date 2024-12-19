@@ -74,7 +74,8 @@
         <div class="board">
             <div class="row">
                 <h2>To Do <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
-                <div id="toDo">
+                <div id="To-Do" ondrop="moveTo('To-Do')" ondragleave="removeHighlight('To-Do')"
+                    ondragover="allowDrop(event); highlight('To-Do')">
                     <div class="task-list">
                     </div>
                 </div>
@@ -82,20 +83,23 @@
             <div class="row">
                 <h2>In Progress <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button>
                 </h2>
-                <div id="inProgress">
+                <div id="In Progress" ondrop="moveTo('In Progress')" ondragleave="removeHighlight('In Progress')"
+                    ondragover="allowDrop(event); highlight('In Progress')">
                     <div class="task-list"></div>
                 </div>
             </div>
             <div class="row">
                 <h2>Await Feedback <button class="add-task-btn"><img src="./assets/icons/plus.svg"
                             alt="Add Task"></button></h2>
-                <div id="awaitFeedback">
+                <div id="Await Feedback" ondrop="moveTo('Await Feedback')" ondragleave="removeHighlight('Await Feedback')"
+                    ondragover="allowDrop(event); highlight('Await Feedback')">
                     <div class="task-list"></div>
                 </div>
             </div>
             <div class="row">
                 <h2>Done <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
-                <div id="done">
+                <div id="Done" ondrop="moveTo('Done')" ondragleave="removeHighlight('Done')"
+                    ondragover="allowDrop(event); highlight('Done')">
                     <div class="task-list"></div>
                 </div>
             </div>
