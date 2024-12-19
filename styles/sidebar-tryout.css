@@ -35,6 +35,10 @@
   background-color: #2a3d59;
 }
 
+.sidebar-categories.active-category {
+  background-color: #091931;
+}
+
 .sidebar nav {
   width: 100%;
 }
