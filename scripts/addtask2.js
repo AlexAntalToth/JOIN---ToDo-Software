@@ -18,7 +18,7 @@ function renderAddTaskCard(task) {
         return;
     }
 
-    addTaskContainer.innerHTML = ""; // Löscht vorhandene Inhalte
+    addTaskContainer.innerHTML = "";
 
     let addTaskCard = createAddTaskCard(task || { title: "", description: "", dueDate: "", priority: "" });
     addTaskContainer.appendChild(addTaskCard);
@@ -28,8 +28,11 @@ function generateAddTaskCardHTML(task) {
     return `
         <div class="addTask-left">
             <div class="addTask-title">
-                <h2>Title</h2>
-                <input class="addTask-input" id="task-title" value="${task.title}" placeholder="Enter a title">
+                <div class="addTask-title-header">
+                    <h2>Title</h2>
+                    <p>*</p>
+                </div>
+                <input class="addTask-title-field" id="task-title" value="${task.title}" placeholder="Enter a title">
             </div>
             <div class="addTask-description">
                 <h2>Description</h2>
