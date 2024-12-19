@@ -44,7 +44,18 @@ async function loadTasks() {
         let response = await fetch(BASE_URL + "tasks.json");
         let data = await response.json();
 
-        return data;
+        if (data) {
+            let tasksWithIds = Object.entries(data).map(([id, task]) => ({
+                id,
+                ...task
+            }));
+
+            return tasksWithIds;
+        }
+
+        return [];
     } catch (error) {
+        console.error("Fehler beim Laden der Tasks:", error);
+        return [];
     }
 }
