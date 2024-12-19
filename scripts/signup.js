@@ -1,7 +1,6 @@
 let contacts = [
-  {'name':'alex','email':'email@form.de' ,'password': 'testcontact123'}
+  { name: "alex", email: "email@form.de", password: "testcontact123" },
 ];
-   
 
 function renderSignup() {
   let wrapDiv = document.getElementById("wrapDiv");
@@ -15,7 +14,7 @@ function renderSignup() {
       </div>
       <div class="separator"></div>
   
-      <form onsubmit="addUser()  return false;" >
+      <form onsubmit="addUser();  return false;" >
       <div class="inputfields_div">
         <input class="input1" id="name"  required placeholder="Name" type="name" />
         <input class="input2"  id="email"  required placeholder="Email" type="email" />
@@ -42,14 +41,22 @@ function renderSignup() {
 console.log(contacts);
 
 function addUser() {
-  let name= document.getElementById('name')
-  let email = document.getElementById('email')   
-  let password = document.getElementById('password')   
-  contacts.push({name: name.value, email: email.value, password: password.value})                                                                                                                    
+  let name = document.getElementById('name');
+  let email = document.getElementById('email');
+  let password = document.getElementById('password');
+
+  contacts.push({
+    name: name.value,
+    email: email.value,
+    password: password.value,
+  });
+
+  window.location.href = 'index.html?msg=Die Registrierung war erfolgreich';
+
 }
 
-function navigateToLogin(){
- window.location.href='index.html'
+function navigateToLogin() {
+  window.location.href = 'index.html';
 }
 
-window.onload = renderSignup;
+

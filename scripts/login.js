@@ -1,4 +1,7 @@
-                    
+let signedUpContacts = [
+  { name: "alex", email: "email@form.de", password: "testcontact123" },
+];
+
 function renderLogin() {
   let wrapDivRef = document.getElementById("wrapDiv");
 
@@ -20,9 +23,11 @@ function renderLogin() {
         <div class="separator"></div>
       </div>
 
-      <div class="email_password">
-        <input class="input1" placeholder="Email" type="text"/>
-        <input class="input2" placeholder="Password" type="password"/>
+    <form onsubmit="login(); return false;">
+
+       <div class="email_password">
+      <input class="input1" id="email"   required placeholder="Email" type="email"/>
+      <input class="input2" id="password" required placeholder="Password" type="password"/>
       </div>
 
       <div class="login_guestlogin">
@@ -30,6 +35,8 @@ function renderLogin() {
         <button class="white_button">Guest Log in</button>
       </div>
     </div>
+    </form>
+
     <div class="dataprotection_div">
       <a href="">Privacy Policy</a>
       <a href="">Legal Notice</a>
@@ -40,8 +47,6 @@ function renderLogin() {
 
   startAnimation();
 }
-
-
 
 function startAnimation() {
   const joinImage = document.getElementById("joinImage");
@@ -57,6 +62,32 @@ function startAnimation() {
     }, 200);
   });
 }
+
+function login() {
+  let email = document.getElementById('email');
+  let password = document.getElementById('password');
+  let signedUpContacts = signedUpContacts.find(
+    c => c.email == email.value && c.password == password.value
+  );
+  console.log(contacts);
+  if (contacts) {
+    console.log('User gefunden:', signedUpContact.name);
+  }else{
+    console.log('Registriere dich');
+    
+  }
+  
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const msg = urlParams.get('msg');
+if (msg) {
+  msgBox.innerHTML = msg;
+}
+else{
+  //display:none
+}
+
 
 function navigateToSignup() {
   window.location.href = "signup.html";
