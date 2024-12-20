@@ -47,6 +47,7 @@
 .addTask-content h2 {
     font-size: 20px;
     font-weight: normal;
+    padding-bottom: 8px;
 }
 
 .addTask-content p {
@@ -60,6 +61,7 @@
 
 .addTask-title-header {
     display: flex;
+    padding-bottom: 8px;
 }
 
 .addTask-title-field {
@@ -78,6 +80,12 @@
     padding-left: 21px;
     gap: 4px;
     margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.addTask-description-header {
+    /* display: flex; */
+    padding-bottom: 8px;
 }
 
 .addTask-description-field {
@@ -98,6 +106,7 @@
     gap: 10px;
     margin-bottom: 12px;
     font-family: 'inter';
+    cursor: pointer;
 }
 
 .addTask-assignedTo-field {
@@ -118,6 +127,10 @@
     cursor: pointer;
 }
 
+.addTask-assignedTo-field:hover {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 .addTask-assignedTo-container {
     position: relative;
 }
@@ -136,6 +149,10 @@
 .addTask-assignedTo-field:focus+.addTask-assignedTo-icon,
 .addTask-assignedTo-field.open+.addTask-assignedTo-icon {
     transform: translateY(-50%) rotate(180deg);
+}
+
+.addTask-prio {
+    margin-bottom: 12px;
 }
 
 .addTask-prio-header {
@@ -205,6 +222,7 @@
     outline: none;
     padding-right: 40px;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 .addTask-date-icon {
@@ -220,6 +238,7 @@
 .addTask-category {
     display: flex;
     flex-direction: column;
+    margin-bottom: 12px;
 }
 
 .addTask-category-header {
@@ -249,6 +268,10 @@
     cursor: pointer;
 }
 
+.addTask-category-field:hover {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 .addTask-category-icon {
     position: absolute;
     width: 7.21px;
@@ -263,6 +286,46 @@
 .addTask-category-field:focus+.addTask-category-icon,
 .addTask-category-field.open+.addTask-category-icon {
     transform: translateY(-50%) rotate(180deg);
+}
+
+.addTask-subtasks {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 8px;
+}
+
+.addTask-subtasks-field {
+    position: relative;
+    width: 440px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(209, 209, 209, 1);
+    border-radius: 10px;
+    padding-left: 16px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.addTask-subtasks-content {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    height: 100%;
+    padding-right: 48px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.addTask-subtasks-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    fill: #2A3647;
+    transition: fill 0.3s;
 }
 
 .addTask-header {

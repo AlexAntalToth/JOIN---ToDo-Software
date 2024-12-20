@@ -50,7 +50,7 @@ async function generateAddTaskCardHTML(task) {
                 <textarea class="addTask-description-field" id="task-description" placeholder="Enter a description">${task.description}</textarea>
             </div>
             <div class="addTask-assignedTo">
-                <h2>Assigned to</h2>
+                <h2 class="addTask-assignedTo-header">Assigned to</h2>
                 <div class="addTask-assignedTo-container">
                     <select class="addTask-assignedTo-field" id="task-assignedTo">
                     <option value="" disabled selected>Select contacts to assign</option>
@@ -109,16 +109,25 @@ async function generateAddTaskCardHTML(task) {
                 <div class="addTask-category-container">
                     <select class="addTask-category-field" id="task-category">
                     <option value="" disabled selected>Select task category</option>
-                    ${task.category}
+                    ${task.badge}
                     </select>
                     <img class="addTask-category-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Logo Arrow Down">
                 </div>
             </div>
-
-        </div>
-        <div class="addTask-buttons">
-            <button class="cancel-task-button">Cancel</button>
-            <button class="save-task-button">Save Task</button>
+            <div class="addTask-subtasks">
+                <h2>Subtasks</h2>
+                <div class="addTask-subtasks-field">
+                    <input class="addTask-subtasks-content" id="task-subtasks" value="${task.title}" placeholder="Add new subtask">
+                    <svg class="addTask-subtasks-icon" width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <mask id="mask0_75601_15213" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="24">
+                        <rect x="0.248535" width="24" height="24" fill="#D9D9D9"/>
+                        </mask>
+                        <g mask="url(#mask0_75601_15213)">
+                        <path d="M11.2485 13H6.24854C5.9652 13 5.7277 12.9042 5.53604 12.7125C5.34437 12.5208 5.24854 12.2833 5.24854 12C5.24854 11.7167 5.34437 11.4792 5.53604 11.2875C5.7277 11.0958 5.9652 11 6.24854 11H11.2485V6C11.2485 5.71667 11.3444 5.47917 11.536 5.2875C11.7277 5.09583 11.9652 5 12.2485 5C12.5319 5 12.7694 5.09583 12.961 5.2875C13.1527 5.47917 13.2485 5.71667 13.2485 6V11H18.2485C18.5319 11 18.7694 11.0958 18.961 11.2875C19.1527 11.4792 19.2485 11.7167 19.2485 12C19.2485 12.2833 19.1527 12.5208 18.961 12.7125C18.7694 12.9042 18.5319 13 18.2485 13H13.2485V18C13.2485 18.2833 13.1527 18.5208 12.961 18.7125C12.7694 18.9042 12.5319 19 12.2485 19C11.9652 19 11.7277 18.9042 11.536 18.7125C11.3444 18.5208 11.2485 18.2833 11.2485 18V13Z" fill="#2A3647"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
         </div>
     `;
 }
