@@ -57,17 +57,18 @@ function getCatContainerId(task){
 }
 
 function generateTaskHtml(task, index, contacts){
+    let { completed, total } = calculateSubtaskProgress(task.subtasks);
     return `
         <div class="task" draggable="true" ondragstart="startDragging(${index})">
              ${generateTaskBadge(task.badge)}
             <div class="task-title" onclick="openTaskPopup(${index})">${task.title}</div>
             <div class="task-desc">${task.description}</div>
             <div class="subtask-bar">
-                ${task.subtasks ? `
+                 ${task.subtasks && total > 0 ? `
                     <div class="pb-bg">
-                        <div class="pb-blue" style="width: ${(task.subtasks.completed / task.subtasks.total) * 100}%;"></div>
+                        <div class="pb-blue" style="width: ${(completed / total) * 100}%;"></div>
                     </div>
-                    <span>${task.subtasks.completed}/${task.subtasks.total} Subtasks</span>
+                    <span>${completed}/${total} Subtasks</span>
                 ` : ""}
             </div>
             <div class="task-footer">
@@ -94,6 +95,14 @@ function generateTaskHtml(task, index, contacts){
             </div>
         </div>
     `;
+}
+
+function calculateSubtaskProgress(subtasks) {
+    let subtaskArray = Object.values(subtasks);
+    if (!subtaskArray || subtaskArray.length === 0) return { completed: 0, total: 0 };
+    const total = subtaskArray.length;
+    const completed = subtaskArray.filter(subtask => subtask.completed === true).length;
+    return { completed, total };
 }
 
 function openTaskPopup(index){
@@ -155,18 +164,13 @@ function generateTaskBadge(badgeType) {
 function generateSubtasksHtml(subtasks) {
     if (!subtasks) return "";
 
-    let subtasksHtml = "";
-    Object.keys(subtasks).forEach(subtaskKey => {
-        const subtask = subtasks[subtaskKey];
-        subtasksHtml += `
-            <label class="label-container">
-                ${subtask.name}
-                <input type="checkbox" ${subtask.completed ? "checked" : ""} />
-                <span class="checkmark"></span>
-            </label>
-        `;
-    });
-    return subtasksHtml;
+    return Object.values(subtasks).map(subtask => `
+        <label class="label-container">
+            ${subtask.name}
+            <input type="checkbox" ${subtask.completed ? "checked" : ""} />
+            <span class="checkmark"></span>
+        </label>
+    `).join("");
 }
 
 function allowDrop(ev) {
@@ -243,30 +247,9 @@ function onSearchInput() {
     }, 500);
 }
 
-function onSearchClick() {
-    const searchInput = document.getElementById("search-input");
-    searchTerm = searchInput.value.trim().toLowerCase();
-    
-    if (searchTerm.length < 3) {
-        showSearchWarning();
-    } else {
-        findTask();
-    }
-}
-
-function showSearchWarning() {
-    const warningMessage = document.getElementById("search-warning");
-    if (warningMessage) {
-        warningMessage.innerHTML = "Please enter at least 3 characters to search.";
-        warningMessage.style.display = "block";
-    }
-}
-
 function clearTaskLists() {
     const taskLists = document.querySelectorAll(".task-list");
     taskLists.forEach(taskList => {
         taskList.innerHTML = "";
     });
 }
-
-document.getElementById("search-input").addEventListener("input", onSearchInput);
