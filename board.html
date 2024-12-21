@@ -64,9 +64,10 @@
             <h1>Board</h1>
             <div class="find-and-add">
                 <div class="searchbar">
-                    <input type="text" placeholder="Find Task" />
+                    <input id="search-input" type="text" placeholder="Find Task" oninput="onSearchInput()" maxlength="10" />
                     <div class="search-separator"></div>
-                    <span class="search-icon"><img src="./assets/icons/search.png" alt=""></span>
+                    <span onclick="findTask()" class="search-icon"><img src="./assets/icons/search.png" alt=""></span>
+                    
                 </div>
                 <button class="add-task">Add task +</button>
             </div>

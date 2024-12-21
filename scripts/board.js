@@ -1,6 +1,7 @@
 let tasks = [];
 let contacts = {};
 let currentDraggedElement;
+let searchTimeout;
 
 async function onloadFunc(){
     contacts = await getData("/contacts");
@@ -57,9 +58,9 @@ function getCatContainerId(task){
 
 function generateTaskHtml(task, index, contacts){
     return `
-        <div onclick="openTaskPopup(${index})" class="task" draggable="true" ondragstart="startDragging(${index})">
+        <div class="task" draggable="true" ondragstart="startDragging(${index})">
              ${generateTaskBadge(task.badge)}
-            <div class="task-title">${task.title}</div>
+            <div class="task-title" onclick="openTaskPopup(${index})">${task.title}</div>
             <div class="task-desc">${task.description}</div>
             <div class="subtask-bar">
                 ${task.subtasks ? `
@@ -202,3 +203,70 @@ function removeHighlight(categoryId) {
         highlightElement.remove();
     }
 }
+
+function findTask() {
+    const searchInput = document.getElementById("search-input");
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const filteredTasks = filterTasksWithIndex(tasks, searchTerm);
+    clearTaskLists();
+    displayFilteredTasks(filteredTasks, searchTerm);
+}
+
+function filterTasksWithIndex(tasks, searchTerm){
+    return tasks
+    .map((task, index) => ({ ...task, originalIndex: index }))
+    .filter(task =>
+        task.task.title.toLowerCase().includes(searchTerm) ||
+        task.task.description.toLowerCase().includes(searchTerm)
+    );
+}
+
+function displayFilteredTasks(filteredTasks, searchTerm) {
+    if (filteredTasks.length > 0) {
+        filteredTasks.forEach((task) => insertTaskIntoDOM(task.task, task.originalIndex));
+    } else {
+        const taskLists = document.querySelectorAll(".task-list");
+        taskLists.forEach(taskList => {
+            taskList.innerHTML = `
+                <div class="no-tasks">
+                    No Tasks found for "<strong>${searchTerm}</strong>".
+                </div>
+            `;
+        });
+    }
+}
+
+function onSearchInput() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        findTask();
+    }, 500);
+}
+
+function onSearchClick() {
+    const searchInput = document.getElementById("search-input");
+    searchTerm = searchInput.value.trim().toLowerCase();
+    
+    if (searchTerm.length < 3) {
+        showSearchWarning();
+    } else {
+        findTask();
+    }
+}
+
+function showSearchWarning() {
+    const warningMessage = document.getElementById("search-warning");
+    if (warningMessage) {
+        warningMessage.innerHTML = "Please enter at least 3 characters to search.";
+        warningMessage.style.display = "block";
+    }
+}
+
+function clearTaskLists() {
+    const taskLists = document.querySelectorAll(".task-list");
+    taskLists.forEach(taskList => {
+        taskList.innerHTML = "";
+    });
+}
+
+document.getElementById("search-input").addEventListener("input", onSearchInput);
