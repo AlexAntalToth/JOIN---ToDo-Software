@@ -1,3 +1,6 @@
+let contacts = [];
+let selectedContacts = [];
+
 async function init() {
     await loadTasks();
     renderAddTaskCard();
@@ -28,17 +31,108 @@ async function renderAddTaskCard(task) {
     let addTaskFooterHTML = generateAddTaskCardFooterHTML();
     addTaskFooter.innerHTML = addTaskFooterHTML;
 
-    // let saveButton = document.querySelector(".save-task-button");
-    // saveButton.addEventListener("click", saveNewTask);
+    let createButton = document.querySelector(".create-addTask-button");
+    createButton.addEventListener("click", saveNewTask);
 
-    // let cancelButton = document.querySelector(".cancel-task-button");
-    // cancelButton.addEventListener("click", clearTaskForm);
+    let assignedToField = document.getElementById("task-assignedTo");
+    let contactList = document.getElementById("contactList");
+
+    if (assignedToField && contactList) {
+        assignedToField.addEventListener("click", () => {
+            if (contactList.style.display === "none") {
+                contactList.style.display = "block";
+                renderSearchField();
+            } else {
+                contactList.style.display = "none";
+                removeSearchField();
+            }
+        });
+
+        let contactItems = document.querySelectorAll(".contact-item");
+        contactItems.forEach(contactItem => {
+            contactItem.addEventListener("click", (event) => {
+                let selectedContactId = event.target.closest('.contact-item').dataset.id;
+                let selectedContact = contacts.find(contact => contact.id === selectedContactId);
+            
+                // Toggle der Kontakt-ID in der selectedContacts-Liste
+                if (selectedContact) {
+                    const contactIndex = selectedContacts.findIndex(contact => contact.id === selectedContactId);
+                    if (contactIndex === -1) {
+                        selectedContacts.push(selectedContact);
+                    } else {
+                        selectedContacts.splice(contactIndex, 1);
+                    }
+                    // Update des UI-Feldes
+                    updateAssignedToField();
+                }
+            });
+            console.log("Zugewiesene Kontakte:", selectedContacts);
+        });
+    }
+}
+
+function updateAssignedToField() {
+    let assignedToField = document.getElementById("task-assignedTo");
+
+    if (selectedContacts.length > 0) {
+        assignedToField.innerHTML = selectedContacts.map(contact => `<span>${contact.name}</span>`).join(", ");
+    } else {
+        assignedToField.innerHTML = `<span>Select contacts to assign</span>`;
+    }
+}
+
+function renderSearchField() {
+    let assignedToField = document.getElementById("task-assignedTo");
+
+    if (!document.getElementById("contact-search-field")) {
+        let searchField = document.createElement("input");
+        searchField.id = "contact-search-field";
+        searchField.type = "text";
+        searchField.placeholder = "Search contacts...";
+        searchField.className = "addTask-contact-search";
+
+        assignedToField.innerHTML = "";
+        assignedToField.appendChild(searchField);
+
+        searchField.addEventListener("input", filterContacts);
+    }
+}
+
+function removeSearchField() {
+    let assignedToField = document.getElementById("task-assignedTo");
+    assignedToField.innerHTML = `
+        <span>Select contacts to assign</span>
+        <img class="addTask-assignedTo-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Arrow Down">
+    `;
+}
+
+function filterContacts(event) {
+    let searchValue = event.target.value.toLowerCase();
+    let contacts = document.querySelectorAll(".contact-item");
+
+    contacts.forEach(contact => {
+        let contactName = contact.querySelector(".contact-name").textContent.toLowerCase();
+        if (contactName.includes(searchValue)) {
+            contact.style.display = "flex";
+        } else {
+            contact.style.display = "none";
+        }
+    });
 }
 
 async function generateAddTaskCardHTML(task) {
-    let contacts = await loadContacts();
-    let contactOptions = contacts
-        .map(contact => `<option value="${contact.id}">${contact.name}</option>`)
+    let contacts = await loadTaskContacts();
+    console.log('Loaded contacts:', contacts);
+    let contactList = contacts
+        .map(contact => `
+            <div class="contact-item" data-id="${contact.id}">
+                <div class="contact-initials" style="background-color: ${contact.color};">
+                    ${contact.name.split(" ").map(name => name[0]).join("").toUpperCase()}
+                </div>
+                <span class="contact-name">${contact.name}</span>
+                <input type="checkbox" class="contact-checkbox" data-id="${contact.id}" />
+            </div>
+        `)
         .join("");
 
     return `
@@ -57,11 +151,15 @@ async function generateAddTaskCardHTML(task) {
             <div class="addTask-assignedTo">
                 <h2 class="addTask-assignedTo-header">Assigned to</h2>
                 <div class="addTask-assignedTo-container">
-                    <select class="addTask-assignedTo-field" id="task-assignedTo">
-                    <option value="" disabled selected>Select contacts to assign</option>
-                    ${contactOptions}
-                    </select>
-                    <img class="addTask-assignedTo-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Logo Arrow Down">
+                    <div class="addTask-assignedTo-field" id="task-assignedTo">
+                        <span>Select contacts to assign</span>
+                        <img class="addTask-assignedTo-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Arrow Down">
+                    </div>
+                    <div class="addTask-assignedTo-contactList" id="contactList" style="display: none;">
+                        <div class="contact-list-scrollable">
+                            ${contactList}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,7 +220,7 @@ async function generateAddTaskCardHTML(task) {
             <div class="addTask-subtasks">
                 <h2>Subtasks</h2>
                 <div class="addTask-subtasks-field">
-                    <input class="addTask-subtasks-content" id="task-subtasks" value="${task.title}" placeholder="Add new subtask">
+                    <input class="addTask-subtasks-content" id="task-subtasks" value="${task.subtasks}" placeholder="Add new subtask">
                     <svg class="addTask-subtasks-icon" width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <mask id="mask0_75601_15213" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="24">
                         <rect x="0.248535" width="24" height="24" fill="#D9D9D9"/>
@@ -162,19 +260,22 @@ function generateAddTaskCardFooterHTML() {
     `;
 }
 
-function createAddTaskCard(task) {
-    let addTaskCard = document.createElement("div");
-    addTaskCard.classList.add("addTask-card");
+async function createAddTaskCard(task) {
+    let addTaskContainer = document.querySelector(".addTask-content");
+    let addTaskFooter = document.querySelector(".addTask-footer");
 
-    addTaskCard.innerHTML = generateAddTaskCardHTML(task) + generateAddTaskCardFooterHTML(task);
+    if (!addTaskContainer) {
+        return;
+    }
 
-    let saveButton = addTaskCard.querySelector(".save-task-button");
-    saveButton.addEventListener("click", () => saveNewTask(task));
+    addTaskContainer.innerHTML = "";
+    addTaskFooter.innerHTML = "";
 
-    let cancelButton = addTaskCard.querySelector(".cancel-task-button");
-    cancelButton.addEventListener("click", clearTaskForm);
+    let addTaskCardHTML = await generateAddTaskCardHTML(task || { title: "", description: "", dueDate: "", priority: "" });
+    addTaskContainer.innerHTML = addTaskCardHTML;
 
-    return addTaskCard;
+    let addTaskFooterHTML = generateAddTaskCardFooterHTML();
+    addTaskFooter.innerHTML = addTaskFooterHTML;
 }
 
 function clearTaskForm() {
@@ -182,26 +283,65 @@ function clearTaskForm() {
 }
 
 async function saveNewTask() {
-    let title = document.getElementById("task-title").value;
-    let description = document.getElementById("task-description").value;
-    let dueDate = document.getElementById("task-dueDate").value;
-    let priority = document.getElementById("task-priority").value;
+    let taskTitle = document.getElementById('task-title').value;
+    let taskDescription = document.getElementById('task-description').value;
+    let taskDueDate = document.getElementById('task-dueDate').value;
+    let taskPriority = document.getElementById('task-priority').value;
+    let taskBadge = document.getElementById('task-category').value;
 
-    let newTask = { title, description, dueDate, priority };
+    // Subtasks are assumed to be a comma-separated list of values
+    let taskSubtasks = document.getElementById('task-subtasks').value.split(',').map(subtask => subtask.trim());
+
+    let newTask = {
+        title: taskTitle,
+        description: taskDescription,
+        assignedTo: selectedContacts.map(contact => contact.id),
+        dueDate: taskDueDate,
+        priority: taskPriority,
+        badge: taskBadge,
+        subtasks: taskSubtasks // Store the subtasks list
+    };
 
     try {
-        await fetch(`${BASE_URL}tasks.json`, {
+        let response = await fetch(BASE_URL + "tasks.json", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify(newTask),
+            body: JSON.stringify(newTask)
         });
 
-        alert("Task saved successfully!");
-        clearTaskForm();
+        if (response.ok) {
+            let responseData = await response.json();
+            console.log("Neue Aufgabe gespeichert:", responseData);
+            return responseData; // Returns the generated Task ID
+        } else {
+            console.error("Fehler beim Speichern der Aufgabe:", response.statusText);
+            return null;
+        }
     } catch (error) {
-        console.error("Error saving task:", error);
-        alert("Failed to save task.");
+        console.error("Fehler beim Speichern der Aufgabe:", error);
+        return null;
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    let assignedToElement = document.getElementById('task-assignedTo'); // Sucht optional nach der ID
+    let contactList = document.querySelector('.addTask-assignedTo-contactList'); // Kontaktliste über Klasse suchen
+
+    // Standardmäßige Funktion, um die Kontaktliste zu togglen
+    const toggleContactList = () => {
+        if (contactList) {
+            contactList.style.display = contactList.style.display === 'block' ? 'none' : 'block';
+        }
+    };
+
+    // Fallback für den Fall, dass die ID nicht vorhanden ist
+    if (assignedToElement) {
+        assignedToElement.addEventListener('click', toggleContactList);
+    } else {
+        // Optional: Standardlistener auf das gesamte Dokument oder einen anderen Bereich setzen
+        document.addEventListener('click', toggleContactList);
+    }
+});
+

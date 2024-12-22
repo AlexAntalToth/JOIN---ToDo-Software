@@ -21,9 +21,36 @@ async function loadContacts() {
             }
 
             renderContactsList(sortedContacts);
+            return sortedContacts;
+        }
+    } catch (error) {
+        return [];
+    }
+}
+
+async function loadTaskContacts() {
+    try {
+        let response = await fetch(BASE_URL + "contacts.json");
+        let data = await response.json();
+
+        if (data) {
+            let sortedContacts = Object.entries(data)
+                .map(([id, contact]) => ({
+                    id,
+                    ...contact,
+                    color: contact.color || generateRandomColor()
+                }))
+                .sort((a, b) => a.name.localeCompare(b.name));
+
+            console.log("Contacts loaded:", sortedContacts);  // Debugging-Ausgabe
+
+            return sortedContacts;
+        } else {
+            console.log("No contacts found in the database.");
             return [];
         }
     } catch (error) {
+        console.error("Error loading contacts:", error);
         return [];
     }
 }
