@@ -43,7 +43,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-left: auto; 
+    margin-left: auto;
 }
 
 .addTask-buttons {
@@ -154,6 +154,14 @@
     padding-bottom: 8px;
 }
 
+.addTask-prio-field h2 {
+    font-size: 20px;
+    font-weight: normal;
+    padding-bottom: unset;
+    margin-right: 8px;
+}
+
+
 .addTask-content p {
     color: red;
 }
@@ -255,14 +263,17 @@
 }
 
 .contact-list-scrollable {
-    max-height: 250px; /* Passt die Scrollhöhe an */
-    overflow-y: auto; /* Setzt das Scrollen für die Liste */
+    max-height: 250px;
+    /* Passt die Scrollhöhe an */
+    overflow-y: auto;
+    /* Setzt das Scrollen für die Liste */
     padding: 5px 0;
     width: 100%;
 }
 
-.addTask-assignedTo-field.open + .addTask-assignedTo-contactList {
-    display: block;  /* Zeige die Kontaktliste, wenn das Dropdown geöffnet ist */
+.addTask-assignedTo-field.open+.addTask-assignedTo-contactList {
+    display: block;
+    /* Zeige die Kontaktliste, wenn das Dropdown geöffnet ist */
 }
 
 .addTask-contact-search {
@@ -351,10 +362,18 @@
     cursor: pointer;
     background-color: white;
     font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.addTask-prio-button:hover {
+.addTask-prio-button:not(.urgent-active):hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.urgent-active {
+    background-color: red;
+     color: white;
 }
 
 .addTask-dueDate {
@@ -385,6 +404,8 @@
     margin-bottom: 12px;
     cursor: pointer;
     background-color: white;
+    position: relative;
+    z-index: 10;
 }
 
 .addTask-dueDate-field input {
@@ -500,4 +521,3 @@
     fill: #2A3647;
     transition: fill 0.3s;
 }
-
