@@ -20,9 +20,6 @@ async function onloadFunc(){
         });
     }
     dueDate = getUrgentDueDate(tasks);
-    console.log(dueDate);
-    console.log(getToday());
-    
     updateCount(tasks);
     renderHTML();
     renderGreeting();
@@ -54,7 +51,13 @@ function findClosestDueDate(tasks, today) {
             }
         }
     }
-    return closestDueDate ? formatDateToDDMMYYYY(closestDueDate) : "No Deadlines";
+    return closestDueDate ? formatDateToMonthDayYear(closestDueDate) : "No Deadlines";
+}
+
+function formatDateToMonthDayYear(dateString) {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
 }
 
 function getUrgentDueDate(tasks) {

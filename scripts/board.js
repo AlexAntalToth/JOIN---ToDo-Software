@@ -63,8 +63,8 @@ function generateTaskHtml(task, index, contacts){
              ${generateTaskBadge(task.badge)}
             <div class="task-title" onclick="openTaskPopup(${index})">${task.title}</div>
             <div class="task-desc">${task.description}</div>
-            <div class="subtask-bar">
-                 ${task.subtasks && total > 0 ? `
+            <div class="subtask-bar" id="subtaskBar-${index}">
+                ${task.subtasks && total > 0 ? `
                     <div class="pb-bg">
                         <div class="pb-blue" style="width: ${(completed / total) * 100}%;"></div>
                     </div>
@@ -73,22 +73,20 @@ function generateTaskHtml(task, index, contacts){
             </div>
             <div class="task-footer">
                 <div class="contacts">
-                    ${task.assignedTo 
-                        ? Object.keys(task.assignedTo).map(contactKey => {
-                            const contact = contacts[contactKey];
-                            if (contact) {
-                                const [firstName, lastName] = contact.name.split(" ");
-                                const initials = `${firstName[0]}${lastName[0]}`;
-                                return `
-                                    <div class="profile-circle">
-                                        ${initials}
-                                    </div>
-                                `;
-                            }
-                            return "";
-                        }).join("") 
-                        : ""}
-                </div>
+                ${task.assignedTo ? Object.keys(task.assignedTo).map(contactKey => {
+                    const contact = contacts[contactKey];
+                    if (contact) {
+                        const [firstName, lastName] = contact.name.split(" ");
+                        const initials = `${firstName[0]}${lastName[0]}`;
+                        return `
+                            <div class="profile-circle">
+                              ${initials}
+                            </div>
+                        `;
+                    }
+                    return "";
+                }).join("") : ""}
+            </div>
                 ${task.priority ? `
                     <div class="priority">
                         <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">
@@ -115,7 +113,7 @@ function openTaskPopup(index){
     document.getElementById("taskDueDate").innerText = formatDateToDDMMYYYY(task.dueDate);
     generateTaskPriorityElement(task.priority);
     document.getElementById("taskContacts").innerHTML = generateContactsHtml(task.assignedTo, contacts);
-    document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks);
+    document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks, index);
     document.getElementById("taskPopup").classList.add("show");
 }
 
@@ -172,16 +170,44 @@ function generateTaskBadge(badgeType) {
     `;
 }
 
-function generateSubtasksHtml(subtasks) {
+function generateSubtasksHtml(subtasks, taskIndex) {
     if (!subtasks) return "";
 
-    return Object.values(subtasks).map(subtask => `
+    return Object.entries(subtasks).map(([subtaskId, subtask]) => `
         <label class="label-container">
             ${subtask.name}
-            <input type="checkbox" ${subtask.completed ? "checked" : ""} />
+            <input type="checkbox" ${subtask.completed ? "checked" : ""} onchange="toggleSubtask(${taskIndex}, '${subtaskId}')" />
             <span class="checkmark"></span>
         </label>
     `).join("");
+}
+
+function toggleSubtask(taskIndex, subtaskId) {
+    const task = tasks[taskIndex];
+    const subtask = task.task.subtasks[subtaskId];
+    subtask.completed = !subtask.completed;
+    updateSubtaskBar(taskIndex);
+    updatePopupSubtasks(taskIndex);
+}
+
+function updateSubtaskBar(taskIndex) {
+    const task = tasks[taskIndex];
+    const subtasks = task.task.subtasks;
+    const total = Object.keys(subtasks).length;
+    const completed = Object.values(subtasks).filter(subtask => subtask.completed).length;
+    const subtaskBar = document.querySelector(`#subtaskBar-${taskIndex}`);
+    if (subtaskBar) {
+        subtaskBar.querySelector(".pb-blue").style.width = `${(completed / total) * 100}%`;
+        subtaskBar.querySelector("span").innerText = `${completed}/${total} Subtasks`;
+    }
+}
+
+function updatePopupSubtasks(taskIndex) {
+    const task = tasks[taskIndex].task;
+    const subtasksList = document.getElementById("subtasksList");
+    if (subtasksList) {
+        subtasksList.innerHTML = generateSubtasksHtml(task.subtasks, taskIndex);
+    }
 }
 
 function allowDrop(ev) {
@@ -263,4 +289,9 @@ function clearTaskLists() {
     taskLists.forEach(taskList => {
         taskList.innerHTML = "";
     });
+}
+
+function formatDateToDDMMYYYY(dateString) {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
 }
