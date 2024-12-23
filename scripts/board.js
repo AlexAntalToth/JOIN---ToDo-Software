@@ -89,9 +89,11 @@ function generateTaskHtml(task, index, contacts){
                         }).join("") 
                         : ""}
                 </div>
-                <div class="priority">
-                    <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">
-                </div>
+                ${task.priority ? `
+                    <div class="priority">
+                        <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">
+                    </div>
+                ` : ""}
             </div>
         </div>
     `;
@@ -106,18 +108,27 @@ function calculateSubtaskProgress(subtasks) {
 }
 
 function openTaskPopup(index){
-    const task = tasks[index].task;
+    let task = tasks[index].task;
     document.getElementById("taskBadge").innerHTML = generateTaskBadge(task.badge);
     document.getElementById("taskTitle").innerText = task.title;
     document.getElementById("taskDescription").innerText = task.description;
-    document.getElementById("taskDueDate").innerText = task.dueDate;
-    document.getElementById("taskPriority").innerHTML = `
-    <p>${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}</p>
-    <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">
-    `;
+    document.getElementById("taskDueDate").innerText = formatDateToDDMMYYYY(task.dueDate);
+    generateTaskPriorityElement(task.priority);
     document.getElementById("taskContacts").innerHTML = generateContactsHtml(task.assignedTo, contacts);
     document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks);
     document.getElementById("taskPopup").classList.add("show");
+}
+
+function generateTaskPriorityElement(priority){
+    let taskPriorityElement = document.getElementById("taskPriority");
+    if (priority) {
+        taskPriorityElement.innerHTML = `
+            <p>${priority.charAt(0).toUpperCase() + priority.slice(1)}</p>
+            <img src="./assets/icons/priority_${priority}.png" alt="Priority">
+        `;
+    } else {
+        taskPriorityElement.innerHTML = "none";
+    }
 }
 
 function closeTaskPopup(event) {

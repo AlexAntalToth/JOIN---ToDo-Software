@@ -20,6 +20,9 @@ async function onloadFunc(){
         });
     }
     dueDate = getUrgentDueDate(tasks);
+    console.log(dueDate);
+    console.log(getToday());
+    
     updateCount(tasks);
     renderHTML();
     renderGreeting();
@@ -33,7 +36,8 @@ function getToday(){
 }
 
 function calculateDateDifference(dueDate, today) {
-    return (new Date(dueDate) - today) / (1000 * 60 * 60 * 24);
+    const dueDateObj = new Date(dueDate); 
+    return (dueDateObj - today) / (1000 * 60 * 60 * 24);
 }
 
 function findClosestDueDate(tasks, today) {
@@ -44,13 +48,13 @@ function findClosestDueDate(tasks, today) {
         const dueDate = task.dueDate;
         if (dueDate) {
             const difference = calculateDateDifference(dueDate, today);
-            if (difference < smallestDifference) {
+            if (difference >= 0 && difference < smallestDifference) {
                 smallestDifference = difference;
                 closestDueDate = dueDate;
             }
         }
     }
-    return closestDueDate || "No Deadlines";
+    return closestDueDate ? formatDateToDDMMYYYY(closestDueDate) : "No Deadlines";
 }
 
 function getUrgentDueDate(tasks) {

@@ -474,10 +474,15 @@ body {
   }
   .task-list {
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     flex-direction: row;
     min-height: auto;
     max-width: 100%;
+    overflow-x: scroll;
+    scrollbar-width: none;
+  }
+  .task-list::-webkit-scrollbar {
+    display: none;
   }
   .task-title {
     font-size: 14px;
@@ -496,6 +501,7 @@ body {
     gap: 16px;
     padding: 12px;
     max-width: 196px;
+    flex-shrink: 0
   }
   .row h2 {
     font-size: 16px;

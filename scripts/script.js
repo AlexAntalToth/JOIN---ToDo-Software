@@ -25,3 +25,8 @@ async function getData(path) {
     const response = await fetch(BASE_URL + path + ".json");
     return data = await response.json();
 }
+
+function formatDateToDDMMYYYY(dateString) {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+}
