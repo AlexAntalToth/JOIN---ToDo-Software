@@ -118,6 +118,34 @@
     height: 24px;
 }
 
+.task-created-popup {
+    position: fixed;
+    bottom: -100px; /* Start außerhalb des Bildschirms */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(42, 54, 71, 0.95);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: bottom 0.4s ease-in-out;
+    z-index: 1000;
+    opacity: 0; /* Unsichtbar starten */
+}
+
+.task-created-popup.show {
+    bottom: 50%; /* Position in der Mitte */
+    opacity: 1; /* Sichtbar */
+}
+
+.task-created-icon {
+    width: 24px;
+    height: 24px;
+}
+
 .addTask-left {
     display: flex;
     flex-direction: column;
@@ -194,6 +222,19 @@
     margin-bottom: 12px;
     cursor: pointer;
 }
+
+.addTask-title-field:focus {
+    outline: none;
+}
+
+.addTask-title-field[data-focused="true"]:invalid {
+    border-color: red;
+}
+
+.addTask-title-field[data-focused="true"]:valid {
+    border-color: green;
+}
+
 
 .addTask-description-header {
     /* display: flex; */

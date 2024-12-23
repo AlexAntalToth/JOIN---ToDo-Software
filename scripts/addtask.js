@@ -122,8 +122,8 @@ function setupPriorityButtons() {
 
         // Prüfen, ob der Button bereits aktiv ist
         const isActive = selectedButton.classList.contains('urgent-active') ||
-                         selectedButton.classList.contains('middle-active') ||
-                         selectedButton.classList.contains('low-active');
+            selectedButton.classList.contains('middle-active') ||
+            selectedButton.classList.contains('low-active');
 
         // Entfernen aller aktiven Klassen
         allButtons.forEach(button => {
@@ -245,7 +245,7 @@ async function generateAddTaskCardHTML(task) {
                     <h2>Title</h2>
                     <p>*</p>
                 </div>
-                <input class="addTask-title-field" id="task-title" value="${task.title}" placeholder="Enter a title">
+                <input class="addTask-title-field" id="task-title" value="${task.title}" placeholder="Enter a title" required data-focused="false">
             </div>
             <div class="addTask-description">
                 <h2>Description</h2>
@@ -335,6 +335,10 @@ async function generateAddTaskCardHTML(task) {
                 </div>
             </div>
         </div>
+        <div id="task-created-popup" class="task-created-popup">
+            <span>Task added to board</span>
+            <img class="task-created-icon" src="../../assets/icons/board.png" alt="Board Icon">
+        </div>
     `;
 }
 
@@ -417,6 +421,10 @@ async function saveNewTask() {
         if (response.ok) {
             let responseData = await response.json();
             console.log("Neue Aufgabe gespeichert:", responseData);
+
+            // Zeige das Popup an
+            showTaskCreatedPopup();
+
             return responseData; // Returns the generated Task ID
         } else {
             console.error("Fehler beim Speichern der Aufgabe:", response.statusText);
@@ -446,3 +454,43 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 });
+
+function showTaskCreatedPopup() {
+    const popup = document.getElementById('task-created-popup');
+    popup.classList.add('show'); // Popup anzeigen
+
+    // Popup nach 1 Sekunde ausblenden
+    setTimeout(() => {
+        popup.classList.remove('show');
+    }, 1000);
+}
+
+function setupCreateButton() {
+    const createButton = document.querySelector(".create-addTask-button");
+    const titleField = document.querySelector("#task-title");
+
+    if (createButton && titleField) {
+        // Funktion zur Überprüfung und Styling-Anpassung
+        function validateTitle() {
+            const isTitleEmpty = titleField.value.trim() === "";
+            createButton.style.backgroundColor = isTitleEmpty ? "red" : "";
+            createButton.style.cursor = isTitleEmpty ? "not-allowed" : "pointer";
+            createButton.disabled = isTitleEmpty; // Button deaktivieren, wenn kein Titel eingegeben wurde
+        }
+
+        // Initiale Überprüfung
+        validateTitle();
+
+        // Überprüfung bei Eingabeänderungen
+        titleField.addEventListener("input", validateTitle);
+
+        // Nur bei gültigem Titel speichern
+        createButton.addEventListener("click", (event) => {
+            if (titleField.value.trim() === "") {
+                event.preventDefault();
+            } else {
+                saveNewTask();
+            }
+        });
+    }
+}
