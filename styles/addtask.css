@@ -367,12 +367,22 @@
     justify-content: center;
 }
 
-.addTask-prio-button:not(.urgent-active):hover {
+.addTask-prio-button:not(.urgent-active):not(.middle-active):not(.low-active):hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .urgent-active {
     background-color: red;
+     color: white;
+}
+
+.middle-active {
+    background-color:rgba(255,168,0,1);
+     color: white;
+}
+
+.low-active {
+    background-color:rgba(122,226,41,1);
      color: white;
 }
 

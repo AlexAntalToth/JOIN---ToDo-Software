@@ -1,5 +1,6 @@
 let contacts = [];
 let selectedContacts = [];
+let taskPriority = "";
 
 async function init() {
     await loadTasks();
@@ -22,18 +23,27 @@ async function renderAddTaskCard(task) {
         return;
     }
 
-    addTaskContainer.innerHTML = "";
-    addTaskFooter.innerHTML = "";
+    // HTML-Inhalte einfügen
+    addTaskContainer.innerHTML = await generateAddTaskCardHTML(task || { title: "", description: "", dueDate: "", priority: "" });
+    addTaskFooter.innerHTML = generateAddTaskCardFooterHTML();
 
-    let addTaskCardHTML = await generateAddTaskCardHTML(task || { title: "", description: "", dueDate: "", priority: "" });
-    addTaskContainer.innerHTML = addTaskCardHTML;
+    // Events für Buttons und Felder
+    setupCreateButton();
+    setupAssignedToField();
+    setupDueDateValidation();
+    setupPriorityButtons(); // Die Logik für Prioritätsbuttons ist ausgelagert
+}
 
-    let addTaskFooterHTML = generateAddTaskCardFooterHTML();
-    addTaskFooter.innerHTML = addTaskFooterHTML;
-
+// Setup-Funktion für "Create"-Button
+function setupCreateButton() {
     let createButton = document.querySelector(".create-addTask-button");
-    createButton.addEventListener("click", saveNewTask);
+    if (createButton) {
+        createButton.addEventListener("click", saveNewTask);
+    }
+}
 
+// Setup-Funktion für das "Assigned To"-Feld
+function setupAssignedToField() {
     let assignedToField = document.getElementById("task-assignedTo");
     let contactList = document.getElementById("contactList");
 
@@ -54,7 +64,6 @@ async function renderAddTaskCard(task) {
                 let selectedContactId = event.target.closest('.contact-item').dataset.id;
                 let selectedContact = contacts.find(contact => contact.id === selectedContactId);
 
-                // Toggle der Kontakt-ID in der selectedContacts-Liste
                 if (selectedContact) {
                     const contactIndex = selectedContacts.findIndex(contact => contact.id === selectedContactId);
                     if (contactIndex === -1) {
@@ -62,21 +71,21 @@ async function renderAddTaskCard(task) {
                     } else {
                         selectedContacts.splice(contactIndex, 1);
                     }
-                    // Update des UI-Feldes
                     updateAssignedToField();
                 }
             });
-            console.log("Zugewiesene Kontakte:", selectedContacts);
         });
     }
+}
 
+// Setup-Funktion für Datumseingabevalidierung
+function setupDueDateValidation() {
     let dueDateInput = document.getElementById("task-dueDate");
     if (dueDateInput) {
         dueDateInput.addEventListener("input", function () {
             let dueDateField = document.getElementById("task-dueDate");
             let errorMessage = document.getElementById("date-error-message");
 
-            // Regulärer Ausdruck für dd/mm/yyyy
             let datePattern = /^([0-2][0-9]|(3)[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
 
             if (!datePattern.test(dueDateField.value)) {
@@ -87,33 +96,82 @@ async function renderAddTaskCard(task) {
                     errorSpan.textContent = "Bitte ein gültiges Datum im Format dd/mm/yyyy eingeben.";
                     dueDateField.parentNode.appendChild(errorSpan);
                 }
-            } else {
-                // Wenn das Datum korrekt ist, Fehlernachricht entfernen
-                if (errorMessage) {
-                    errorMessage.remove();
-                }
+            } else if (errorMessage) {
+                errorMessage.remove();
             }
         });
     }
+}
 
-    let urgentButton = document.getElementById("task-urgent");
-    if (urgentButton) {
-        urgentButton.addEventListener("click", function () {
-            // Toggle der Klasse, die die rote Farbe anwendet
-            urgentButton.classList.toggle("urgent-active");
-    
-            // SVG Farbe auf Rot setzen, wenn die Klasse "urgent-active" hinzugefügt wurde
-            let svgPaths = urgentButton.querySelectorAll("svg path");
-            svgPaths.forEach(path => {
-                if (urgentButton.classList.contains("urgent-active")) {
-                    path.setAttribute("fill", "white");  // Setze die Farbe auf Rot
-                } else {
-                    path.setAttribute("fill", "#FF3D00");  // Setze die Farbe auf Weiß, wenn nicht aktiv
-                }
+// Setup-Funktion für Prioritätsbuttons
+function setupPriorityButtons() {
+    let urgentButton = document.getElementById('task-urgent');
+    let mediumButton = document.getElementById('task-medium');
+    let lowButton = document.getElementById('task-low');
+
+    if (urgentButton && mediumButton && lowButton) {
+        [urgentButton, mediumButton, lowButton].forEach(button => {
+            button.addEventListener('click', function () {
+                togglePriority(button);
             });
         });
     }
 
+    function togglePriority(selectedButton) {
+        let allButtons = [urgentButton, mediumButton, lowButton];
+
+        // Prüfen, ob der Button bereits aktiv ist
+        const isActive = selectedButton.classList.contains('urgent-active') ||
+                         selectedButton.classList.contains('middle-active') ||
+                         selectedButton.classList.contains('low-active');
+
+        // Entfernen aller aktiven Klassen
+        allButtons.forEach(button => {
+            button.classList.remove('urgent-active', 'middle-active', 'low-active');
+            updateButtonSVG(button, false); // Setzt die Farben zurück
+        });
+
+        // Nur aktivieren, wenn der Button zuvor nicht aktiv war
+        if (!isActive) {
+            if (selectedButton === urgentButton) {
+                selectedButton.classList.add('urgent-active');
+                taskPriority = "high"; // Priorität setzen
+            } else if (selectedButton === mediumButton) {
+                selectedButton.classList.add('middle-active');
+                taskPriority = "medium"; // Priorität setzen
+            } else if (selectedButton === lowButton) {
+                selectedButton.classList.add('low-active');
+                taskPriority = "low"; // Priorität setzen
+            }
+
+            updateButtonSVG(selectedButton, true); // Aktivierte Farbe setzen
+        } else {
+            taskPriority = ""; // Keine Priorität ausgewählt
+        }
+
+        console.log(`Task Priority set to: ${taskPriority}`); // Debug-Ausgabe
+    }
+
+    function updateButtonSVG(button, isActive) {
+        let svgPaths = button.querySelectorAll("svg path");
+        let color;
+
+        if (isActive) {
+            color = "white";
+        } else {
+            if (button === urgentButton) {
+                color = "#FF3D00";
+            } else if (button === mediumButton) {
+                color = "#FF9900";
+            } else if (button === lowButton) {
+                color = "#7ae229";
+            }
+        }
+
+        svgPaths.forEach(path => {
+            path.setAttribute("fill", color);
+        });
+    }
 }
 
 function updateAssignedToField() {
@@ -331,7 +389,7 @@ async function saveNewTask() {
     let taskTitle = document.getElementById('task-title').value;
     let taskDescription = document.getElementById('task-description').value;
     let taskDueDate = document.getElementById('task-dueDate').value;
-    let taskPriority = document.getElementById('task-priority').value;
+    // let taskPriority = taskdocument.getElementById('task-priority').value;
     let taskBadge = document.getElementById('task-category').value;
 
     // Subtasks are assumed to be a comma-separated list of values
@@ -388,43 +446,3 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 });
-
-document.addEventListener('DOMContentLoaded', function () {
-    const urgentButton = document.getElementById('task-urgent');
-    const mediumButton = document.getElementById('task-medium');
-    const lowButton = document.getElementById('task-low');
-
-    if (urgentButton) {
-        urgentButton.addEventListener('click', function () {
-            togglePriority(urgentButton, 'urgent');
-        });
-    }
-
-    if (mediumButton) {
-        mediumButton.addEventListener('click', function () {
-            togglePriority(mediumButton, 'medium');
-        });
-    }
-
-    if (lowButton) {
-        lowButton.addEventListener('click', function () {
-            togglePriority(lowButton, 'low');
-        });
-    }
-
-    function togglePriority(button, priority) {
-        const allButtons = [urgentButton, mediumButton, lowButton];
-        allButtons.forEach(btn => {
-            if (btn !== button) {
-                btn.style.backgroundColor = '';  // reset others
-            }
-        });
-
-        if (priority === 'urgent') {
-            button.style.backgroundColor = button.style.backgroundColor === 'red' ? '' : 'red';
-        } else {
-            button.style.backgroundColor = '';  // reset for other priorities
-        }
-    }
-});
-
