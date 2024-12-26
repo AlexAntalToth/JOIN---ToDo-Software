@@ -42,6 +42,15 @@ p {
   font-size: 16px;
 }
 
+li::marker {
+  font-size: 27px;
+  font-weight: 700;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
 .lightblue {
   color: #29abe2;
 }

@@ -8,14 +8,19 @@
         <h1>Kanban Project Management Tool</h1>
     </div>
     <div class="header-right">
-        <a href="#">
+        <a href="../help.html">
             <img class="help" src="../../assets/icons/help.png" alt="Help Icon">
         </a>
-        <span class="initials">
-            <a href="#">AB</a>
+        <span class="initials" onclick="toggleHeaderPopUp()">
+            <a>AB</a>
         </span>
-
     </div>
+    <div id="headerPopup" class="header-popup hidden">
+        <a href="../../legal_notice.html">Legal Notice</a>
+        <a href="../../privacy_policy.html">Privacy Policy</a>
+        <a href="../../index.html" onclick="logout()">Logout</a>
+    </div>
+    
 </header>
 
 </html>

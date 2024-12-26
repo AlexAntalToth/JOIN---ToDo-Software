@@ -7,26 +7,21 @@
     <title>Board</title>
     <link rel="stylesheet" href="./styles/board.css">
     <script src="./scripts/w3include.js"></script>
-    <script src="./scripts/board.js"></script>
-    <script src="./scripts/script.js"></script>
+    <script src="./scripts/script.js" async></script>
+    <script src="./scripts/board.js" async></script>
 </head>
 
 <body onload="includeHTML(); onloadFunc()">
     <div w3-include-html="./assets/templates/header-tryout.html"></div>
     <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
-
-    <div id="taskPopup" class="popup" onclick="closeTaskPopup(event)">
-
+    <div id="taskPopup" class="popup" onclick="closeTaskPopup()">
         <div class="popup-content" onclick="event.stopPropagation()">
-
             <div class="popup-header">
                 <div id="taskBadge"></div>
-                <button onclick="closeTaskPopup(event)" class="close-btn">X</button>
+                <button onclick="closeTaskPopup()" class="close-btn">X</button>
             </div>
-
             <h1 id="taskTitle"></h1>
             <p id="taskDescription"></p>
-
             <p><span class="details">Due date: </span><span id="taskDueDate"></span></p>
             <p class="task-priority gap-8"><span class="details">Priority: </span><span class="task-priority"
                     id="taskPriority"></span></p>
@@ -35,39 +30,30 @@
                 <span class="subtasks" id="subtasksList">
                 </span>
             </p>
-
-
-
             <div class="popup-footer">
                 <div class="edit-and-delete">
-                    <div class="delete-task">
+                    <div class="delete-task" onclick="deleteTask()">
                         <img src="./assets/icons/contact_basket.png" alt="Delete Task">
                         <span>Delete</span>
                     </div>
                     <div class="separator"></div>
-                    <div class="edit-task">
+                    <div class="edit-task" onclick="editTask()">
                         <img src="./assets/icons/contact_edit.png" alt="Edit Task">
                         <span>Edit</span>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
     </div>
-
-
-
     <div class="container">
         <div class="board-headline">
             <h1>Board</h1>
             <div class="find-and-add">
                 <div class="searchbar">
-                    <input id="search-input" type="text" placeholder="Find Task" oninput="onSearchInput()" maxlength="10" />
+                    <input id="search-input" type="text" placeholder="Find Task" oninput="onSearchInput()"
+                        maxlength="10" />
                     <div class="search-separator"></div>
                     <span onclick="findTask()" class="search-icon"><img src="./assets/icons/search.png" alt=""></span>
-                    
                 </div>
                 <button class="add-task">Add task +</button>
             </div>
@@ -92,7 +78,8 @@
             <div class="row">
                 <h2>Await Feedback <button class="add-task-btn"><img src="./assets/icons/plus.svg"
                             alt="Add Task"></button></h2>
-                <div id="Await Feedback" ondrop="moveTo('Await Feedback')" ondragleave="removeHighlight('Await Feedback')"
+                <div id="Await Feedback" ondrop="moveTo('Await Feedback')"
+                    ondragleave="removeHighlight('Await Feedback')"
                     ondragover="allowDrop(event); highlight('Await Feedback')">
                     <div class="task-list"></div>
                 </div>
@@ -107,8 +94,6 @@
         </div>
 
     </div>
-
-
 </body>
 
 </html>

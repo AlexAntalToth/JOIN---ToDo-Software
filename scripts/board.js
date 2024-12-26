@@ -2,6 +2,7 @@ let tasks = [];
 let contacts = {};
 let currentDraggedElement;
 let searchTimeout;
+let currentTaskIndex = null;
 
 async function onloadFunc(){
     contacts = await getData("/contacts");
@@ -52,7 +53,10 @@ function insertTaskIntoDOM(task, index){
     }
 }
 
-function getCatContainerId(task){
+function getCatContainerId(task) {
+    if (!task.category) {
+        task.category = "To-Do";
+    }
     return document.getElementById(task.category);
 }
 
@@ -106,15 +110,17 @@ function calculateSubtaskProgress(subtasks) {
 }
 
 function openTaskPopup(index){
+    currentTaskIndex = index;
     let task = tasks[index].task;
     document.getElementById("taskBadge").innerHTML = generateTaskBadge(task.badge);
-    document.getElementById("taskTitle").innerText = task.title;
-    document.getElementById("taskDescription").innerText = task.description;
-    document.getElementById("taskDueDate").innerText = formatDateToDDMMYYYY(task.dueDate);
+    document.getElementById("taskTitle").innerHTML = task.title;
+    document.getElementById("taskDescription").innerHTML = task.description;
+    document.getElementById("taskDueDate").innerHTML = formatDateToDDMMYYYY(task.dueDate);
     generateTaskPriorityElement(task.priority);
     document.getElementById("taskContacts").innerHTML = generateContactsHtml(task.assignedTo, contacts);
     document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks, index);
     document.getElementById("taskPopup").classList.add("show");
+    document.body.style.overflow = "hidden";
 }
 
 function generateTaskPriorityElement(priority){
@@ -129,9 +135,22 @@ function generateTaskPriorityElement(priority){
     }
 }
 
-function closeTaskPopup(event) {
-    if (event.target === document.getElementById("taskPopup") || event.target.classList.contains("close-btn")) {
-        document.getElementById("taskPopup").classList.remove("show");
+function deleteTask() {
+    if (currentTaskIndex !== null) {
+        tasks.splice(currentTaskIndex, 1);
+        document.querySelectorAll(".task-list").forEach(taskList => (taskList.innerHTML = ""));
+        tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
+        checkEmptyCategories();
+        closeTaskPopup();
+    }
+}
+
+function closeTaskPopup() {
+    const taskPopup = document.getElementById("taskPopup");
+    if (taskPopup) {
+        taskPopup.classList.remove("show");
+        currentTaskIndex = null;
+        document.body.style.overflow = "auto";
     }
 }
 
@@ -142,19 +161,22 @@ function generateContactsHtml(assignedTo, contacts) {
         const contact = contacts[contactKey];
         if (contact) {
             const [firstName, lastName] = contact.name.split(" ");
-            contactsHtml += `
+            contactsHtml += contactsHtmlTemplate(firstName, lastName, contact);
+        }
+    });
+    return contactsHtml;
+}
+
+function contactsHtmlTemplate(firstName, lastName, contact){
+    return `
             <div class="task-contact">
                 <div class="profile-circle">
                     ${firstName[0]}${lastName[0]}
                 </div>
                 <span>${contact.name}</span>
             </div>
-            `;
-        }
-    });
-    return contactsHtml;
+            `
 }
-
 
 function generateTaskBadge(badgeType) {
     let badgeClass = "bg-orange";
@@ -294,4 +316,130 @@ function clearTaskLists() {
 function formatDateToDDMMYYYY(dateString) {
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
+}
+
+//Edit-Task 
+
+function editTask() {
+    if (currentTaskIndex === null) return;
+
+    const task = tasks[currentTaskIndex].task;
+
+    // Task-Popup-Container
+    const taskPopupContent = document.querySelector(".popup-content");
+    taskPopupContent.innerHTML = `
+        <div class="popup-header">
+            <div id="taskBadge">${generateTaskBadge(task.badge)}</div>
+            <button onclick="closeTaskPopup()" class="close-btn">X</button>
+        </div>
+        <form id="editTaskForm" class="edit-task-form">
+            <div class="form-group">
+                <label for="editTaskTitle">Title</label>
+                <input type="text" id="editTaskTitle" value="${task.title}" />
+            </div>
+            <div class="form-group">
+                <label for="editTaskDescription">Description</label>
+                <textarea id="editTaskDescription">${task.description}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="editTaskDueDate">Due Date</label>
+                <input type="date" id="editTaskDueDate" value="${task.dueDate}" />
+            </div>
+            <div class="form-group">
+                <label>Priority</label>
+                <div class="priority-buttons">
+                    ${["low", "medium", "high"].map(priority => `
+                        <button type="button" class="priority-btn ${task.priority === priority ? "active" : ""}" 
+                                onclick="setPriority('${priority}')">${priority}</button>
+                    `).join("")}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Assigned To</label>
+                <div id="assignedToList">
+                    ${Object.keys(contacts).map(contactKey => `
+                        <label>
+                            <input type="checkbox" value="${contactKey}" 
+                                ${task.assignedTo && task.assignedTo[contactKey] ? "checked" : ""} />
+                            ${contacts[contactKey].name}
+                        </label>
+                    `).join("")}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="editTaskSubtasks">Subtasks (max 3)</label>
+                <div id="subtasksContainer">
+                    ${Object.values(task.subtasks || {}).map((subtask, index) => `
+                        <input type="text" value="${subtask.name}" 
+                               class="subtask-input" maxlength="50" data-index="${index}" />
+                    `).join("")}
+                    ${Object.keys(task.subtasks || {}).length < 3 ? `
+                        <button type="button" onclick="addSubtask()">+ Add Subtask</button>
+                    ` : ""}
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" onclick="saveTaskChanges()">Save</button>
+                <button type="button" onclick="closeTaskPopup()">Cancel</button>
+            </div>
+        </form>
+    `;
+
+    taskPopupContent.style.overflowY = "auto";
+}
+
+function setPriority(priority) {
+    const priorityButtons = document.querySelectorAll(".priority-btn");
+    priorityButtons.forEach(btn => btn.classList.remove("active"));
+    const activeButton = Array.from(priorityButtons).find(btn => btn.textContent === priority);
+    if (activeButton) activeButton.classList.add("active");
+}
+
+function addSubtask() {
+    const subtasksContainer = document.getElementById("subtasksContainer");
+    const subtaskInputs = subtasksContainer.querySelectorAll(".subtask-input");
+    if (subtaskInputs.length < 3) {
+        const newSubtaskInput = document.createElement("input");
+        newSubtaskInput.type = "text";
+        newSubtaskInput.classList.add("subtask-input");
+        newSubtaskInput.maxLength = 50;
+        subtasksContainer.insertBefore(newSubtaskInput, subtasksContainer.querySelector("button"));
+    }
+    if (subtaskInputs.length === 2) {
+        subtasksContainer.querySelector("button").remove();
+    }
+}
+
+function saveTaskChanges() {
+    const title = document.getElementById("editTaskTitle").value;
+    const description = document.getElementById("editTaskDescription").value;
+    const dueDate = document.getElementById("editTaskDueDate").value;
+    const priority = document.querySelector(".priority-btn.active")?.textContent || null;
+    const assignedToCheckboxes = document.querySelectorAll("#assignedToList input[type='checkbox']");
+    const assignedTo = {};
+    assignedToCheckboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            assignedTo[checkbox.value] = true;
+        }
+    });
+    const subtaskInputs = document.querySelectorAll(".subtask-input");
+    const subtasks = {};
+    subtaskInputs.forEach((input, index) => {
+        if (input.value.trim()) {
+            subtasks[`subtask${index + 1}`] = { name: input.value.trim(), completed: false };
+        }
+    });
+    const updatedTask = tasks[currentTaskIndex].task;
+    updatedTask.title = title;
+    updatedTask.description = description;
+    updatedTask.dueDate = dueDate;
+    updatedTask.priority = priority;
+    updatedTask.assignedTo = assignedTo;
+    updatedTask.subtasks = subtasks;
+
+    document.querySelectorAll(".task-list").forEach(taskList => (taskList.innerHTML = ""));
+    tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
+    checkEmptyCategories();
+
+    closeTaskPopup();
 }

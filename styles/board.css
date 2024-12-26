@@ -330,9 +330,8 @@ body {
   background: #fff;
   border-radius: 30px;
   padding: 48px 32px;
-  width: 525px;
+  max-width: 525px;
   overflow-wrap: break-word;
-
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   position: relative;
   display: flex;
@@ -456,6 +455,15 @@ body {
   pointer-events: none;
 }
 
+/* edit-Task */
+
+.edit-task-form {
+  gap: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* responsive */
 @media (max-width: 1230px) {
   .container {
     padding-left: 40px;
