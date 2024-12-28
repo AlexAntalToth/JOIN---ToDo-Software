@@ -1,6 +1,5 @@
-let signedUpContacts = [
-  { name: "alex", email: "email@form.de", password: "testcontact123" },
-];
+const BASE_URL =
+  "https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
 
 function renderLogin() {
   let wrapDivRef = document.getElementById("wrapDiv");
@@ -42,6 +41,7 @@ function renderLogin() {
       <a href="">Legal Notice</a>
     </div>
   </div>
+    <div id="msgBox"></div>
 </div>
   `;
 
@@ -63,31 +63,37 @@ function startAnimation() {
   });
 }
 
-function login() {
-  let email = document.getElementById('email');
-  let password = document.getElementById('password');
-  let signedUpContacts = signedUpContacts.find(
-    c => c.email == email.value && c.password == password.value
-  );
-  console.log(contacts);
-  if (contacts) {
-    console.log('User gefunden:', signedUpContact.name);
-  }else{
-    console.log('Registriere dich');
-    
+async function login() {
+
+  let contact = await fetch(BASE_URL + ".json");
+  let contactAsJson = await contact.json();
+
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  let signedUpContact = Object.values(contactAsJson.contacts || {}).find(
+      (c) => c.email === email && c.password === password
+    );
+
+  console.log(signedUpContact);
+  if (signedUpContact) {
+    console.log("User gefunden:", signedUpContact.name);
+    alert("Login erfolgreich! Willkommen, " + signedUpContact.name)
+    window.location.href = "board.html";
+  } else {
+    console.log("Benutzer nicht gefunden");
+      alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.")
   }
-  
 }
 
+const msgBox = document.getElementById("msgBox");
 const urlParams = new URLSearchParams(window.location.search);
-const msg = urlParams.get('msg');
+const msg = urlParams.get("msg");
 if (msg) {
   msgBox.innerHTML = msg;
+} else {
+  msgBox.style.display = "none";
 }
-else{
-  //display:none
-}
-
 
 function navigateToSignup() {
   window.location.href = "signup.html";

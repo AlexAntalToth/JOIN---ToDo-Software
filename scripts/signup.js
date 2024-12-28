@@ -1,6 +1,11 @@
-let contacts = [
-  { name: "alex", email: "email@form.de", password: "testcontact123" },
-];
+const BASE_URL =
+  "https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
+
+async function getContacts() {
+  let contact = await fetch(BASE_URL + ".json");
+  let contactAsJson = await contact.json();
+  console.log(contactAsJson);
+}
 
 function renderSignup() {
   let wrapDiv = document.getElementById("wrapDiv");
@@ -14,49 +19,67 @@ function renderSignup() {
       </div>
       <div class="separator"></div>
   
-      <form onsubmit="addUser();  return false;" >
-      <div class="inputfields_div">
-        <input class="input1" id="name"  required placeholder="Name" type="name" />
-        <input class="input2"  id="email"  required placeholder="Email" type="email" />
-        <input class="input3" id="password" required placeholder="Password" type="password" />
-        <input class="input4" placeholder="Confirm Password" type="password" />
-      </div>
-      
-      <div class="checkbox_div">
-        <input class="checkbox_input" type="checkbox" style="height: 16px; width: 16px; border: 2px solid rgba(42, 54, 71, 1); border-radius: 3px;" />
-        <p>
-          I accept the <a class="checkbox_input" href="#privacypolicy">privacy policy</a>
-        </p>
-      </div>
-      <button class="blue_button1">Sign up</button>
-    </div>
-    </form>
+   <form onsubmit="addContact(); return false;">
+  <div class="inputfields_div">
+    <input class="input1" id="name" required placeholder="Name" type="text" />
+    <input class="input2" id="email" required placeholder="Email" type="email" />
+    <input class="input3" id="password" required placeholder="Password" type="password" />
+    <input class="input4" id="confirmPassword" required placeholder="Confirm Password" type="password" />
+  </div>
+
+  <div class="checkbox_div">
+    <input
+      id="acceptPolicy"
+      class="checkbox_input"
+      type="checkbox"
+      style="height: 16px; width: 16px; border: 2px solid rgba(42, 54, 71, 1); border-radius: 3px;"
+    />
+    <p>
+      I accept the <a class="checkbox_input" href="#privacypolicy">privacy policy</a>
+    </p>
+  </div>
+  <button class="blue_button1">Sign up</button>
+</form>
 
     <div class="dataprotection_div">
       <a href="">Privacy Policy</a>
       <a href="">Legal Notice</a>
     </div>`;
 }
+getContacts();
 
-console.log(contacts);
+async function addContact(path = "", data = {}) {
+  
+  let name = document.getElementById("name");
+  let email = document.getElementById("email");
+  let password = document.getElementById("password").value.trim();
+  let confirmPassword = document.getElementById("confirmPassword").value.trim();
+  let acceptPolicy = document.getElementById("acceptPolicy").checked;
 
-function addUser() {
-  let name = document.getElementById('name');
-  let email = document.getElementById('email');
-  let password = document.getElementById('password');
+  if (password !== confirmPassword) {
+    alert("Die Passwörter stimmen nicht überein.");
+    return;
+  }
 
-  contacts.push({
-    name: name.value,
-    email: email.value,
-    password: password.value,
+  if (!acceptPolicy) {
+    alert("Bitte akzeptiere die Datenschutzrichtlinie.");
+    return;
+  }
+
+  let contact = await fetch(BASE_URL + path + "contacts.json", {
+    method: "POST",
+    headers: { "content-Type": "application/json" },
+    body: JSON.stringify({
+      name: name.value,
+      email: email.value,
+      password: password.value,
+    }),
   });
 
-  window.location.href = 'index.html?msg=Die Registrierung war erfolgreich';
-
+  window.location.href = "index.html?msg=Die Registrierung war erfolgreich";
+  return (contactAsJson = await contact.json());
 }
 
 function navigateToLogin() {
-  window.location.href = 'index.html';
+  window.location.href = "index.html";
 }
-
-
