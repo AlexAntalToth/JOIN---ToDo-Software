@@ -23,26 +23,19 @@ async function renderAddTaskCard(task) {
         return;
     }
 
-    // HTML-Inhalte einfügen
     addTaskContainer.innerHTML = await generateAddTaskCardHTML(task || { title: "", description: "", dueDate: "", priority: "" });
     addTaskFooter.innerHTML = generateAddTaskCardFooterHTML();
 
-    // Events für Buttons und Felder
     setupCreateButton();
+    setupClearButton();
     setupAssignedToField();
+    setupPriorityButtons();
+    setupCategoryDropdown();
+    setupTitleField();
+    validateFields();
     setupDueDateValidation();
-    setupPriorityButtons(); // Die Logik für Prioritätsbuttons ist ausgelagert
-}
-
-// Setup-Funktion für "Create"-Button
-function setupCreateButton() {
-    let createButton = document.querySelector(".create-addTask-button");
-    if (createButton) {
-        createButton.addEventListener("click", saveNewTask);
     }
-}
 
-// Setup-Funktion für das "Assigned To"-Feld
 function setupAssignedToField() {
     let assignedToField = document.getElementById("task-assignedTo");
     let contactList = document.getElementById("contactList");
@@ -78,32 +71,6 @@ function setupAssignedToField() {
     }
 }
 
-// Setup-Funktion für Datumseingabevalidierung
-function setupDueDateValidation() {
-    let dueDateInput = document.getElementById("task-dueDate");
-    if (dueDateInput) {
-        dueDateInput.addEventListener("input", function () {
-            let dueDateField = document.getElementById("task-dueDate");
-            let errorMessage = document.getElementById("date-error-message");
-
-            let datePattern = /^([0-2][0-9]|(3)[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
-
-            if (!datePattern.test(dueDateField.value)) {
-                if (!errorMessage) {
-                    let errorSpan = document.createElement("span");
-                    errorSpan.id = "date-error-message";
-                    errorSpan.style.color = "red";
-                    errorSpan.textContent = "Bitte ein gültiges Datum im Format dd/mm/yyyy eingeben.";
-                    dueDateField.parentNode.appendChild(errorSpan);
-                }
-            } else if (errorMessage) {
-                errorMessage.remove();
-            }
-        });
-    }
-}
-
-// Setup-Funktion für Prioritätsbuttons
 function setupPriorityButtons() {
     let urgentButton = document.getElementById('task-urgent');
     let mediumButton = document.getElementById('task-medium');
@@ -120,36 +87,33 @@ function setupPriorityButtons() {
     function togglePriority(selectedButton) {
         let allButtons = [urgentButton, mediumButton, lowButton];
 
-        // Prüfen, ob der Button bereits aktiv ist
-        const isActive = selectedButton.classList.contains('urgent-active') ||
+        let isActive = selectedButton.classList.contains('urgent-active') ||
             selectedButton.classList.contains('middle-active') ||
             selectedButton.classList.contains('low-active');
 
-        // Entfernen aller aktiven Klassen
         allButtons.forEach(button => {
             button.classList.remove('urgent-active', 'middle-active', 'low-active');
-            updateButtonSVG(button, false); // Setzt die Farben zurück
+            updateButtonSVG(button, false);
         });
 
-        // Nur aktivieren, wenn der Button zuvor nicht aktiv war
         if (!isActive) {
             if (selectedButton === urgentButton) {
                 selectedButton.classList.add('urgent-active');
-                taskPriority = "high"; // Priorität setzen
+                taskPriority = "high";
             } else if (selectedButton === mediumButton) {
                 selectedButton.classList.add('middle-active');
-                taskPriority = "medium"; // Priorität setzen
+                taskPriority = "medium";
             } else if (selectedButton === lowButton) {
                 selectedButton.classList.add('low-active');
-                taskPriority = "low"; // Priorität setzen
+                taskPriority = "low";
             }
 
-            updateButtonSVG(selectedButton, true); // Aktivierte Farbe setzen
+            updateButtonSVG(selectedButton, true);
         } else {
-            taskPriority = ""; // Keine Priorität ausgewählt
+            taskPriority = "";
         }
 
-        console.log(`Task Priority set to: ${taskPriority}`); // Debug-Ausgabe
+        console.log(`Task Priority set to: ${taskPriority}`);
     }
 
     function updateButtonSVG(button, isActive) {
@@ -275,7 +239,7 @@ async function generateAddTaskCardHTML(task) {
                     <p>*</p>
                 </div>
                 <div class="addTask-dueDate-field">
-                    <input id="task-dueDate" type="text" value="${task.dueDate}" placeholder="dd/mm/yyyy">
+                    <input id="task-dueDate" type="date" value="${task.dueDate}" placeholder="dd/mm/yyyy">
                     <img class="addTask-date-icon" src="../../assets/icons/addTask_date.png" alt="Logo Due Date">
                 </div>
             </div>
@@ -313,11 +277,14 @@ async function generateAddTaskCardHTML(task) {
                     <p>*</p>
                 </div>
                 <div class="addTask-category-container">
-                    <select class="addTask-category-field" id="task-category">
-                    <option value="" disabled selected>Select task category</option>
-                    ${task.badge}
-                    </select>
+                    <div class="addTask-category-field" id="task-category">
+                    <span>Select task category</span>
+                    </div>
                     <img class="addTask-category-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Logo Arrow Down">
+                    <div class="addTask-category-dropdown" id="categoryDropdown" style="display: none;">
+                        <div class="category-item" data-value="Technical Task">Technical Task</div>
+                        <div class="category-item" data-value="User Story">User Story</div>
+                    </div>
                 </div>
             </div>
             <div class="addTask-subtasks">
@@ -385,18 +352,14 @@ async function createAddTaskCard(task) {
     addTaskFooter.innerHTML = addTaskFooterHTML;
 }
 
-function clearTaskForm() {
-    document.querySelector(".addTask-content").innerHTML = "";
-}
-
 async function saveNewTask() {
     let taskTitle = document.getElementById('task-title').value;
     let taskDescription = document.getElementById('task-description').value;
     let taskDueDate = document.getElementById('task-dueDate').value;
-    // let taskPriority = taskdocument.getElementById('task-priority').value;
-    let taskBadge = document.getElementById('task-category').value;
-
-    // Subtasks are assumed to be a comma-separated list of values
+    let dueDateISO = document.getElementById('task-dueDate').value;
+    let [year, month, day] = dueDateISO.split("-");
+    let formattedDueDate = `${day}/${month}/${year}`; // in case of saving as DD/MM/YYYY
+    let taskBadge = document.getElementById('categoryDropdown').getAttribute('data-selected');
     let taskSubtasks = document.getElementById('task-subtasks').value.split(',').map(subtask => subtask.trim());
 
     let newTask = {
@@ -406,7 +369,7 @@ async function saveNewTask() {
         dueDate: taskDueDate,
         priority: taskPriority,
         badge: taskBadge,
-        subtasks: taskSubtasks // Store the subtasks list
+        subtasks: taskSubtasks
     };
 
     try {
@@ -421,11 +384,8 @@ async function saveNewTask() {
         if (response.ok) {
             let responseData = await response.json();
             console.log("Neue Aufgabe gespeichert:", responseData);
-
-            // Zeige das Popup an
             showTaskCreatedPopup();
-
-            return responseData; // Returns the generated Task ID
+            return responseData;
         } else {
             console.error("Fehler beim Speichern der Aufgabe:", response.statusText);
             return null;
@@ -436,12 +396,166 @@ async function saveNewTask() {
     }
 }
 
+function showTaskCreatedPopup() {
+    let popup = document.getElementById('task-created-popup');
+    popup.classList.add('show');
+
+    setTimeout(() => {
+        popup.classList.remove('show');
+    }, 1500);
+}
+
+function setupCreateButton() {
+    let createButton = document.querySelector(".create-addTask-button");
+    if (createButton) {
+        createButton.addEventListener("click", validateAndSaveTask);
+    }
+}
+
+function setupClearButton() {
+    let clearButton = document.querySelector(".clear-addTask-button");
+    if (!clearButton) return;
+
+    clearButton.addEventListener("click", () => {
+        document.getElementById("task-title").value = "";
+        document.getElementById("task-description").value = "";
+        document.getElementById("task-dueDate").value = "";
+        document.querySelectorAll(".addTask-prio-button").forEach(button => button.classList.remove("selected"));
+        
+        let categoryField = document.getElementById("task-category");
+        categoryField.innerHTML = `<span>Select task category</span>`;
+        let categoryDropdown = document.getElementById("categoryDropdown");
+        if (categoryDropdown) {
+            categoryDropdown.querySelectorAll(".category-item").forEach(item => {
+                item.classList.remove("selected");
+            });
+        }
+
+        document.getElementById("task-subtasks").value = "";
+        
+        document.querySelectorAll(".contact-checkbox").forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        renderAddTaskCard();
+    });
+}
+
+function validateFields() {
+    let titleField = document.getElementById("task-title");
+    let categoryDropdown = document.getElementById("categoryDropdown");
+    let dueDateField = document.getElementById("task-dueDate");
+    let createButton = document.querySelector(".create-addTask-button");
+
+    let isTitleEmpty = titleField.value.trim() === "";
+    let isCategoryEmpty = !categoryDropdown.getAttribute("data-selected");
+
+    let isDueDateEmpty = dueDateField.value.trim() === "";
+    let isDueDateInvalid = false;
+
+    if (!isDueDateEmpty) {
+        let date = new Date(dueDateField.value);
+        isDueDateInvalid = isNaN(date.getTime());
+    }
+
+    console.log('Due Date:', dueDateField.value);
+
+    createButton.style.backgroundColor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "grey" : "";
+    createButton.style.cursor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "not-allowed" : "pointer";
+    createButton.disabled = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid;
+}
+
+function validateAndSaveTask(event) {
+    event.preventDefault();
+
+    let titleField = document.getElementById("task-title");
+    let categoryDropdown = document.getElementById("categoryDropdown");
+    let dueDateField = document.getElementById("task-dueDate");
+
+    let isValid = true;
+
+    removeErrorMessages();
+
+    if (!titleField.value.trim()) {
+        isValid = false;
+        showError(titleField, "This field is required");
+    }
+
+    if (!categoryDropdown.getAttribute("data-selected")) {
+        isValid = false;
+        showError(categoryDropdown, "This field is required");
+    }
+
+    if (!dueDateField.value.trim()) {
+        isValid = false;
+        showError(dueDateField, "This field is required");
+    }
+
+    if (isValid) {
+        saveNewTask();
+    }
+}
+
+function showError(field, message) {
+    let errorSpan = document.createElement("span");
+    errorSpan.style.color = "red";
+    errorSpan.textContent = message;
+    field.parentNode.appendChild(errorSpan);
+}
+
+function removeErrorMessages() {
+    let errorMessages = document.querySelectorAll(".error-message");
+    errorMessages.forEach(msg => msg.remove());
+}
+
+function setupTitleField() {
+    let titleField = document.getElementById('task-title');
+    if (titleField) {
+        titleField.addEventListener('input', validateFields);
+    }
+}
+
+function setupCreateButton() {
+    let createButton = document.querySelector(".create-addTask-button");
+    if (createButton) {
+        createButton.addEventListener("click", validateAndSaveTask);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Abschnitt 1: Kontaktliste toggeln
+    setupTitleField();
+    setupCreateButton();
+});
+
+function setupCategoryDropdown() {
+    const categoryDropdown = document.getElementById('categoryDropdown');
+    const categoryItems = document.querySelectorAll('.category-item');
+    const categoryField = document.getElementById('task-category');
+
+    if (categoryField && categoryDropdown) {
+        categoryField.addEventListener('click', () => {
+            const dropdown = document.getElementById('categoryDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        });
+
+        if (categoryItems.length > 0) {
+            categoryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    categoryField.innerHTML = item.innerHTML;
+                    categoryDropdown.setAttribute('data-selected', item.getAttribute('data-value'));
+                    categoryDropdown.style.display = 'none';
+                    validateFields();
+                });
+            });
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
     let assignedToElement = document.getElementById('task-assignedTo');
     let contactList = document.querySelector('.addTask-assignedTo-contactList');
 
-    const toggleContactList = () => {
+    let toggleContactList = () => {
         if (contactList) {
             contactList.style.display = contactList.style.display === 'block' ? 'none' : 'block';
         }
@@ -453,44 +567,33 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('click', toggleContactList);
     }
 
+    let categoryField = document.getElementById("task-category");
+    let dropdown = document.getElementById("categoryDropdown");
+
+    if (categoryField && dropdown) {
+        categoryField.addEventListener("click", () => {
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        });
+
+        dropdown.addEventListener('click', function (event) {
+            if (event.target.classList.contains('category-item')) {
+                let selectedValue = event.target.dataset.value;
+                categoryField.querySelector("span").textContent = selectedValue;
+                dropdown.style.display = "none";
+                dropdown.setAttribute('data-selected', selectedValue);
+                console.log('Selected category:', selectedValue);
+            }
+        });
+    } else {
+    }
 });
 
-function showTaskCreatedPopup() {
-    const popup = document.getElementById('task-created-popup');
-    popup.classList.add('show'); // Popup anzeigen
+function setupDueDateValidation() {
+    let dueDateField = document.getElementById("task-dueDate");
 
-    // Popup nach 1 Sekunde ausblenden
-    setTimeout(() => {
-        popup.classList.remove('show');
-    }, 1000);
-}
-
-function setupCreateButton() {
-    const createButton = document.querySelector(".create-addTask-button");
-    const titleField = document.querySelector("#task-title");
-
-    if (createButton && titleField) {
-        // Funktion zur Überprüfung und Styling-Anpassung
-        function validateTitle() {
-            const isTitleEmpty = titleField.value.trim() === "";
-            createButton.style.backgroundColor = isTitleEmpty ? "red" : "";
-            createButton.style.cursor = isTitleEmpty ? "not-allowed" : "pointer";
-            createButton.disabled = isTitleEmpty; // Button deaktivieren, wenn kein Titel eingegeben wurde
-        }
-
-        // Initiale Überprüfung
-        validateTitle();
-
-        // Überprüfung bei Eingabeänderungen
-        titleField.addEventListener("input", validateTitle);
-
-        // Nur bei gültigem Titel speichern
-        createButton.addEventListener("click", (event) => {
-            if (titleField.value.trim() === "") {
-                event.preventDefault();
-            } else {
-                saveNewTask();
-            }
+    if (dueDateField) {
+        dueDateField.addEventListener("input", () => {
+            validateFields();
         });
     }
 }
