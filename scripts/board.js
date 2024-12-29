@@ -325,7 +325,6 @@ function editTask() {
 
     const task = tasks[currentTaskIndex].task;
 
-    // Task-Popup-Container
     const taskPopupContent = document.querySelector(".popup-content");
     taskPopupContent.innerHTML = `
         <div class="popup-header">
@@ -348,98 +347,205 @@ function editTask() {
             <div class="form-group">
                 <label>Priority</label>
                 <div class="priority-buttons">
-                    ${["low", "medium", "high"].map(priority => `
+                    ${["urgent", "medium", "low"].map(priority => `
                         <button type="button" class="priority-btn ${task.priority === priority ? "active" : ""}" 
-                                onclick="setPriority('${priority}')">${priority}</button>
+                                onclick="setPriority('${priority}')"
+                                data-priority="${priority}">
+                                ${capitalizeFirstLetter(priority)}
+                                <img src="./assets/icons/priority_${priority}.png" alt="${priority}">
+                                </button>
                     `).join("")}
                 </div>
             </div>
             <div class="form-group">
                 <label>Assigned To</label>
-                <div id="assignedToList">
-                    ${Object.keys(contacts).map(contactKey => `
-                        <label>
-                            <input type="checkbox" value="${contactKey}" 
-                                ${task.assignedTo && task.assignedTo[contactKey] ? "checked" : ""} />
-                            ${contacts[contactKey].name}
-                        </label>
-                    `).join("")}
+                <div class="dropdown">
+                    <button type="button" class="dropdown-toggle" onclick="toggleDropdown()">
+                    Select contacts to assign
+                    <img class="dropdown-icon" src="./assets/icons/addtask_arrowdown.png" alt="Arrow down">
+                    </button>
+                    <div class="dropdown-menu" id="assignedToList">
+                        ${Object.keys(contacts).map(contactKey => {
+                            const fullName = contacts[contactKey].name.split(" ");
+                            const firstName = fullName[0] || "";
+                            const lastName = fullName[1] || "";
+                            const initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
+                                return ` 
+                                    <div class="dropdown-item" onclick="toggleDropdownItem(this)">
+                                        <div class="dd-name">
+                                            <div class="profile-circle">${initials}</div>
+                                            <p> ${contacts[contactKey].name}</p>
+                                        </div>
+                                        <input type="checkbox" value="${contactKey}" 
+                                            ${task.assignedTo && task.assignedTo[contactKey] ? "checked" : ""} />
+                                        <span class="checkmark"></span>
+                                    </div>
+                                `;
+                        }).join("")}
+                    </div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="editTaskSubtasks">Subtasks (max 3)</label>
-                <div id="subtasksContainer">
-                    ${Object.values(task.subtasks || {}).map((subtask, index) => `
-                        <input type="text" value="${subtask.name}" 
-                               class="subtask-input" maxlength="50" data-index="${index}" />
-                    `).join("")}
-                    ${Object.keys(task.subtasks || {}).length < 3 ? `
-                        <button type="button" onclick="addSubtask()">+ Add Subtask</button>
-                    ` : ""}
+                <label>Subtasks</label>
+                <div class="subtask-input-container">
+                    <input type="text" id="newSubtaskInput" placeholder="Add new subtask" maxlength="30" />
+                    <button id="addSubtaskButton" onclick="addSubtask(event)">+</button>
                 </div>
-            </div>
-            <div class="form-actions">
-                <button type="button" onclick="saveTaskChanges()">Save</button>
-                <button type="button" onclick="closeTaskPopup()">Cancel</button>
+                <ul class="subtasks-list" id="subtasksList">
+                </ul>
             </div>
         </form>
+        <div class="form-actions">
+            <button class="add-task" type="button" onclick="saveTaskChanges()">
+            Ok
+            <img src="./assets/icons/contact_create.png"></img>
+            </button>
+        </div>
     `;
+    updateSubtasksList(task);
+}
 
-    taskPopupContent.style.overflowY = "auto";
+function addSubtask(event) {
+    event.preventDefault();
+    const task = tasks[currentTaskIndex]?.task;
+    const subtaskName = getSubtaskName();
+
+    if (canAddSubtask(task)) {
+        addNewSubtask(task, subtaskName);
+        updateSubtasksList(task);
+        clearSubtaskInput();
+    } else {
+        alert("Es können nur maximal 3 Subtasks hinzugefügt werden.");
+    }
+}
+
+function getSubtaskName() {
+    return document.getElementById('newSubtaskInput').value.trim();
+}
+
+function canAddSubtask(task) {
+    return Object.keys(task.subtasks || {}).length < 3;
+}
+
+function addNewSubtask(task, subtaskName) {
+    const subtaskId = Object.keys(task.subtasks || {}).length;
+    task.subtasks = task.subtasks || {};
+    task.subtasks[subtaskId] = { name: subtaskName, completed: false };
+}
+
+function clearSubtaskInput() {
+    document.getElementById('newSubtaskInput').value = "";
+}
+
+function updateSubtasksList(task) {
+    const subtasksList = document.querySelector('.subtasks-list');
+    subtasksList.innerHTML = Object.entries(task.subtasks).map(([subtaskId, subtask], index) => `
+        <li id="subtask-${subtaskId}" class="subtask-item" data-index="${index}">
+            <div class="subtask-item-name">
+                <img class="ul-bullet" src="./assets/icons/addtask_arrowdown.png" alt="Arrow right">
+                <span>${subtask.name}</span>
+            </div>
+            <div class="subtask-actions">
+                <img src="./assets/icons/contact_edit.png" alt="Edit" title="Edit" onclick="editSubtask(${index})" />
+                <span class="separator"></span>
+                <img src="./assets/icons/contact_basket.png" alt="Delete" title="Delete" onclick="deleteSubtask(${index})" />
+            </div>
+        </li>
+    `).join("");
+}
+
+function editSubtask(subtaskIndex) {
+    const task = tasks[currentTaskIndex].task;
+    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
+    const subtask = task.subtasks[subtaskId];
+    const subtaskElement = document.getElementById(`subtask-${subtaskId}`);
+    let inputField = createInputField(subtask);
+    let checkIcon = createCheckIcon();
+    subtaskElement.innerHTML = '';
+    subtaskElement.appendChild(inputField);
+    subtaskElement.appendChild(checkIcon);
+    checkIcon.addEventListener('click', function() {
+        const newSubtaskName = inputField.value.trim();
+        if (newSubtaskName) {
+            subtask.name = newSubtaskName;
+            updateSubtasksList(task);
+        }
+    });
+}
+
+function createCheckIcon() {
+    let checkIcon = document.createElement('img');
+    checkIcon.src = './assets/icons/contact_create.png';
+    checkIcon.alt = 'Bestätigen';
+    checkIcon.className = 'confirm-img';
+    return checkIcon;
+}
+
+function createInputField(subtask){
+    let inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.value = subtask.name;
+    inputField.maxLength = '30';
+    return inputField;
+}
+
+function deleteSubtask(subtaskIndex) {
+    const task = tasks[currentTaskIndex].task;
+    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
+    delete task.subtasks[subtaskId];
+    updateSubtasksList(task);
+}
+
+function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function setPriority(priority) {
     const priorityButtons = document.querySelectorAll(".priority-btn");
-    priorityButtons.forEach(btn => btn.classList.remove("active"));
-    const activeButton = Array.from(priorityButtons).find(btn => btn.textContent === priority);
-    if (activeButton) activeButton.classList.add("active");
-}
-
-function addSubtask() {
-    const subtasksContainer = document.getElementById("subtasksContainer");
-    const subtaskInputs = subtasksContainer.querySelectorAll(".subtask-input");
-    if (subtaskInputs.length < 3) {
-        const newSubtaskInput = document.createElement("input");
-        newSubtaskInput.type = "text";
-        newSubtaskInput.classList.add("subtask-input");
-        newSubtaskInput.maxLength = 50;
-        subtasksContainer.insertBefore(newSubtaskInput, subtasksContainer.querySelector("button"));
+    let activeButton = null;
+    priorityButtons.forEach(btn => {
+        if (btn.classList.contains("active")) {
+            activeButton = btn;
+        }
+        btn.classList.remove("active");
+    });
+    const clickedButton = document.querySelector(`.priority-btn[data-priority="${priority}"]`);
+    if (clickedButton === activeButton) {
+        return;
     }
-    if (subtaskInputs.length === 2) {
-        subtasksContainer.querySelector("button").remove();
+    if (clickedButton) {
+        clickedButton.classList.add("active");
     }
 }
 
-function saveTaskChanges() {
-    const title = document.getElementById("editTaskTitle").value;
-    const description = document.getElementById("editTaskDescription").value;
-    const dueDate = document.getElementById("editTaskDueDate").value;
-    const priority = document.querySelector(".priority-btn.active")?.textContent || null;
-    const assignedToCheckboxes = document.querySelectorAll("#assignedToList input[type='checkbox']");
-    const assignedTo = {};
-    assignedToCheckboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            assignedTo[checkbox.value] = true;
+function toggleDropdown() {
+    const dropdown = document.querySelector(".dropdown");
+    const icon = document.querySelector(".dropdown-toggle .dropdown-icon");
+    dropdown.classList.toggle("open");
+    document.querySelector(".dropdown-toggle").classList.toggle("dd-highlight");
+    icon.classList.toggle("rotated");
+    if (dropdown.classList.contains("open")) {
+        updateDropdownItems(dropdown);
+    }
+}
+
+function toggleDropdownItem(item) {
+    const checkbox = item.querySelector("input[type='checkbox']");
+    if (!checkbox) return;
+    checkbox.checked = !checkbox.checked;
+    updateItemStyle(item, checkbox.checked);
+}
+
+function updateDropdownItems(dropdown) {
+    const items = dropdown.querySelectorAll(".dropdown-item");
+    items.forEach(item => {
+        const checkbox = item.querySelector("input[type='checkbox']");
+        if (checkbox) {
+            updateItemStyle(item, checkbox.checked);
         }
     });
-    const subtaskInputs = document.querySelectorAll(".subtask-input");
-    const subtasks = {};
-    subtaskInputs.forEach((input, index) => {
-        if (input.value.trim()) {
-            subtasks[`subtask${index + 1}`] = { name: input.value.trim(), completed: false };
-        }
-    });
-    const updatedTask = tasks[currentTaskIndex].task;
-    updatedTask.title = title;
-    updatedTask.description = description;
-    updatedTask.dueDate = dueDate;
-    updatedTask.priority = priority;
-    updatedTask.assignedTo = assignedTo;
-    updatedTask.subtasks = subtasks;
+}
 
-    document.querySelectorAll(".task-list").forEach(taskList => (taskList.innerHTML = ""));
-    tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
-    checkEmptyCategories();
-
-    closeTaskPopup();
+function updateItemStyle(item, isChecked) {
+    item.classList.toggle("checked", isChecked);
 }

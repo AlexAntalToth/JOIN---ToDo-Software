@@ -23,26 +23,20 @@ async function renderAddTaskCard(task) {
         return;
     }
 
-    // HTML-Inhalte einfügen
     addTaskContainer.innerHTML = await generateAddTaskCardHTML(task || { title: "", description: "", dueDate: "", priority: "" });
     addTaskFooter.innerHTML = generateAddTaskCardFooterHTML();
 
-    // Events für Buttons und Felder
     setupCreateButton();
+    setupClearButton();
     setupAssignedToField();
+    setupPriorityButtons();
+    setupCategoryDropdown();
+    setupTitleField();
+    validateFields();
     setupDueDateValidation();
-    setupPriorityButtons(); // Die Logik für Prioritätsbuttons ist ausgelagert
-}
-
-// Setup-Funktion für "Create"-Button
-function setupCreateButton() {
-    let createButton = document.querySelector(".create-addTask-button");
-    if (createButton) {
-        createButton.addEventListener("click", saveNewTask);
+    setupSubtaskInput();
     }
-}
 
-// Setup-Funktion für das "Assigned To"-Feld
 function setupAssignedToField() {
     let assignedToField = document.getElementById("task-assignedTo");
     let contactList = document.getElementById("contactList");
@@ -78,32 +72,6 @@ function setupAssignedToField() {
     }
 }
 
-// Setup-Funktion für Datumseingabevalidierung
-function setupDueDateValidation() {
-    let dueDateInput = document.getElementById("task-dueDate");
-    if (dueDateInput) {
-        dueDateInput.addEventListener("input", function () {
-            let dueDateField = document.getElementById("task-dueDate");
-            let errorMessage = document.getElementById("date-error-message");
-
-            let datePattern = /^([0-2][0-9]|(3)[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
-
-            if (!datePattern.test(dueDateField.value)) {
-                if (!errorMessage) {
-                    let errorSpan = document.createElement("span");
-                    errorSpan.id = "date-error-message";
-                    errorSpan.style.color = "red";
-                    errorSpan.textContent = "Bitte ein gültiges Datum im Format dd/mm/yyyy eingeben.";
-                    dueDateField.parentNode.appendChild(errorSpan);
-                }
-            } else if (errorMessage) {
-                errorMessage.remove();
-            }
-        });
-    }
-}
-
-// Setup-Funktion für Prioritätsbuttons
 function setupPriorityButtons() {
     let urgentButton = document.getElementById('task-urgent');
     let mediumButton = document.getElementById('task-medium');
@@ -120,36 +88,33 @@ function setupPriorityButtons() {
     function togglePriority(selectedButton) {
         let allButtons = [urgentButton, mediumButton, lowButton];
 
-        // Prüfen, ob der Button bereits aktiv ist
-        const isActive = selectedButton.classList.contains('urgent-active') ||
+        let isActive = selectedButton.classList.contains('urgent-active') ||
             selectedButton.classList.contains('middle-active') ||
             selectedButton.classList.contains('low-active');
 
-        // Entfernen aller aktiven Klassen
         allButtons.forEach(button => {
             button.classList.remove('urgent-active', 'middle-active', 'low-active');
-            updateButtonSVG(button, false); // Setzt die Farben zurück
+            updateButtonSVG(button, false);
         });
 
-        // Nur aktivieren, wenn der Button zuvor nicht aktiv war
         if (!isActive) {
             if (selectedButton === urgentButton) {
                 selectedButton.classList.add('urgent-active');
-                taskPriority = "high"; // Priorität setzen
+                taskPriority = "high";
             } else if (selectedButton === mediumButton) {
                 selectedButton.classList.add('middle-active');
-                taskPriority = "medium"; // Priorität setzen
+                taskPriority = "medium";
             } else if (selectedButton === lowButton) {
                 selectedButton.classList.add('low-active');
-                taskPriority = "low"; // Priorität setzen
+                taskPriority = "low";
             }
 
-            updateButtonSVG(selectedButton, true); // Aktivierte Farbe setzen
+            updateButtonSVG(selectedButton, true);
         } else {
-            taskPriority = ""; // Keine Priorität ausgewählt
+            taskPriority = "";
         }
 
-        console.log(`Task Priority set to: ${taskPriority}`); // Debug-Ausgabe
+        console.log(`Task Priority set to: ${taskPriority}`);
     }
 
     function updateButtonSVG(button, isActive) {
@@ -275,7 +240,7 @@ async function generateAddTaskCardHTML(task) {
                     <p>*</p>
                 </div>
                 <div class="addTask-dueDate-field">
-                    <input id="task-dueDate" type="text" value="${task.dueDate}" placeholder="dd/mm/yyyy">
+                    <input id="task-dueDate" type="date" value="${task.dueDate}" placeholder="dd/mm/yyyy">
                     <img class="addTask-date-icon" src="../../assets/icons/addTask_date.png" alt="Logo Due Date">
                 </div>
             </div>
@@ -313,25 +278,44 @@ async function generateAddTaskCardHTML(task) {
                     <p>*</p>
                 </div>
                 <div class="addTask-category-container">
-                    <select class="addTask-category-field" id="task-category">
-                    <option value="" disabled selected>Select task category</option>
-                    ${task.badge}
-                    </select>
+                    <div class="addTask-category-field" id="task-category">
+                    <span>Select task category</span>
+                    </div>
                     <img class="addTask-category-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Logo Arrow Down">
+                    <div class="addTask-category-dropdown" id="categoryDropdown" style="display: none;">
+                        <div class="category-item" data-value="Technical Task">Technical Task</div>
+                        <div class="category-item" data-value="User Story">User Story</div>
+                    </div>
                 </div>
             </div>
             <div class="addTask-subtasks">
                 <h2>Subtasks</h2>
                 <div class="addTask-subtasks-field">
-                    <input class="addTask-subtasks-content" id="task-subtasks" value="${task.subtasks}" placeholder="Add new subtask">
-                    <svg class="addTask-subtasks-icon" width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <mask id="mask0_75601_15213" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="24">
-                        <rect x="0.248535" width="24" height="24" fill="#D9D9D9"/>
+                    <input class="addTask-subtasks-content" id="task-subtasks" placeholder="Add new subtask">
+                    <svg class="addTask-subtasks-icon-add" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <mask id="mask0_75601_15213" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
+                        <rect x="0.248535" width="24" height="25" fill="#D9D9D9"/>
                         </mask>
                         <g mask="url(#mask0_75601_15213)">
                         <path d="M11.2485 13H6.24854C5.9652 13 5.7277 12.9042 5.53604 12.7125C5.34437 12.5208 5.24854 12.2833 5.24854 12C5.24854 11.7167 5.34437 11.4792 5.53604 11.2875C5.7277 11.0958 5.9652 11 6.24854 11H11.2485V6C11.2485 5.71667 11.3444 5.47917 11.536 5.2875C11.7277 5.09583 11.9652 5 12.2485 5C12.5319 5 12.7694 5.09583 12.961 5.2875C13.1527 5.47917 13.2485 5.71667 13.2485 6V11H18.2485C18.5319 11 18.7694 11.0958 18.961 11.2875C19.1527 11.4792 19.2485 11.7167 19.2485 12C19.2485 12.2833 19.1527 12.5208 18.961 12.7125C18.7694 12.9042 18.5319 13 18.2485 13H13.2485V18C13.2485 18.2833 13.1527 18.5208 12.961 18.7125C12.7694 18.9042 12.5319 19 12.2485 19C11.9652 19 11.7277 18.9042 11.536 18.7125C11.3444 18.5208 11.2485 18.2833 11.2485 18V13Z" fill="#2A3647"/>
                         </g>
                     </svg>
+                    <div class="addTask-icons-input">
+                        <svg class="cancel-addTask-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
+                            <path d="M12.001 12.5001L17.244 17.7431M6.758 17.7431L12.001 12.5001L6.758 17.7431ZM17.244 7.25708L12 12.5001L17.244 7.25708ZM12 12.5001L6.758 7.25708L12 12.5001Z" stroke="#2A3647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>  
+                        <div class="addTask-subtasks-vertical-line">
+                        </div>
+                        <svg class="create-addTask-icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_267600_4053" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
+                            <rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
+                            </mask>
+                            <g mask="url(#mask0_267600_4053)">
+                            <path d="M9.55057 15.65L18.0256 7.175C18.2256 6.975 18.4631 6.875 18.7381 6.875C19.0131 6.875 19.2506 6.975 19.4506 7.175C19.6506 7.375 19.7506 7.6125 19.7506 7.8875C19.7506 8.1625 19.6506 8.4 19.4506 8.6L10.2506 17.8C10.0506 18 9.81724 18.1 9.55057 18.1C9.28391 18.1 9.05057 18 8.85057 17.8L4.55057 13.5C4.35057 13.3 4.25474 13.0625 4.26307 12.7875C4.27141 12.5125 4.37557 12.275 4.57557 12.075C4.77557 11.875 5.01307 11.775 5.28807 11.775C5.56307 11.775 5.80057 11.875 6.00057 12.075L9.55057 15.65Z" fill="black"/>
+                            </g>
+                        </svg>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -385,18 +369,14 @@ async function createAddTaskCard(task) {
     addTaskFooter.innerHTML = addTaskFooterHTML;
 }
 
-function clearTaskForm() {
-    document.querySelector(".addTask-content").innerHTML = "";
-}
-
 async function saveNewTask() {
     let taskTitle = document.getElementById('task-title').value;
     let taskDescription = document.getElementById('task-description').value;
     let taskDueDate = document.getElementById('task-dueDate').value;
-    // let taskPriority = taskdocument.getElementById('task-priority').value;
-    let taskBadge = document.getElementById('task-category').value;
-
-    // Subtasks are assumed to be a comma-separated list of values
+    let dueDateISO = document.getElementById('task-dueDate').value;
+    let [year, month, day] = dueDateISO.split("-");
+    let formattedDueDate = `${day}/${month}/${year}`; // in case of saving as DD/MM/YYYY
+    let taskBadge = document.getElementById('categoryDropdown').getAttribute('data-selected');
     let taskSubtasks = document.getElementById('task-subtasks').value.split(',').map(subtask => subtask.trim());
 
     let newTask = {
@@ -406,7 +386,7 @@ async function saveNewTask() {
         dueDate: taskDueDate,
         priority: taskPriority,
         badge: taskBadge,
-        subtasks: taskSubtasks // Store the subtasks list
+        subtasks: taskSubtasks
     };
 
     try {
@@ -421,11 +401,8 @@ async function saveNewTask() {
         if (response.ok) {
             let responseData = await response.json();
             console.log("Neue Aufgabe gespeichert:", responseData);
-
-            // Zeige das Popup an
             showTaskCreatedPopup();
-
-            return responseData; // Returns the generated Task ID
+            return responseData;
         } else {
             console.error("Fehler beim Speichern der Aufgabe:", response.statusText);
             return null;
@@ -436,12 +413,149 @@ async function saveNewTask() {
     }
 }
 
+function showTaskCreatedPopup() {
+    let popup = document.getElementById('task-created-popup');
+    popup.classList.add('show');
+
+    setTimeout(() => {
+        popup.classList.remove('show');
+    }, 1500);
+}
+
+function setupCreateButton() {
+    let createButton = document.querySelector(".create-addTask-button");
+    if (createButton) {
+        createButton.addEventListener("click", validateAndSaveTask);
+    }
+}
+
+function setupClearButton() {
+    let clearButton = document.querySelector(".clear-addTask-button");
+    if (!clearButton) return;
+
+    clearButton.addEventListener("click", () => {
+        document.getElementById("task-title").value = "";
+        document.getElementById("task-description").value = "";
+        document.getElementById("task-dueDate").value = "";
+        document.querySelectorAll(".addTask-prio-button").forEach(button => button.classList.remove("selected"));
+        
+        let categoryField = document.getElementById("task-category");
+        categoryField.innerHTML = `<span>Select task category</span>`;
+        let categoryDropdown = document.getElementById("categoryDropdown");
+        if (categoryDropdown) {
+            categoryDropdown.querySelectorAll(".category-item").forEach(item => {
+                item.classList.remove("selected");
+            });
+        }
+
+        document.getElementById("task-subtasks").value = "";
+        
+        document.querySelectorAll(".contact-checkbox").forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        renderAddTaskCard();
+    });
+}
+
+function validateFields() {
+    let titleField = document.getElementById("task-title");
+    let categoryDropdown = document.getElementById("categoryDropdown");
+    let dueDateField = document.getElementById("task-dueDate");
+    let createButton = document.querySelector(".create-addTask-button");
+
+    let isTitleEmpty = titleField.value.trim() === "";
+    let isCategoryEmpty = !categoryDropdown.getAttribute("data-selected");
+
+    let isDueDateEmpty = dueDateField.value.trim() === "";
+    let isDueDateInvalid = false;
+
+    if (!isDueDateEmpty) {
+        let date = new Date(dueDateField.value);
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+        date.setHours(0, 0, 0, 0);
+        isDueDateInvalid = isNaN(date.getTime()) || date < today;
+    }
+
+    console.log('Due Date:', dueDateField.value);
+
+    createButton.style.backgroundColor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "grey" : "";
+    createButton.style.cursor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "not-allowed" : "pointer";
+    createButton.disabled = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid;
+}
+
+function validateAndSaveTask(event) {
+    event.preventDefault();
+
+    let titleField = document.getElementById("task-title");
+    let categoryDropdown = document.getElementById("categoryDropdown");
+    let dueDateField = document.getElementById("task-dueDate");
+
+    let isValid = true;
+
+    removeErrorMessages();
+
+    if (!titleField.value.trim()) {
+        isValid = false;
+        showError(titleField, "This field is required");
+    }
+
+    if (!categoryDropdown.getAttribute("data-selected")) {
+        isValid = false;
+        showError(categoryDropdown, "This field is required");
+    }
+
+    if (!dueDateField.value.trim()) {
+        isValid = false;
+        showError(dueDateField, "This field is required");
+    }
+
+    if (isValid) {
+        saveNewTask();
+    }
+}
+
+function showError(field, message) {
+    let errorSpan = document.createElement("span");
+    errorSpan.style.color = "red";
+    errorSpan.textContent = message;
+    field.parentNode.appendChild(errorSpan);
+}
+
+function removeErrorMessages() {
+    let errorMessages = document.querySelectorAll(".error-message");
+    errorMessages.forEach(msg => msg.remove());
+}
+
+function setupTitleField() {
+    let titleField = document.getElementById('task-title');
+    if (titleField) {
+        titleField.addEventListener('input', validateFields);
+    }
+}
+
+function setupCreateButton() {
+    let createButton = document.querySelector(".create-addTask-button");
+    if (createButton) {
+        createButton.addEventListener("click", validateAndSaveTask);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Abschnitt 1: Kontaktliste toggeln
+    setupTitleField();
+    setupCreateButton();
+    setupAssignedTo();
+    setupCategoryDropdown();
+    setupSubtaskInput();
+    setupDueDateValidation();
+});
+
+function setupAssignedTo() {
     let assignedToElement = document.getElementById('task-assignedTo');
     let contactList = document.querySelector('.addTask-assignedTo-contactList');
 
-    const toggleContactList = () => {
+    let toggleContactList = () => {
         if (contactList) {
             contactList.style.display = contactList.style.display === 'block' ? 'none' : 'block';
         }
@@ -452,44 +566,68 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         document.addEventListener('click', toggleContactList);
     }
-
-});
-
-function showTaskCreatedPopup() {
-    const popup = document.getElementById('task-created-popup');
-    popup.classList.add('show'); // Popup anzeigen
-
-    // Popup nach 1 Sekunde ausblenden
-    setTimeout(() => {
-        popup.classList.remove('show');
-    }, 1000);
 }
 
-function setupCreateButton() {
-    const createButton = document.querySelector(".create-addTask-button");
-    const titleField = document.querySelector("#task-title");
+function setupCategoryDropdown() {
+    let categoryField = document.getElementById("task-category");
+    let dropdown = document.getElementById("categoryDropdown");
+    let icon = document.querySelector(".addTask-category-icon");
 
-    if (createButton && titleField) {
-        // Funktion zur Überprüfung und Styling-Anpassung
-        function validateTitle() {
-            const isTitleEmpty = titleField.value.trim() === "";
-            createButton.style.backgroundColor = isTitleEmpty ? "red" : "";
-            createButton.style.cursor = isTitleEmpty ? "not-allowed" : "pointer";
-            createButton.disabled = isTitleEmpty; // Button deaktivieren, wenn kein Titel eingegeben wurde
-        }
+    if (categoryField && dropdown) {
+        categoryField.addEventListener("click", () => {
+            // Toggle das Dropdown
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
 
-        // Initiale Überprüfung
-        validateTitle();
+            // Toggle die Klasse 'open' für das Feld und icon
+            categoryField.classList.toggle("open");
+        });
 
-        // Überprüfung bei Eingabeänderungen
-        titleField.addEventListener("input", validateTitle);
+        dropdown.addEventListener('click', function (event) {
+            if (event.target.classList.contains('category-item')) {
+                let selectedValue = event.target.dataset.value;
+                categoryField.querySelector("span").textContent = selectedValue;
+                
+                // Dropdown schließen
+                dropdown.style.display = "none";
+                
+                // Entferne die 'open'-Klasse, um das Icon zurückzusetzen
+                categoryField.classList.remove("open");
+                
+                dropdown.setAttribute('data-selected', selectedValue);
+                console.log('Selected category:', selectedValue);
+            }
+        });
+    }
+}
 
-        // Nur bei gültigem Titel speichern
-        createButton.addEventListener("click", (event) => {
-            if (titleField.value.trim() === "") {
-                event.preventDefault();
-            } else {
-                saveNewTask();
+function setupDueDateValidation() {
+    let dueDateField = document.getElementById("task-dueDate");
+
+    if (dueDateField) {
+        dueDateField.addEventListener("input", () => {
+            validateFields();
+        });
+    }
+}
+
+function setupSubtaskInput() {
+    const subtaskInput = document.querySelector(".addTask-subtasks-content");
+    const addIcon = document.querySelector(".addTask-subtasks-icon-add");
+    const iconsContainer = document.querySelector(".addTask-icons-input");
+
+    if (subtaskInput && addIcon && iconsContainer) {
+        addIcon.classList.remove("hidden");
+        iconsContainer.classList.remove("active");
+
+        subtaskInput.addEventListener("focus", () => {
+            addIcon.classList.add("hidden");
+            iconsContainer.classList.add("active");
+        });
+
+        subtaskInput.addEventListener("blur", () => {
+            if (!subtaskInput.value.trim()) {
+                addIcon.classList.remove("hidden");
+                iconsContainer.classList.remove("active");
             }
         });
     }
