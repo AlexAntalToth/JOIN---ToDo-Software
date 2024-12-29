@@ -411,15 +411,16 @@ body {
   user-select: none;
 }
 
-.label-container input {
+.label-container input,
+.dropdown-item input {
   position: absolute;
   opacity: 0;
-  cursor: pointer;
   height: 0;
   width: 0;
+  cursor: pointer;
 }
 
-.checkmark {
+.label-container .checkmark {
   position: absolute;
   top: 0;
   left: 0;
@@ -431,6 +432,11 @@ body {
 
 .label-container input:checked ~ .checkmark {
   background-image: url(../assets/icons/checked.svg);
+}
+
+.dropdown-item input:checked ~ .checkmark{
+  background-image: url(../assets/icons/checked.svg);
+  filter: grayscale(100) brightness(100);
 }
 
 .subtasks {
@@ -494,8 +500,26 @@ body {
   padding: 12px 16px;
 }
 
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #8acce6;
+  box-shadow: 0px 2px 3px 1px #8acce6;
+}
+
 .form-group textarea {
   height: 120px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.form-actions .add-task img{
+width: 16px;
+height: 16px;
 }
 
 .priority-buttons {
@@ -579,13 +603,17 @@ body {
   height: 5px;
 }
 
+.dropdown-icon.rotated {
+  transform: rotate(-180deg);
+}
+
 .dropdown-toggle:hover {
   box-shadow: 0px 2px 3px 1px #bfbfbf;
 }
 
 .dd-highlight {
-  border-color: #8ACCE6;
-  box-shadow: 0px 2px 3px 1px #8ACCE6;
+  border-color: #8acce6;
+  box-shadow: 0px 2px 3px 1px #8acce6;
 }
 
 .dropdown-menu {
@@ -601,15 +629,35 @@ body {
 }
 
 .dropdown-menu .dropdown-item {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 5px 10px;
   cursor: pointer;
+  color: black;
 }
 
 .dropdown-item:hover {
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
+}
+
+.dropdown-item.checked {
+  background-color: #091830;
+  color: white;
+}
+
+.dropdown-item .checkmark {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  height: 24px;
+  width: 24px;
+  background-image: url(../assets/icons/unchecked.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 .dropdown-item .dd-name {
@@ -622,12 +670,101 @@ body {
   margin: 0;
 }
 
-.dropdown-menu .dropdown-item input {
-  margin-right: 10px;
-}
-
 .dropdown.open .dropdown-menu {
   display: block;
+}
+
+/* subtask-edit */
+
+.subtask-input-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.subtask-input-container input {
+  flex: 1;
+}
+
+.subtask-input-container button {
+  margin-left: 10px;
+  padding: 8px;
+  background-color: #2B3646;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.subtask-input-container button:hover {
+  background-color: #28ABE3;
+}
+
+.subtask-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.subtask-item:hover {
+  background-color: #f0f0f0;
+}
+
+.subtask-item input {
+  width: 95%;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #8acce6;
+  padding: 0;
+  font-size: 16px;
+}
+
+.subtask-item input:focus {
+  outline: none;
+  border-color: none;
+  box-shadow: none;
+}
+
+.confirm-img {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  filter: grayscale(100) brightness(0);
+}
+
+.subtask-actions {
+  display: flex;
+  align-items: center;
+}
+
+.subtask-actions img {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.subtask-actions .separator {
+  width: 1px;
+  height: 16px;
+  background-color: #ccc;
+  margin: 0 5px;
+}
+
+.subtask-item-name{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ul-bullet {
+  transform: rotate(-90deg);
+  width: 8px;
+  height: 5px;
 }
 
 /* responsive */

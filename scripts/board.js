@@ -362,7 +362,7 @@ function editTask() {
                 <div class="dropdown">
                     <button type="button" class="dropdown-toggle" onclick="toggleDropdown()">
                     Select contacts to assign
-                    <img src="./assets/icons/addtask_arrowdown.png" alt="Arrow down">
+                    <img class="dropdown-icon" src="./assets/icons/addtask_arrowdown.png" alt="Arrow down">
                     </button>
                     <div class="dropdown-menu" id="assignedToList">
                         ${Object.keys(contacts).map(contactKey => {
@@ -370,7 +370,7 @@ function editTask() {
                             const firstName = fullName[0] || "";
                             const lastName = fullName[1] || "";
                             const initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
-                                return `
+                                return ` 
                                     <div class="dropdown-item" onclick="toggleDropdownItem(this)">
                                         <div class="dd-name">
                                             <div class="profile-circle">${initials}</div>
@@ -378,6 +378,7 @@ function editTask() {
                                         </div>
                                         <input type="checkbox" value="${contactKey}" 
                                             ${task.assignedTo && task.assignedTo[contactKey] ? "checked" : ""} />
+                                        <span class="checkmark"></span>
                                     </div>
                                 `;
                         }).join("")}
@@ -385,23 +386,114 @@ function editTask() {
                 </div>
             </div>
             <div class="form-group">
-                <label>Subtasks (max 3)</label>
-                <div id="subtasksContainer">
-                    ${Object.values(task.subtasks || {}).map((subtask, index) => `
-                        <input type="text" value="${subtask.name}" 
-                               class="subtask-input" maxlength="50" data-index="${index}" />
-                    `).join("")}
-                    ${Object.keys(task.subtasks || {}).length < 3 ? `
-                        <button type="button" onclick="addSubtask()">+ Add Subtask</button>
-                    ` : ""}
+                <label>Subtasks</label>
+                <div class="subtask-input-container">
+                    <input type="text" id="newSubtaskInput" placeholder="Add new subtask" maxlength="30" />
+                    <button id="addSubtaskButton" onclick="addSubtask(event)">+</button>
                 </div>
+                <ul class="subtasks-list" id="subtasksList">
+                </ul>
             </div>
         </form>
         <div class="form-actions">
-            <button type="button" onclick="saveTaskChanges()">Save</button>
-            <button type="button" onclick="closeTaskPopup()">Cancel</button>
+            <button class="add-task" type="button" onclick="saveTaskChanges()">
+            Ok
+            <img src="./assets/icons/contact_create.png"></img>
+            </button>
         </div>
     `;
+    updateSubtasksList(task);
+}
+
+function addSubtask(event) {
+    event.preventDefault();
+    const task = tasks[currentTaskIndex]?.task;
+    const subtaskName = getSubtaskName();
+
+    if (canAddSubtask(task)) {
+        addNewSubtask(task, subtaskName);
+        updateSubtasksList(task);
+        clearSubtaskInput();
+    } else {
+        alert("Es können nur maximal 3 Subtasks hinzugefügt werden.");
+    }
+}
+
+function getSubtaskName() {
+    return document.getElementById('newSubtaskInput').value.trim();
+}
+
+function canAddSubtask(task) {
+    return Object.keys(task.subtasks || {}).length < 3;
+}
+
+function addNewSubtask(task, subtaskName) {
+    const subtaskId = Object.keys(task.subtasks || {}).length;
+    task.subtasks = task.subtasks || {};
+    task.subtasks[subtaskId] = { name: subtaskName, completed: false };
+}
+
+function clearSubtaskInput() {
+    document.getElementById('newSubtaskInput').value = "";
+}
+
+function updateSubtasksList(task) {
+    const subtasksList = document.querySelector('.subtasks-list');
+    subtasksList.innerHTML = Object.entries(task.subtasks).map(([subtaskId, subtask], index) => `
+        <li id="subtask-${subtaskId}" class="subtask-item" data-index="${index}">
+            <div class="subtask-item-name">
+                <img class="ul-bullet" src="./assets/icons/addtask_arrowdown.png" alt="Arrow right">
+                <span>${subtask.name}</span>
+            </div>
+            <div class="subtask-actions">
+                <img src="./assets/icons/contact_edit.png" alt="Edit" title="Edit" onclick="editSubtask(${index})" />
+                <span class="separator"></span>
+                <img src="./assets/icons/contact_basket.png" alt="Delete" title="Delete" onclick="deleteSubtask(${index})" />
+            </div>
+        </li>
+    `).join("");
+}
+
+function editSubtask(subtaskIndex) {
+    const task = tasks[currentTaskIndex].task;
+    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
+    const subtask = task.subtasks[subtaskId];
+    const subtaskElement = document.getElementById(`subtask-${subtaskId}`);
+    let inputField = createInputField(subtask);
+    let checkIcon = createCheckIcon();
+    subtaskElement.innerHTML = '';
+    subtaskElement.appendChild(inputField);
+    subtaskElement.appendChild(checkIcon);
+    checkIcon.addEventListener('click', function() {
+        const newSubtaskName = inputField.value.trim();
+        if (newSubtaskName) {
+            subtask.name = newSubtaskName;
+            updateSubtasksList(task);
+        }
+    });
+}
+
+function createCheckIcon() {
+    let checkIcon = document.createElement('img');
+    checkIcon.src = './assets/icons/contact_create.png';
+    checkIcon.alt = 'Bestätigen';
+    checkIcon.className = 'confirm-img';
+    return checkIcon;
+}
+
+function createInputField(subtask){
+    let inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.value = subtask.name;
+    inputField.maxLength = '30';
+    return inputField;
+}
+
+function deleteSubtask(subtaskIndex) {
+    const task = tasks[currentTaskIndex].task;
+    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
+    delete task.subtasks[subtaskId];
+    updateSubtasksList(task);
 }
 
 function capitalizeFirstLetter(str) {
@@ -428,63 +520,32 @@ function setPriority(priority) {
 
 function toggleDropdown() {
     const dropdown = document.querySelector(".dropdown");
+    const icon = document.querySelector(".dropdown-toggle .dropdown-icon");
     dropdown.classList.toggle("open");
     document.querySelector(".dropdown-toggle").classList.toggle("dd-highlight");
+    icon.classList.toggle("rotated");
+    if (dropdown.classList.contains("open")) {
+        updateDropdownItems(dropdown);
+    }
 }
 
-function toggleDropdownItem(item){
-let checkbox = item.querySelector("input[type='checkbox']");
-if (!checkbox) return;
-checkbox.checked = !checkbox.checked;
-item.style.backgroundColor = checkbox.checked ? "#091830" : "";
-item.style.color = checkbox.checked ? "white" : "black";
+function toggleDropdownItem(item) {
+    const checkbox = item.querySelector("input[type='checkbox']");
+    if (!checkbox) return;
+    checkbox.checked = !checkbox.checked;
+    updateItemStyle(item, checkbox.checked);
 }
 
-// function addSubtask() {
-//     const subtasksContainer = document.getElementById("subtasksContainer");
-//     const subtaskInputs = subtasksContainer.querySelectorAll(".subtask-input");
-//     if (subtaskInputs.length < 3) {
-//         const newSubtaskInput = document.createElement("input");
-//         newSubtaskInput.type = "text";
-//         newSubtaskInput.classList.add("subtask-input");
-//         newSubtaskInput.maxLength = 50;
-//         subtasksContainer.insertBefore(newSubtaskInput, subtasksContainer.querySelector("button"));
-//     }
-//     if (subtaskInputs.length === 2) {
-//         subtasksContainer.querySelector("button").remove();
-//     }
-// }
-
-function saveTaskChanges() {
-    const title = document.getElementById("editTaskTitle").value;
-    const description = document.getElementById("editTaskDescription").value;
-    const dueDate = document.getElementById("editTaskDueDate").value;
-    const priority = document.querySelector(".priority-btn.active")?.textContent || null;
-    const assignedToCheckboxes = document.querySelectorAll("#assignedToList input[type='checkbox']");
-    const assignedTo = {};
-    assignedToCheckboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            assignedTo[checkbox.value] = true;
+function updateDropdownItems(dropdown) {
+    const items = dropdown.querySelectorAll(".dropdown-item");
+    items.forEach(item => {
+        const checkbox = item.querySelector("input[type='checkbox']");
+        if (checkbox) {
+            updateItemStyle(item, checkbox.checked);
         }
     });
-    const subtaskInputs = document.querySelectorAll(".subtask-input");
-    const subtasks = {};
-    subtaskInputs.forEach((input, index) => {
-        if (input.value.trim()) {
-            subtasks[`subtask${index + 1}`] = { name: input.value.trim(), completed: false };
-        }
-    });
-    const updatedTask = tasks[currentTaskIndex].task;
-    updatedTask.title = title;
-    updatedTask.description = description;
-    updatedTask.dueDate = dueDate;
-    updatedTask.priority = priority;
-    updatedTask.assignedTo = assignedTo;
-    updatedTask.subtasks = subtasks;
+}
 
-    document.querySelectorAll(".task-list").forEach(taskList => (taskList.innerHTML = ""));
-    tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
-    checkEmptyCategories();
-
-    closeTaskPopup();
+function updateItemStyle(item, isChecked) {
+    item.classList.toggle("checked", isChecked);
 }
