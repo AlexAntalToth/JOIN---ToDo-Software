@@ -584,7 +584,6 @@
     align-items: center;
     border: 1px solid rgba(209, 209, 209, 1);
     border-radius: 10px;
-    padding-left: 16px;
     background-color: #fff;
     cursor: pointer;
 }
@@ -595,12 +594,20 @@
     outline: none;
     font-size: 20px;
     height: 100%;
+    padding-left: 16px;
     padding-right: 48px;
     border-radius: 10px;
     cursor: pointer;
 }
 
-.addTask-subtasks-icon {
+.addTask-subtasks-vertical-line {
+    padding: 1px;
+    height: 24px;
+    background-color: rgba(209, 209, 209, 1);
+    margin: 0 auto;
+}
+
+.addTask-subtasks-icon-add {
     position: absolute;
     right: 20px;
     top: 50%;
@@ -608,4 +615,18 @@
     cursor: pointer;
     fill: #2A3647;
     transition: fill 0.3s;
+}
+
+.addTask-icons-input {
+    display: none;
+}
+
+.addTask-icons-input.active {
+    display: flex; 
+    gap: 2px;
+    padding-right: 20px;
+}
+
+.addTask-subtasks-icon-add.hidden {
+    display: none;
 }

@@ -34,6 +34,7 @@ async function renderAddTaskCard(task) {
     setupTitleField();
     validateFields();
     setupDueDateValidation();
+    setupSubtaskInput();
     }
 
 function setupAssignedToField() {
@@ -290,15 +291,31 @@ async function generateAddTaskCardHTML(task) {
             <div class="addTask-subtasks">
                 <h2>Subtasks</h2>
                 <div class="addTask-subtasks-field">
-                    <input class="addTask-subtasks-content" id="task-subtasks" value="${task.subtasks}" placeholder="Add new subtask">
-                    <svg class="addTask-subtasks-icon" width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <mask id="mask0_75601_15213" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="24">
-                        <rect x="0.248535" width="24" height="24" fill="#D9D9D9"/>
+                    <input class="addTask-subtasks-content" id="task-subtasks" placeholder="Add new subtask">
+                    <svg class="addTask-subtasks-icon-add" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <mask id="mask0_75601_15213" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
+                        <rect x="0.248535" width="24" height="25" fill="#D9D9D9"/>
                         </mask>
                         <g mask="url(#mask0_75601_15213)">
                         <path d="M11.2485 13H6.24854C5.9652 13 5.7277 12.9042 5.53604 12.7125C5.34437 12.5208 5.24854 12.2833 5.24854 12C5.24854 11.7167 5.34437 11.4792 5.53604 11.2875C5.7277 11.0958 5.9652 11 6.24854 11H11.2485V6C11.2485 5.71667 11.3444 5.47917 11.536 5.2875C11.7277 5.09583 11.9652 5 12.2485 5C12.5319 5 12.7694 5.09583 12.961 5.2875C13.1527 5.47917 13.2485 5.71667 13.2485 6V11H18.2485C18.5319 11 18.7694 11.0958 18.961 11.2875C19.1527 11.4792 19.2485 11.7167 19.2485 12C19.2485 12.2833 19.1527 12.5208 18.961 12.7125C18.7694 12.9042 18.5319 13 18.2485 13H13.2485V18C13.2485 18.2833 13.1527 18.5208 12.961 18.7125C12.7694 18.9042 12.5319 19 12.2485 19C11.9652 19 11.7277 18.9042 11.536 18.7125C11.3444 18.5208 11.2485 18.2833 11.2485 18V13Z" fill="#2A3647"/>
                         </g>
                     </svg>
+                    <div class="addTask-icons-input">
+                        <svg class="cancel-addTask-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
+                            <path d="M12.001 12.5001L17.244 17.7431M6.758 17.7431L12.001 12.5001L6.758 17.7431ZM17.244 7.25708L12 12.5001L17.244 7.25708ZM12 12.5001L6.758 7.25708L12 12.5001Z" stroke="#2A3647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>  
+                        <div class="addTask-subtasks-vertical-line">
+                        </div>
+                        <svg class="create-addTask-icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_267600_4053" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
+                            <rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
+                            </mask>
+                            <g mask="url(#mask0_267600_4053)">
+                            <path d="M9.55057 15.65L18.0256 7.175C18.2256 6.975 18.4631 6.875 18.7381 6.875C19.0131 6.875 19.2506 6.975 19.4506 7.175C19.6506 7.375 19.7506 7.6125 19.7506 7.8875C19.7506 8.1625 19.6506 8.4 19.4506 8.6L10.2506 17.8C10.0506 18 9.81724 18.1 9.55057 18.1C9.28391 18.1 9.05057 18 8.85057 17.8L4.55057 13.5C4.35057 13.3 4.25474 13.0625 4.26307 12.7875C4.27141 12.5125 4.37557 12.275 4.57557 12.075C4.77557 11.875 5.01307 11.775 5.28807 11.775C5.56307 11.775 5.80057 11.875 6.00057 12.075L9.55057 15.65Z" fill="black"/>
+                            </g>
+                        </svg>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -455,7 +472,10 @@ function validateFields() {
 
     if (!isDueDateEmpty) {
         let date = new Date(dueDateField.value);
-        isDueDateInvalid = isNaN(date.getTime());
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+        date.setHours(0, 0, 0, 0);
+        isDueDateInvalid = isNaN(date.getTime()) || date < today;
     }
 
     console.log('Due Date:', dueDateField.value);
@@ -525,33 +545,13 @@ function setupCreateButton() {
 document.addEventListener('DOMContentLoaded', function () {
     setupTitleField();
     setupCreateButton();
+    setupAssignedTo();
+    setupCategoryDropdown();
+    setupSubtaskInput();
+    setupDueDateValidation();
 });
 
-function setupCategoryDropdown() {
-    const categoryDropdown = document.getElementById('categoryDropdown');
-    const categoryItems = document.querySelectorAll('.category-item');
-    const categoryField = document.getElementById('task-category');
-
-    if (categoryField && categoryDropdown) {
-        categoryField.addEventListener('click', () => {
-            const dropdown = document.getElementById('categoryDropdown');
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-        });
-
-        if (categoryItems.length > 0) {
-            categoryItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    categoryField.innerHTML = item.innerHTML;
-                    categoryDropdown.setAttribute('data-selected', item.getAttribute('data-value'));
-                    categoryDropdown.style.display = 'none';
-                    validateFields();
-                });
-            });
-        }
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function () {
+function setupAssignedTo() {
     let assignedToElement = document.getElementById('task-assignedTo');
     let contactList = document.querySelector('.addTask-assignedTo-contactList');
 
@@ -566,27 +566,39 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         document.addEventListener('click', toggleContactList);
     }
+}
 
+function setupCategoryDropdown() {
     let categoryField = document.getElementById("task-category");
     let dropdown = document.getElementById("categoryDropdown");
+    let icon = document.querySelector(".addTask-category-icon");
 
     if (categoryField && dropdown) {
         categoryField.addEventListener("click", () => {
+            // Toggle das Dropdown
             dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+
+            // Toggle die Klasse 'open' für das Feld und icon
+            categoryField.classList.toggle("open");
         });
 
         dropdown.addEventListener('click', function (event) {
             if (event.target.classList.contains('category-item')) {
                 let selectedValue = event.target.dataset.value;
                 categoryField.querySelector("span").textContent = selectedValue;
+                
+                // Dropdown schließen
                 dropdown.style.display = "none";
+                
+                // Entferne die 'open'-Klasse, um das Icon zurückzusetzen
+                categoryField.classList.remove("open");
+                
                 dropdown.setAttribute('data-selected', selectedValue);
                 console.log('Selected category:', selectedValue);
             }
         });
-    } else {
     }
-});
+}
 
 function setupDueDateValidation() {
     let dueDateField = document.getElementById("task-dueDate");
@@ -594,6 +606,29 @@ function setupDueDateValidation() {
     if (dueDateField) {
         dueDateField.addEventListener("input", () => {
             validateFields();
+        });
+    }
+}
+
+function setupSubtaskInput() {
+    const subtaskInput = document.querySelector(".addTask-subtasks-content");
+    const addIcon = document.querySelector(".addTask-subtasks-icon-add");
+    const iconsContainer = document.querySelector(".addTask-icons-input");
+
+    if (subtaskInput && addIcon && iconsContainer) {
+        addIcon.classList.remove("hidden");
+        iconsContainer.classList.remove("active");
+
+        subtaskInput.addEventListener("focus", () => {
+            addIcon.classList.add("hidden");
+            iconsContainer.classList.add("active");
+        });
+
+        subtaskInput.addEventListener("blur", () => {
+            if (!subtaskInput.value.trim()) {
+                addIcon.classList.remove("hidden");
+                iconsContainer.classList.remove("active");
+            }
         });
     }
 }
