@@ -67,7 +67,6 @@ async function login() {
 
   let contact = await fetch(BASE_URL + ".json");
   let contactAsJson = await contact.json();
-
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
 
