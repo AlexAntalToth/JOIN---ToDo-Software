@@ -78,7 +78,7 @@ async function login() {
   if (signedUpContact) {
     console.log("User gefunden:", signedUpContact.name);
     alert("Login erfolgreich! Willkommen, " + signedUpContact.name)
-    window.location.href = "board.html";
+    window.location.href = "summary.html";
   } else {
     console.log("Benutzer nicht gefunden");
       alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.")
