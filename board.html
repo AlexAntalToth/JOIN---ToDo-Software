@@ -14,8 +14,9 @@
 <body onload="includeHTML(); onloadFunc()">
     <div w3-include-html="./assets/templates/header-tryout.html"></div>
     <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
+
     <div id="taskPopup" class="popup" onclick="closeTaskPopup()">
-        <div class="popup-content" onclick="event.stopPropagation()">
+        <div id="taskView" class="popup-content" onclick="event.stopPropagation()">
             <div class="popup-header">
                 <div id="taskBadge"></div>
                 <button onclick="closeTaskPopup()" class="close-btn">X</button>
@@ -44,6 +45,7 @@
                 </div>
             </div>
         </div>
+        <div id="taskEdit" class="popup-content hidden"></div>
     </div>
     <div class="container">
         <div class="board-headline">

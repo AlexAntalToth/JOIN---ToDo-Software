@@ -363,6 +363,10 @@ body {
   align-items: center;
 }
 
+.hidden {
+  display: none;
+}
+
 .close-btn {
   background: none;
   border: none;

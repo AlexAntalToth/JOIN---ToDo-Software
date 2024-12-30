@@ -342,9 +342,12 @@ function editTask() {
     if (currentTaskIndex === null) return;
     const task = tasks[currentTaskIndex].task;
     isEditing = true;
+    const taskView = document.getElementById("taskView");
+    const taskEdit = document.getElementById("taskEdit");
+    taskView.classList.add("hidden");
+    taskEdit.classList.remove("hidden");
 
-    const taskPopupContent = document.querySelector(".popup-content");
-    taskPopupContent.innerHTML = `
+    taskEdit.innerHTML = `
         <div class="popup-header">
             <div id="taskBadge">${generateTaskBadge(task.badge)}</div>
             <button onclick="closeTaskPopup()" class="close-btn">X</button>
@@ -588,11 +591,11 @@ function saveTaskChanges() {
     task.dueDate = document.getElementById("editTaskDueDate").value;
     task.priority = document.querySelector(".priority-btn.active")?.getAttribute("data-priority");
     task.assignedTo = getAssignedContacts();
-    task.subtasks = updateSubtasksOnSave(task.subtasks);
-
+    task.subtasks = getCurrentSubtasks();
     tasks[currentTaskIndex].task = task;
     isEditing = false;
-
+    refreshTaskPopup();
+    disableButtonWhileEdit();
 }
 
 function getAssignedContacts() {
@@ -602,8 +605,42 @@ function getAssignedContacts() {
         const checkbox = item.querySelector("input[type='checkbox']");
         if (checkbox && checkbox.checked) {
             const contactKey = checkbox.value;
-            assignedContacts[contactKey] = true;
+            if (contacts[contactKey]) {
+                assignedContacts[contactKey] = contacts[contactKey];
+            } else {
+                console.warn(`Kontakt mit ID "${contactKey}" existiert nicht in contacts.`);
+            }
         }
     });
     return assignedContacts;
+}
+
+
+function getCurrentSubtasks() {
+    const subtasksList = document.querySelectorAll(".subtasks-list .subtask-item");
+    const subtasks = {};
+
+    subtasksList.forEach((subtaskElement, index) => {
+        const subtaskName = subtaskElement.querySelector(".subtask-item-name span").textContent.trim();
+        if (subtaskName) {
+            subtasks[index] = { name: subtaskName, completed: false };
+        }
+    });
+
+    return subtasks;
+}
+
+function refreshTaskPopup() {
+    const taskView = document.getElementById("taskView");
+    const taskEdit = document.getElementById("taskEdit");
+    taskView.classList.remove("hidden");
+    taskEdit.classList.add("hidden");
+    const task = tasks[currentTaskIndex].task;
+    document.getElementById("taskBadge").innerHTML = generateTaskBadge(task.badge);
+    document.getElementById("taskTitle").innerHTML = task.title;
+    document.getElementById("taskDescription").innerHTML = task.description;
+    document.getElementById("taskDueDate").innerHTML = formatDateToDDMMYYYY(task.dueDate);
+    generateTaskPriorityElement(task.priority);
+    document.getElementById("taskContacts").innerHTML = generateContactsHtml(task.assignedTo, contacts);
+    document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks, currentTaskIndex);
 }
