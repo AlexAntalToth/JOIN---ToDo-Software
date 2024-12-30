@@ -31,14 +31,14 @@ function renderLogin() {
 
       <div class="login_guestlogin">
         <button class="blue_button2">Log in</button>
-        <button class="white_button">Guest Log in</button>
+        <button onclick="guestLogin()" class="white_button">Guest Log in</button>
       </div>
     </div>
     </form>
 
     <div class="dataprotection_div">
-      <a href="">Privacy Policy</a>
-      <a href="">Legal Notice</a>
+      <a href="privacy_policy.html">Privacy Policy</a>
+      <a href="legal_notice.html">Legal Notice</a>
     </div>
   </div>
     <div id="msgBox"></div>
@@ -61,6 +61,10 @@ function startAnimation() {
       }
     }, 200);
   });
+}
+
+function guestLogin() {
+  window.location.href="summary.html";
 }
 
 async function login() {

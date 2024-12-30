@@ -4,7 +4,6 @@ const BASE_URL =
 async function getContacts() {
   let contact = await fetch(BASE_URL + ".json");
   let contactAsJson = await contact.json();
-  console.log(contactAsJson);
 }
 
 function renderSignup() {
@@ -19,7 +18,7 @@ function renderSignup() {
       </div>
       <div class="separator"></div>
   
-   <form onsubmit="addContact(); return false;">
+   <form onsubmit="if (!checkPassword()) return false; addContact(); return false;">
   <div class="inputfields_div">
     <input class="input1" id="name" required placeholder="Name" type="text" />
     <input class="input2" id="email" required placeholder="Email" type="email" />
@@ -42,29 +41,15 @@ function renderSignup() {
 </form>
 
     <div class="dataprotection_div">
-      <a href="">Privacy Policy</a>
-      <a href="">Legal Notice</a>
+      <a href="privacy_policy.html">Privacy Policy</a>
+      <a href="legal_notice.html">Legal Notice</a>
     </div>`;
 }
-getContacts();
 
 async function addContact(path = "", data = {}) {
-  
   let name = document.getElementById("name");
   let email = document.getElementById("email");
   let password = document.getElementById("password").value.trim();
-  let confirmPassword = document.getElementById("confirmPassword").value.trim();
-  let acceptPolicy = document.getElementById("acceptPolicy").checked;
-
-  if (password !== confirmPassword) {
-    alert("Die Passwörter stimmen nicht überein.");
-    return;
-  }
-
-  if (!acceptPolicy) {
-    alert("Bitte akzeptiere die Datenschutzrichtlinie.");
-    return;
-  }
 
   let contact = await fetch(BASE_URL + path + "contacts.json", {
     method: "POST",
@@ -72,12 +57,29 @@ async function addContact(path = "", data = {}) {
     body: JSON.stringify({
       name: name.value,
       email: email.value,
-      password: password.value,
+      password: password,
     }),
   });
-
   window.location.href = "index.html?msg=Die Registrierung war erfolgreich";
   return (contactAsJson = await contact.json());
+}
+
+function checkPassword() {
+  let password = document.getElementById("password").value.trim();
+  let confirmPassword = document.getElementById("confirmPassword").value.trim();
+  let acceptPolicy = document.getElementById("acceptPolicy").checked;
+
+  if (password !== confirmPassword) {
+    alert("Die Passwörter stimmen nicht überein.");
+    return false;
+  }
+
+  if (!acceptPolicy) {
+    alert("Bitte akzeptiere die Datenschutzrichtlinie.");
+    return false;
+  }
+
+  return true;
 }
 
 function navigateToLogin() {
