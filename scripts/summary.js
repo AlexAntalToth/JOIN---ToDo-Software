@@ -78,7 +78,7 @@ function updateCount(tasks) {
         } else if (task.category === "Await Feedback") {
             feedbackCount++;
         }
-        if (task.priority === "high") {
+        if (task.priority === "urgent") {
             urgencyCount++;
         }
     });

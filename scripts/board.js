@@ -3,6 +3,7 @@ let contacts = {};
 let currentDraggedElement;
 let searchTimeout;
 let currentTaskIndex = null;
+let isEditing = false; 
 
 async function onloadFunc(){
     contacts = await getData("/contacts");
@@ -121,6 +122,14 @@ function openTaskPopup(index){
     document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks, index);
     document.getElementById("taskPopup").classList.add("show");
     document.body.style.overflow = "hidden";
+    disableButtonWhileEdit();
+}
+
+function disableButtonWhileEdit() {
+    const closeButton = document.querySelector(".close-btn");
+    if (closeButton) {
+        closeButton.disabled = isEditing;
+    }
 }
 
 function generateTaskPriorityElement(priority){
@@ -146,13 +155,22 @@ function deleteTask() {
 }
 
 function closeTaskPopup() {
+    if (!isEditing) {
+        const taskPopup = document.getElementById("taskPopup");
+        if (taskPopup) {
+            taskPopup.classList.remove("show");
+            currentTaskIndex = null;
+            document.body.style.overflow = "auto";
+        }
+      }
+    }
     const taskPopup = document.getElementById("taskPopup");
     if (taskPopup) {
         taskPopup.classList.remove("show");
         currentTaskIndex = null;
         document.body.style.overflow = "auto";
     }
-}
+
 
 function generateContactsHtml(assignedTo, contacts) {
     if (!assignedTo) return "";
@@ -322,8 +340,8 @@ function formatDateToDDMMYYYY(dateString) {
 
 function editTask() {
     if (currentTaskIndex === null) return;
-
     const task = tasks[currentTaskIndex].task;
+    isEditing = true;
 
     const taskPopupContent = document.querySelector(".popup-content");
     taskPopupContent.innerHTML = `
@@ -532,7 +550,20 @@ function toggleDropdown() {
 function toggleDropdownItem(item) {
     const checkbox = item.querySelector("input[type='checkbox']");
     if (!checkbox) return;
+    const contactKey = checkbox.value;
     checkbox.checked = !checkbox.checked;
+
+    if (checkbox.checked) {
+        tasks[currentTaskIndex].task.assignedTo = tasks[currentTaskIndex].task.assignedTo || {};
+        tasks[currentTaskIndex].task.assignedTo[contactKey] = true;
+    } else {
+        if (tasks[currentTaskIndex].task.assignedTo) {
+            delete tasks[currentTaskIndex].task.assignedTo[contactKey];
+            if (Object.keys(tasks[currentTaskIndex].task.assignedTo).length === 0) {
+                delete tasks[currentTaskIndex].task.assignedTo;
+            }
+        }
+    }
     updateItemStyle(item, checkbox.checked);
 }
 
@@ -548,4 +579,31 @@ function updateDropdownItems(dropdown) {
 
 function updateItemStyle(item, isChecked) {
     item.classList.toggle("checked", isChecked);
+}
+
+function saveTaskChanges() {
+    const task = tasks[currentTaskIndex].task;
+    task.title = document.getElementById("editTaskTitle").value;
+    task.description = document.getElementById("editTaskDescription").value;
+    task.dueDate = document.getElementById("editTaskDueDate").value;
+    task.priority = document.querySelector(".priority-btn.active")?.getAttribute("data-priority");
+    task.assignedTo = getAssignedContacts();
+    task.subtasks = updateSubtasksOnSave(task.subtasks);
+
+    tasks[currentTaskIndex].task = task;
+    isEditing = false;
+
+}
+
+function getAssignedContacts() {
+    const assignedContacts = {};
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    dropdownItems.forEach(item => {
+        const checkbox = item.querySelector("input[type='checkbox']");
+        if (checkbox && checkbox.checked) {
+            const contactKey = checkbox.value;
+            assignedContacts[contactKey] = true;
+        }
+    });
+    return assignedContacts;
 }
