@@ -1,9 +1,24 @@
 let contacts = [];
 let selectedContacts = [];
 let taskPriority = "";
+let tasks = [];
+let currentTaskIndex = 0;
 
 async function init() {
-    await loadTasks();
+    tasks = await loadTasks(); // Rückgabewert von loadTasks zuweisen
+    if (!tasks || tasks.length === 0) {
+        console.warn("Es wurden keine Aufgaben geladen. Standardaufgabe wird erstellt.");
+        tasks = [{ task: {} }]; // Standardaufgabe ohne Subtasks
+    }
+
+    // Sicherstellen, dass nur Aufgaben, die tatsächlich Subtasks haben, ein 'subtasks' Feld bekommen
+    tasks.forEach(task => {
+        // Falls die Aufgabe ein 'subtasks' Feld benötigt, aber nicht hat, fügen wir es hinzu
+        if (task.task && typeof task.task.subtasks === "undefined") {
+            task.task.subtasks = {}; // Leeres Subtask-Objekt für diese Aufgabe
+        }
+    });
+
     renderAddTaskCard();
 }
 
@@ -35,7 +50,8 @@ async function renderAddTaskCard(task) {
     validateFields();
     setupDueDateValidation();
     setupSubtaskInput();
-    }
+    initializeAddSubtaskButton();
+}
 
 function setupAssignedToField() {
     let assignedToField = document.getElementById("task-assignedTo");
@@ -291,7 +307,7 @@ async function generateAddTaskCardHTML(task) {
             <div class="addTask-subtasks">
                 <h2>Subtasks</h2>
                 <div class="addTask-subtasks-field">
-                    <input class="addTask-subtasks-content" id="task-subtasks" placeholder="Add new subtask">
+                    <input class="addTask-subtasks-content" id="newSubTaskInput" placeholder="Add new subtask">
                     <svg class="addTask-subtasks-icon-add" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <mask id="mask0_75601_15213" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
                         <rect x="0.248535" width="24" height="25" fill="#D9D9D9"/>
@@ -306,17 +322,20 @@ async function generateAddTaskCardHTML(task) {
                         </svg>  
                         <div class="addTask-subtasks-vertical-line">
                         </div>
-                        <svg class="create-addTask-icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <mask id="mask0_267600_4053" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
-                            <rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
-                            </mask>
-                            <g mask="url(#mask0_267600_4053)">
-                            <path d="M9.55057 15.65L18.0256 7.175C18.2256 6.975 18.4631 6.875 18.7381 6.875C19.0131 6.875 19.2506 6.975 19.4506 7.175C19.6506 7.375 19.7506 7.6125 19.7506 7.8875C19.7506 8.1625 19.6506 8.4 19.4506 8.6L10.2506 17.8C10.0506 18 9.81724 18.1 9.55057 18.1C9.28391 18.1 9.05057 18 8.85057 17.8L4.55057 13.5C4.35057 13.3 4.25474 13.0625 4.26307 12.7875C4.27141 12.5125 4.37557 12.275 4.57557 12.075C4.77557 11.875 5.01307 11.775 5.28807 11.775C5.56307 11.775 5.80057 11.875 6.00057 12.075L9.55057 15.65Z" fill="black"/>
-                            </g>
-                        </svg>
-
+                        <div id="addSubtaskButton" onclick="addSubtask(event)">
+                            <svg class="create-addTask-icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask0_267600_4053" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
+                                    <rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
+                                </mask>
+                                <g mask="url(#mask0_267600_4053)">
+                                    <path d="M9.55057 15.65L18.0256 7.175C18.2256 6.975 18.4631 6.875 18.7381 6.875C19.0131 6.875 19.2506 6.975 19.4506 7.175C19.6506 7.375 19.7506 7.6125 19.7506 7.8875C19.7506 8.1625 19.6506 8.4 19.4506 8.6L10.2506 17.8C10.0506 18 9.81724 18.1 9.55057 18.1C9.28391 18.1 9.05057 18 8.85057 17.8L4.55057 13.5C4.35057 13.3 4.25474 13.0625 4.26307 12.7875C4.27141 12.5125 4.37557 12.275 4.57557 12.075C4.77557 11.875 5.01307 11.775 5.28807 11.775C5.56307 11.775 5.80057 11.875 6.00057 12.075L9.55057 15.65Z" fill="black"/>
+                                </g>
+                            </svg>
+                        </div>
                     </div>
                 </div>
+                        <ul class="subtasks-list" id="subtasksList">
+                        </ul>
             </div>
         </div>
         <div id="task-created-popup" class="task-created-popup">
@@ -377,7 +396,19 @@ async function saveNewTask() {
     let [year, month, day] = dueDateISO.split("-");
     let formattedDueDate = `${day}/${month}/${year}`; // in case of saving as DD/MM/YYYY
     let taskBadge = document.getElementById('categoryDropdown').getAttribute('data-selected');
-    let taskSubtasks = document.getElementById('task-subtasks').value.split(',').map(subtask => subtask.trim());
+    // let taskSubtasks = Object.values(tasks[currentTaskIndex].task.subtasks || {}).map(subtask => subtask.name.trim() || "");
+    // let taskSubtasks = document.getElementById('task-subtasks').value.split(',').map(subtask => subtask.trim());
+
+    let taskSubtasks = [];
+    if (tasks && tasks[currentTaskIndex] && tasks[currentTaskIndex].task) {
+        taskSubtasks = Object.values(tasks[currentTaskIndex].task.subtasks || {}).map(subtask => subtask.name.trim() || "");
+    }
+
+    if (Object.keys(taskSubtasks).length === 0) {
+        taskSubtasks = {
+            "subtask1": { name: "" } // Leerer Subtask mit der ID "subtask1"
+        };
+    }
 
     let newTask = {
         title: taskTitle,
@@ -438,7 +469,7 @@ function setupClearButton() {
         document.getElementById("task-description").value = "";
         document.getElementById("task-dueDate").value = "";
         document.querySelectorAll(".addTask-prio-button").forEach(button => button.classList.remove("selected"));
-        
+
         let categoryField = document.getElementById("task-category");
         categoryField.innerHTML = `<span>Select task category</span>`;
         let categoryDropdown = document.getElementById("categoryDropdown");
@@ -449,7 +480,7 @@ function setupClearButton() {
         }
 
         document.getElementById("task-subtasks").value = "";
-        
+
         document.querySelectorAll(".contact-checkbox").forEach(checkbox => {
             checkbox.checked = false;
         });
@@ -483,6 +514,9 @@ function validateFields() {
     createButton.style.backgroundColor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "grey" : "";
     createButton.style.cursor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "not-allowed" : "pointer";
     createButton.disabled = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid;
+    if (isDueDateInvalid || isDueDateEmpty) {
+        dueDateField.value = "";  // Setze das Eingabefeld zurück
+    }
 }
 
 function validateAndSaveTask(event) {
@@ -547,7 +581,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setupCreateButton();
     setupAssignedTo();
     setupCategoryDropdown();
-    setupSubtaskInput();
     setupDueDateValidation();
 });
 
@@ -586,13 +619,13 @@ function setupCategoryDropdown() {
             if (event.target.classList.contains('category-item')) {
                 let selectedValue = event.target.dataset.value;
                 categoryField.querySelector("span").textContent = selectedValue;
-                
+
                 // Dropdown schließen
                 dropdown.style.display = "none";
-                
+
                 // Entferne die 'open'-Klasse, um das Icon zurückzusetzen
                 categoryField.classList.remove("open");
-                
+
                 dropdown.setAttribute('data-selected', selectedValue);
                 console.log('Selected category:', selectedValue);
             }
@@ -630,5 +663,145 @@ function setupSubtaskInput() {
                 iconsContainer.classList.remove("active");
             }
         });
+    }
+}
+
+async function addSubtask(event) {
+    event.preventDefault();
+
+    if (!tasks || tasks.length === 0 || typeof currentTaskIndex === "undefined") {
+        console.error("Tasks oder currentTaskIndex nicht definiert. Standardwerte werden verwendet.");
+        tasks = [{ task: { subtasks: {} } }]; // Standardaufgabe ohne Subtasks
+        currentTaskIndex = 0;
+    }
+
+    const task = tasks[currentTaskIndex]?.task || null;
+    if (!task) {
+        console.error("Die aktuelle Aufgabe ist nicht definiert.");
+        return;
+    }
+
+    const subtaskName = getSubtaskName();
+
+    if (canAddSubtask(task)) {
+        addNewSubtask(task, subtaskName);
+        updateSubtasksList(task);
+        clearSubtaskInput();
+    } else {
+        alert("Es können nur maximal 3 Subtasks hinzugefügt werden.");
+    }
+}
+
+function getSubtaskName() {
+    return document.getElementById('task-subtasks').value.trim();
+}
+
+function canAddSubtask(task) {
+    return Object.keys(task.subtasks || {}).length < 3;
+}
+
+function addNewSubtask(task, subtaskName) {
+    // Wenn die Aufgabe noch keine Subtasks hat, initialisieren wir sie
+    if (!task.subtasks) {
+        task.subtasks = {};  // Initialisiere Subtasks als leeres Objekt
+    }
+
+    const subtaskId = Object.keys(task.subtasks).length;  // Bestimme eine neue ID
+    task.subtasks[subtaskId] = { name: subtaskName, completed: false };  // Subtask hinzufügen
+}
+
+function clearSubtaskInput() {
+    document.getElementById('newSubtaskInput').value = "";
+}
+
+function updateSubtasksList(task) {
+    const subtasksList = document.querySelector('.subtasks-list');
+    const subtasks = task.subtasks || {}; // Sicherstellen, dass es immer ein Subtask-Objekt gibt
+
+    subtasksList.innerHTML = Object.entries(subtasks).map(([subtaskId, subtask], index) => `
+        <li id="subtask-${subtaskId}" class="subtask-item" data-index="${index}">
+            <div class="subtask-item-name">
+                <img class="ul-bullet" src="./assets/icons/addtask_arrowdown.png" alt="Arrow right">
+                <span>${subtask.name}</span>
+            </div>
+            <div class="subtask-actions">
+                <img src="./assets/icons/contact_edit.png" alt="Edit" title="Edit" onclick="editSubtask(${index})" />
+                <span class="separator"></span>
+                <img src="./assets/icons/contact_basket.png" alt="Delete" title="Delete" onclick="deleteSubtask(${index})" />
+            </div>
+        </li>
+    `).join("");
+}
+
+function editSubtask(subtaskIndex) {
+    const task = tasks[currentTaskIndex].task;
+    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
+    const subtask = task.subtasks[subtaskId];
+    const subtaskElement = document.getElementById(`subtask-${subtaskId}`);
+    let inputField = createInputField(subtask);
+    let checkIcon = createCheckIcon();
+    subtaskElement.innerHTML = '';
+    subtaskElement.appendChild(inputField);
+    subtaskElement.appendChild(checkIcon);
+    checkIcon.addEventListener('click', function () {
+        const newSubtaskName = inputField.value.trim();
+        if (newSubtaskName) {
+            subtask.name = newSubtaskName;
+            updateSubtasksList(task);
+        }
+    });
+}
+
+function createCheckIcon() {
+    let checkIcon = document.createElement('img');
+    checkIcon.src = './assets/icons/contact_create.png';
+    checkIcon.alt = 'Bestätigen';
+    checkIcon.className = 'confirm-img';
+    return checkIcon;
+}
+
+function createInputField(subtask) {
+    let inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.value = subtask.name;
+    inputField.maxLength = '30';
+    return inputField;
+}
+
+function deleteSubtask(subtaskIndex) {
+    const task = tasks[currentTaskIndex].task;
+    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
+    delete task.subtasks[subtaskId];
+    updateSubtasksList(task);
+}
+
+function getCurrentSubtasks() {
+    const subtasksList = document.querySelectorAll(".subtasks-list .subtask-item");
+    const subtasks = {};
+
+    subtasksList.forEach((subtaskElement, index) => {
+        const subtaskName = subtaskElement.querySelector(".subtask-item-name span").textContent.trim();
+        if (subtaskName) {
+            subtasks[index] = { name: subtaskName, completed: false };
+        }
+    });
+
+    return subtasks;
+}
+
+function initializeAddSubtaskButton() {
+    const addSubtaskButton = document.getElementById("addSubtaskButton");
+    if (addSubtaskButton) {
+        console.log("Add Subtask Button gefunden");
+
+        addSubtaskButton.onclick = (event) => {
+            if (tasks.length > 0 && currentTaskIndex < tasks.length) {
+                addSubtask(event);
+            } else {
+                console.error("Ungültiger currentTaskIndex oder keine Aufgaben vorhanden.");
+            }
+        };
+    } else {
+        console.error("Das Element mit der ID 'addSubtaskButton' wurde nicht gefunden.");
     }
 }

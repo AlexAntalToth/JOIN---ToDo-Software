@@ -630,3 +630,19 @@
 .addTask-subtasks-icon-add.hidden {
     display: none;
 }
+
+.subtask-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .subtask-bar span {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
+  }
+  
+  .subtasks-list {
+    display: block; /* Sicherstellen, dass die Liste angezeigt wird */
+}

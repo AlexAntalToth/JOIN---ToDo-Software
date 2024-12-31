@@ -78,11 +78,12 @@ async function loadTasks() {
                 id,
                 ...task
             }));
-
+            console.log("Tasks erfolgreich geladen:", tasksWithIds); // Debugging-Ausgabe
             return tasksWithIds;
+        } else {
+            console.warn("Keine Tasks in der Datenbank gefunden.");
+            return [];
         }
-
-        return [];
     } catch (error) {
         console.error("Fehler beim Laden der Tasks:", error);
         return [];
