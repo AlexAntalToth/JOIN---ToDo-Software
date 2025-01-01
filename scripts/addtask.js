@@ -3,6 +3,8 @@ let selectedContacts = [];
 let taskPriority = "";
 let tasks = [{ subtasks: [] }];
 let currentTaskIndex = 0;
+let taskSubtasks = [];
+let editingSubtaskIndex = null;
 
 async function init() {
     renderAddTaskCard();
@@ -292,7 +294,7 @@ async function generateAddTaskCardHTML(task) {
             <div class="addTask-subtasks">
                 <h2>Subtasks</h2>
                 <div class="addTask-subtasks-field">
-                    <input class="addTask-subtasks-content" type="text" id="newSubTaskInput2" placeholder="Add new subtask">
+                    <input class="addTask-subtasks-content" type="text" id="addTaskNewSubTaskInput" placeholder="Add new subtask">
                     <svg class="addTask-subtasks-icon-add" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <mask id="mask0_75601_15213" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
                         <rect x="0.248535" width="24" height="25" fill="#D9D9D9"/>
@@ -319,7 +321,7 @@ async function generateAddTaskCardHTML(task) {
                         </div>
                     </div>
                 </div>
-                        <ul class="subtasks-list" id="subtasksList2">
+                        <ul class="subtasks-list" id="addTaskSubtasksList">
                         </ul>
             </div>
         </div>
@@ -387,15 +389,10 @@ async function saveNewTask() {
     // let taskSubtasks = document.getElementById('task-subtasks').value.split(',').map(subtask => subtask.trim());
 
     let taskSubtasks = [];
-    if (tasks && tasks[currentTaskIndex] && tasks[currentTaskIndex].task) {
-        taskSubtasks = Object.values(tasks[currentTaskIndex].task.subtasks || {}).map(subtask => subtask.name.trim() || "");
-    }
-
-    if (Object.keys(taskSubtasks).length === 0) {
-        taskSubtasks = {
-            "subtask1": { name: "" } // Leerer Subtask mit der ID "subtask1"
-        };
-    }
+    let subtaskElements = document.querySelectorAll('.subtasks-list li span');
+    subtaskElements.forEach((element) => {
+        taskSubtasks.push({ name: element.textContent.trim(), completed: false });
+    });
 
     let newTask = {
         title: taskTitle,
@@ -466,13 +463,16 @@ function setupClearButton() {
             });
         }
 
-        document.getElementById("task-subtasks").value = "";
+        // document.getElementById("task-subtasks").value = "";
 
         document.querySelectorAll(".contact-checkbox").forEach(checkbox => {
             checkbox.checked = false;
         });
 
+        tasks[currentTaskIndex].subtasks = [];
+
         renderAddTaskCard();
+        updateSubtasksList();
     });
 }
 
@@ -653,9 +653,8 @@ function setupSubtaskInput() {
     }
 }
 
-// Fügt einen neuen Subtask hinzu
 function addSubtask() {
-    const input = document.getElementById("newSubTaskInput2");
+    const input = document.getElementById("addTaskNewSubTaskInput");
     const subtaskName = input.value.trim();
 
     if (subtaskName === "") {
@@ -663,20 +662,18 @@ function addSubtask() {
         return;
     }
 
-    // Überprüfen, ob die maximale Anzahl erreicht wurde
     if (tasks[currentTaskIndex].subtasks.length >= 3) {
         alert("Es können maximal 3 Subtasks hinzugefügt werden.");
         return;
     }
 
     tasks[currentTaskIndex].subtasks.push({ name: subtaskName, completed: false });
-    input.value = ""; // Eingabefeld leeren
+    input.value = "";
     updateSubtasksList();
 }
 
-// Aktualisiert die Subtask-Liste
 function updateSubtasksList() {
-    const list = document.getElementById("subtasksList2");
+    const list = document.getElementById("addTaskSubtasksList");
     const subtasks = tasks[currentTaskIndex].subtasks;
 
     list.innerHTML = subtasks
@@ -684,15 +681,96 @@ function updateSubtasksList() {
             (subtask, index) => `
         <li>
             <span>${subtask.name}</span>
-            <button onclick="deleteSubtask(${index})">Delete</button>
+            <div class="subtask-detail-buttons">
+            <button class="subtask-buttons" onclick="editSubtask(${index})">
+                <svg class="edit-subtask-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <mask id="mask0_268101_3948" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                        <rect width="24" height="24" fill="#D9D9D9"/>
+                    </mask>
+                    <g mask="url(#mask0_268101_3948)">
+                        <path d="M5 19H6.4L15.025 10.375L13.625 8.975L5 17.6V19ZM19.3 8.925L15.05 4.725L16.45 3.325C16.8333 2.94167 17.3042 2.75 17.8625 2.75C18.4208 2.75 18.8917 2.94167 19.275 3.325L20.675 4.725C21.0583 5.10833 21.2583 5.57083 21.275 6.1125C21.2917 6.65417 21.1083 7.11667 20.725 7.5L19.3 8.925ZM17.85 10.4L7.25 21H3V16.75L13.6 6.15L17.85 10.4Z" fill="#2A3647"/>
+                    </g>
+                </svg>
+            </button>
+            <div class="addTask-subtasks-detail-vertical-line">
+            </div>
+            <button class="subtask-buttons" onclick="deleteSubtask(${index})">
+                <svg class="delete-subtask-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <mask id="mask0_268101_4160" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                        <rect width="24" height="24" fill="#D9D9D9"/>
+                    </mask>
+                    <g mask="url(#mask0_268101_4160)">
+                        <path d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6C4.71667 6 4.47917 5.90417 4.2875 5.7125C4.09583 5.52083 4 5.28333 4 5C4 4.71667 4.09583 4.47917 4.2875 4.2875C4.47917 4.09583 4.71667 4 5 4H9C9 3.71667 9.09583 3.47917 9.2875 3.2875C9.47917 3.09583 9.71667 3 10 3H14C14.2833 3 14.5208 3.09583 14.7125 3.2875C14.9042 3.47917 15 3.71667 15 4H19C19.2833 4 19.5208 4.09583 19.7125 4.2875C19.9042 4.47917 20 4.71667 20 5C20 5.28333 19.9042 5.52083 19.7125 5.7125C19.5208 5.90417 19.2833 6 19 6V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM7 6V19H17V6H7ZM9 16C9 16.2833 9.09583 16.5208 9.2875 16.7125C9.47917 16.9042 9.71667 17 10 17C10.2833 17 10.5208 16.9042 10.7125 16.7125C10.9042 16.5208 11 16.2833 11 16V9C11 8.71667 10.9042 8.47917 10.7125 8.2875C10.5208 8.09583 10.2833 8 10 8C9.71667 8 9.47917 8.09583 9.2875 8.2875C9.09583 8.47917 9 8.71667 9 9V16ZM13 16C13 16.2833 13.0958 16.5208 13.2875 16.7125C13.4792 16.9042 13.7167 17 14 17C14.2833 17 14.5208 16.9042 14.7125 16.7125C14.9042 16.5208 15 16.2833 15 16V9C15 8.71667 14.9042 8.47917 14.7125 8.2875C14.5208 8.09583 14.2833 8 14 8C13.7167 8 13.4792 8.09583 13.2875 8.2875C13.0958 8.47917 13 8.71667 13 9V16Z" fill="#2A3647"/>
+                    </g>
+                </svg>
+            </button>
+            </div>
         </li>
     `
         )
         .join("");
 }
 
-// Löscht einen Subtask
 function deleteSubtask(index) {
     tasks[currentTaskIndex].subtasks.splice(index, 1);
+    updateSubtasksList();
+}
+
+function editSubtask(index) {
+    const list = document.getElementById("addTaskSubtasksList");
+    const subtasks = tasks[currentTaskIndex].subtasks;
+
+    if (editingSubtaskIndex !== null) {
+        updateSubtasksList();
+    }
+
+    editingSubtaskIndex = index;
+
+    const subtask = subtasks[index];
+    const editTemplate = `
+        <li class="editing">
+            <div class="subtask-edit-mode">
+                <input class="edit-input" type="text" value="${subtask.name}" id="editSubtaskInput"/>
+                <div class="subtask-detail-buttons">
+                    <button class="subtask-buttons" onclick="deleteSubtask(${index})">
+                        <svg class="delete-subtask-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_268101_4160" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                                <rect width="24" height="24" fill="#D9D9D9"/>
+                            </mask>
+                            <g mask="url(#mask0_268101_4160)">
+                                <path d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6C4.71667 6 4.47917 5.90417 4.2875 5.7125C4.09583 5.52083 4 5.28333 4 5C4 4.71667 4.09583 4.47917 4.2875 4.2875C4.47917 4.09583 4.71667 4 5 4H9C9 3.71667 9.09583 3.47917 9.2875 3.2875C9.47917 3.09583 9.71667 3 10 3H14C14.2833 3 14.5208 3.09583 14.7125 3.2875C14.9042 3.47917 15 3.71667 15 4H19C19.2833 4 19.5208 4.09583 19.7125 4.2875C19.9042 4.47917 20 4.71667 20 5C20 5.28333 19.9042 5.52083 19.7125 5.7125C19.5208 5.90417 19.2833 6 19 6V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM7 6V19H17V6H7ZM9 16C9 16.2833 9.09583 16.5208 9.2875 16.7125C9.47917 16.9042 9.71667 17 10 17C10.2833 17 10.5208 16.9042 10.7125 16.7125C10.9042 16.5208 11 16.2833 11 16V9C11 8.71667 10.9042 8.47917 10.7125 8.2875C10.5208 8.09583 10.2833 8 10 8C9.71667 8 9.47917 8.09583 9.2875 8.2875C9.09583 8.47917 9 8.71667 9 9V16ZM13 16C13 16.2833 13.0958 16.5208 13.2875 16.7125C13.4792 16.9042 13.7167 17 14 17C14.2833 17 14.5208 16.9042 14.7125 16.7125C14.9042 16.5208 15 16.2833 15 16V9C15 8.71667 14.9042 8.47917 14.7125 8.2875C14.5208 8.09583 14.2833 8 14 8C13.7167 8 13.4792 8.09583 13.2875 8.2875C13.0958 8.47917 13 8.71667 13 9V16Z" fill="#2A3647"/>
+                            </g>
+                        </svg>
+                    </button>
+                    <div class="addTask-subtasks-detail-vertical-line"></div>
+                    <button class="subtask-buttons" onclick="saveSubtask(${index})">
+                        <svg class="create-addTask-icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_267600_4053" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
+                                <rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
+                            </mask>
+                            <g mask="url(#mask0_267600_4053)">
+                                <path d="M9.55057 15.65L18.0256 7.175C18.2256 6.975 18.4631 6.875 18.7381 6.875C19.0131 6.875 19.2506 6.975 19.4506 7.175C19.6506 7.375 19.7506 7.6125 19.7506 7.8875C19.7506 8.1625 19.6506 8.4 19.4506 8.6L10.2506 17.8C10.0506 18 9.81724 18.1 9.55057 18.1C9.28391 18.1 9.05057 18 8.85057 17.8L4.55057 13.5C4.35057 13.3 4.25474 13.0625 4.26307 12.7875C4.27141 12.5125 4.37557 12.275 4.57557 12.075C4.77557 11.875 5.01307 11.775 5.28807 11.775C5.56307 11.775 5.80057 11.875 6.00057 12.075L9.55057 15.65Z" fill="black"/>
+                            </g>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </li>
+    `;
+
+    list.children[index].outerHTML = editTemplate;
+}
+
+function saveSubtask(index) {
+    const input = document.getElementById("editSubtaskInput");
+    const newName = input.value.trim();
+
+    if (newName === "") {
+        alert("Bitte geben Sie einen gültigen Namen für den Subtask ein.");
+        return;
+    }
+
+    tasks[currentTaskIndex].subtasks[index].name = newName;
+    editingSubtaskIndex = null;
     updateSubtasksList();
 }
