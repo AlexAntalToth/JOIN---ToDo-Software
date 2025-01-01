@@ -1,24 +1,10 @@
 let contacts = [];
 let selectedContacts = [];
 let taskPriority = "";
-let tasks = [];
+let tasks = [{ subtasks: [] }];
 let currentTaskIndex = 0;
 
 async function init() {
-    tasks = await loadTasks(); // Rückgabewert von loadTasks zuweisen
-    if (!tasks || tasks.length === 0) {
-        console.warn("Es wurden keine Aufgaben geladen. Standardaufgabe wird erstellt.");
-        tasks = [{ task: {} }]; // Standardaufgabe ohne Subtasks
-    }
-
-    // Sicherstellen, dass nur Aufgaben, die tatsächlich Subtasks haben, ein 'subtasks' Feld bekommen
-    tasks.forEach(task => {
-        // Falls die Aufgabe ein 'subtasks' Feld benötigt, aber nicht hat, fügen wir es hinzu
-        if (task.task && typeof task.task.subtasks === "undefined") {
-            task.task.subtasks = {}; // Leeres Subtask-Objekt für diese Aufgabe
-        }
-    });
-
     renderAddTaskCard();
 }
 
@@ -50,7 +36,6 @@ async function renderAddTaskCard(task) {
     validateFields();
     setupDueDateValidation();
     setupSubtaskInput();
-    initializeAddSubtaskButton();
 }
 
 function setupAssignedToField() {
@@ -307,7 +292,7 @@ async function generateAddTaskCardHTML(task) {
             <div class="addTask-subtasks">
                 <h2>Subtasks</h2>
                 <div class="addTask-subtasks-field">
-                    <input class="addTask-subtasks-content" id="newSubTaskInput" placeholder="Add new subtask">
+                    <input class="addTask-subtasks-content" type="text" id="newSubTaskInput2" placeholder="Add new subtask">
                     <svg class="addTask-subtasks-icon-add" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <mask id="mask0_75601_15213" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
                         <rect x="0.248535" width="24" height="25" fill="#D9D9D9"/>
@@ -322,7 +307,7 @@ async function generateAddTaskCardHTML(task) {
                         </svg>  
                         <div class="addTask-subtasks-vertical-line">
                         </div>
-                        <div id="addSubtaskButton" onclick="addSubtask(event)">
+                        <div id="addSubtaskButton2" onclick="addSubtask(event)">
                             <svg class="create-addTask-icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_267600_4053" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
                                     <rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
@@ -334,7 +319,7 @@ async function generateAddTaskCardHTML(task) {
                         </div>
                     </div>
                 </div>
-                        <ul class="subtasks-list" id="subtasksList">
+                        <ul class="subtasks-list" id="subtasksList2">
                         </ul>
             </div>
         </div>
@@ -343,6 +328,8 @@ async function generateAddTaskCardHTML(task) {
             <img class="task-created-icon" src="../../assets/icons/board.png" alt="Board Icon">
         </div>
     `;
+    document.getElementById("addSubtaskButton").addEventListener("click", addSubtask);
+    updateSubtasksList();
 }
 
 function generateAddTaskCardFooterHTML() {
@@ -666,142 +653,46 @@ function setupSubtaskInput() {
     }
 }
 
-async function addSubtask(event) {
-    event.preventDefault();
+// Fügt einen neuen Subtask hinzu
+function addSubtask() {
+    const input = document.getElementById("newSubTaskInput2");
+    const subtaskName = input.value.trim();
 
-    if (!tasks || tasks.length === 0 || typeof currentTaskIndex === "undefined") {
-        console.error("Tasks oder currentTaskIndex nicht definiert. Standardwerte werden verwendet.");
-        tasks = [{ task: { subtasks: {} } }]; // Standardaufgabe ohne Subtasks
-        currentTaskIndex = 0;
-    }
-
-    const task = tasks[currentTaskIndex]?.task || null;
-    if (!task) {
-        console.error("Die aktuelle Aufgabe ist nicht definiert.");
+    if (subtaskName === "") {
+        alert("Bitte geben Sie einen Namen für die Subtask ein.");
         return;
     }
 
-    const subtaskName = getSubtaskName();
-
-    if (canAddSubtask(task)) {
-        addNewSubtask(task, subtaskName);
-        updateSubtasksList(task);
-        clearSubtaskInput();
-    } else {
-        alert("Es können nur maximal 3 Subtasks hinzugefügt werden.");
-    }
-}
-
-function getSubtaskName() {
-    return document.getElementById('task-subtasks').value.trim();
-}
-
-function canAddSubtask(task) {
-    return Object.keys(task.subtasks || {}).length < 3;
-}
-
-function addNewSubtask(task, subtaskName) {
-    // Wenn die Aufgabe noch keine Subtasks hat, initialisieren wir sie
-    if (!task.subtasks) {
-        task.subtasks = {};  // Initialisiere Subtasks als leeres Objekt
+    // Überprüfen, ob die maximale Anzahl erreicht wurde
+    if (tasks[currentTaskIndex].subtasks.length >= 3) {
+        alert("Es können maximal 3 Subtasks hinzugefügt werden.");
+        return;
     }
 
-    const subtaskId = Object.keys(task.subtasks).length;  // Bestimme eine neue ID
-    task.subtasks[subtaskId] = { name: subtaskName, completed: false };  // Subtask hinzufügen
+    tasks[currentTaskIndex].subtasks.push({ name: subtaskName, completed: false });
+    input.value = ""; // Eingabefeld leeren
+    updateSubtasksList();
 }
 
-function clearSubtaskInput() {
-    document.getElementById('newSubtaskInput').value = "";
-}
+// Aktualisiert die Subtask-Liste
+function updateSubtasksList() {
+    const list = document.getElementById("subtasksList2");
+    const subtasks = tasks[currentTaskIndex].subtasks;
 
-function updateSubtasksList(task) {
-    const subtasksList = document.querySelector('.subtasks-list');
-    const subtasks = task.subtasks || {}; // Sicherstellen, dass es immer ein Subtask-Objekt gibt
-
-    subtasksList.innerHTML = Object.entries(subtasks).map(([subtaskId, subtask], index) => `
-        <li id="subtask-${subtaskId}" class="subtask-item" data-index="${index}">
-            <div class="subtask-item-name">
-                <img class="ul-bullet" src="./assets/icons/addtask_arrowdown.png" alt="Arrow right">
-                <span>${subtask.name}</span>
-            </div>
-            <div class="subtask-actions">
-                <img src="./assets/icons/contact_edit.png" alt="Edit" title="Edit" onclick="editSubtask(${index})" />
-                <span class="separator"></span>
-                <img src="./assets/icons/contact_basket.png" alt="Delete" title="Delete" onclick="deleteSubtask(${index})" />
-            </div>
+    list.innerHTML = subtasks
+        .map(
+            (subtask, index) => `
+        <li>
+            <span>${subtask.name}</span>
+            <button onclick="deleteSubtask(${index})">Delete</button>
         </li>
-    `).join("");
+    `
+        )
+        .join("");
 }
 
-function editSubtask(subtaskIndex) {
-    const task = tasks[currentTaskIndex].task;
-    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
-    const subtask = task.subtasks[subtaskId];
-    const subtaskElement = document.getElementById(`subtask-${subtaskId}`);
-    let inputField = createInputField(subtask);
-    let checkIcon = createCheckIcon();
-    subtaskElement.innerHTML = '';
-    subtaskElement.appendChild(inputField);
-    subtaskElement.appendChild(checkIcon);
-    checkIcon.addEventListener('click', function () {
-        const newSubtaskName = inputField.value.trim();
-        if (newSubtaskName) {
-            subtask.name = newSubtaskName;
-            updateSubtasksList(task);
-        }
-    });
-}
-
-function createCheckIcon() {
-    let checkIcon = document.createElement('img');
-    checkIcon.src = './assets/icons/contact_create.png';
-    checkIcon.alt = 'Bestätigen';
-    checkIcon.className = 'confirm-img';
-    return checkIcon;
-}
-
-function createInputField(subtask) {
-    let inputField = document.createElement('input');
-    inputField.type = 'text';
-    inputField.value = subtask.name;
-    inputField.maxLength = '30';
-    return inputField;
-}
-
-function deleteSubtask(subtaskIndex) {
-    const task = tasks[currentTaskIndex].task;
-    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
-    delete task.subtasks[subtaskId];
-    updateSubtasksList(task);
-}
-
-function getCurrentSubtasks() {
-    const subtasksList = document.querySelectorAll(".subtasks-list .subtask-item");
-    const subtasks = {};
-
-    subtasksList.forEach((subtaskElement, index) => {
-        const subtaskName = subtaskElement.querySelector(".subtask-item-name span").textContent.trim();
-        if (subtaskName) {
-            subtasks[index] = { name: subtaskName, completed: false };
-        }
-    });
-
-    return subtasks;
-}
-
-function initializeAddSubtaskButton() {
-    const addSubtaskButton = document.getElementById("addSubtaskButton");
-    if (addSubtaskButton) {
-        console.log("Add Subtask Button gefunden");
-
-        addSubtaskButton.onclick = (event) => {
-            if (tasks.length > 0 && currentTaskIndex < tasks.length) {
-                addSubtask(event);
-            } else {
-                console.error("Ungültiger currentTaskIndex oder keine Aufgaben vorhanden.");
-            }
-        };
-    } else {
-        console.error("Das Element mit der ID 'addSubtaskButton' wurde nicht gefunden.");
-    }
+// Löscht einen Subtask
+function deleteSubtask(index) {
+    tasks[currentTaskIndex].subtasks.splice(index, 1);
+    updateSubtasksList();
 }

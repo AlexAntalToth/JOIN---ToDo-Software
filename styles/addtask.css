@@ -120,7 +120,8 @@
 
 .task-created-popup {
     position: fixed;
-    bottom: -100px; /* Start außerhalb des Bildschirms */
+    bottom: -100px;
+    /* Start außerhalb des Bildschirms */
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(42, 54, 71, 0.95);
@@ -133,12 +134,15 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transition: bottom 0.4s ease-in-out;
     z-index: 1000;
-    opacity: 0; /* Unsichtbar starten */
+    opacity: 0;
+    /* Unsichtbar starten */
 }
 
 .task-created-popup.show {
-    bottom: 50%; /* Position in der Mitte */
-    opacity: 1; /* Sichtbar */
+    bottom: 50%;
+    /* Position in der Mitte */
+    opacity: 1;
+    /* Sichtbar */
 }
 
 .task-created-icon {
@@ -414,17 +418,17 @@
 
 .urgent-active {
     background-color: red;
-     color: white;
+    color: white;
 }
 
 .middle-active {
-    background-color:rgba(255,168,0,1);
-     color: white;
+    background-color: rgba(255, 168, 0, 1);
+    color: white;
 }
 
 .low-active {
-    background-color:rgba(122,226,41,1);
-     color: white;
+    background-color: rgba(122, 226, 41, 1);
+    color: white;
 }
 
 .addTask-dueDate {
@@ -622,7 +626,7 @@
 }
 
 .addTask-icons-input.active {
-    display: flex; 
+    display: flex;
     gap: 2px;
     padding-right: 20px;
 }
@@ -635,14 +639,28 @@
     display: flex;
     align-items: center;
     gap: 16px;
-  }
-  
-  .subtask-bar span {
+}
+
+.subtask-bar span {
     font-size: 12px;
     font-weight: 400;
     line-height: 14px;
-  }
-  
-  .subtasks-list {
-    display: block; /* Sicherstellen, dass die Liste angezeigt wird */
+}
+
+.subtasks-list {
+    list-style: disc; /* Bullet Points anzeigen */
+    padding-left: 20px; /* Abstand für die Bullet Points */
+}
+
+.subtasks-list li {
+    position: relative; /* Positionierung für den Hover-Effekt */
+    padding: 8px 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover-Effekt für jedes Listenelement */
+.subtasks-list li:hover {
+    background-color: rgba(238, 238, 238, 1);
 }
