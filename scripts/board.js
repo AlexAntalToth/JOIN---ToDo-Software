@@ -64,7 +64,7 @@ function getCatContainerId(task) {
 function generateTaskHtml(task, index, contacts){
     let { completed, total } = calculateSubtaskProgress(task.subtasks);
     return `
-        <div class="task" draggable="true" ondragstart="startDragging(${index})">
+        <div class="task" id="task-${index}" draggable="true" ondragstart="startDragging(${index})">
              ${generateTaskBadge(task.badge)}
             <div class="task-title" onclick="openTaskPopup(${index})">${task.title}</div>
             <div class="task-desc">${task.description}</div>
@@ -83,15 +83,16 @@ function generateTaskHtml(task, index, contacts){
                     if (contact) {
                         const [firstName, lastName] = contact.name.split(" ");
                         const initials = `${firstName[0]}${lastName[0]}`;
+                        const bgColor = contact.color || "#cccccc";
                         return `
-                            <div class="profile-circle">
+                            <div class="profile-circle" style="background-color: ${bgColor};">
                               ${initials}
                             </div>
                         `;
                     }
                     return "";
                 }).join("") : ""}
-            </div>
+                </div>
                 ${task.priority ? `
                     <div class="priority">
                         <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">
@@ -179,16 +180,17 @@ function generateContactsHtml(assignedTo, contacts) {
         const contact = contacts[contactKey];
         if (contact) {
             const [firstName, lastName] = contact.name.split(" ");
-            contactsHtml += contactsHtmlTemplate(firstName, lastName, contact);
+            const bgColor = contact.color || "#cccccc";
+            contactsHtml += contactsHtmlTemplate(firstName, lastName, contact, bgColor);
         }
     });
     return contactsHtml;
 }
 
-function contactsHtmlTemplate(firstName, lastName, contact){
+function contactsHtmlTemplate(firstName, lastName, contact, bgColor){
     return `
             <div class="task-contact">
-                <div class="profile-circle">
+                <div class="profile-circle" style="background-color: ${bgColor};">
                     ${firstName[0]}${lastName[0]}
                 </div>
                 <span>${contact.name}</span>
@@ -212,7 +214,7 @@ function generateTaskBadge(badgeType) {
 
 function generateSubtasksHtml(subtasks, taskIndex) {
     if (!subtasks) return "";
-
+    
     return Object.entries(subtasks).map(([subtaskId, subtask]) => `
         <label class="label-container">
             ${subtask.name}
@@ -387,14 +389,16 @@ function editTask() {
                     </button>
                     <div class="dropdown-menu" id="assignedToList">
                         ${Object.keys(contacts).map(contactKey => {
-                            const fullName = contacts[contactKey].name.split(" ");
+                            const contact = contacts[contactKey];
+                            const fullName = contact.name.split(" ");
                             const firstName = fullName[0] || "";
                             const lastName = fullName[1] || "";
                             const initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
+                            const bgColor = contact.color || "#cccccc";
                                 return ` 
                                     <div class="dropdown-item" onclick="toggleDropdownItem(this)">
                                         <div class="dd-name">
-                                            <div class="profile-circle">${initials}</div>
+                                            <div class="profile-circle" style="background-color: ${bgColor};">${initials}</div>
                                             <p> ${contacts[contactKey].name}</p>
                                         </div>
                                         <input type="checkbox" value="${contactKey}" 
@@ -595,7 +599,15 @@ function saveTaskChanges() {
     tasks[currentTaskIndex].task = task;
     isEditing = false;
     refreshTaskPopup();
-    disableButtonWhileEdit();
+    updateTaskHtml(currentTaskIndex);
+}
+
+function updateTaskHtml(taskIndex) {
+    const task = tasks[taskIndex].task;
+    const taskDiv = document.getElementById(`task-${taskIndex}`);
+    if (taskDiv) {
+        taskDiv.outerHTML = generateTaskHtml(task, taskIndex, contacts);
+    }
 }
 
 function getAssignedContacts() {
@@ -633,8 +645,12 @@ function getCurrentSubtasks() {
 function refreshTaskPopup() {
     const taskView = document.getElementById("taskView");
     const taskEdit = document.getElementById("taskEdit");
+    const taskPopup = document.getElementById("taskPopup");
     taskView.classList.remove("hidden");
     taskEdit.classList.add("hidden");
+    if (!taskPopup.classList.contains("show")) {
+        taskPopup.classList.add("show");
+    }
     const task = tasks[currentTaskIndex].task;
     document.getElementById("taskBadge").innerHTML = generateTaskBadge(task.badge);
     document.getElementById("taskTitle").innerHTML = task.title;

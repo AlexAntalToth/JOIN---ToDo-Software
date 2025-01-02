@@ -30,6 +30,26 @@ body {
   padding-bottom: 30px;
 }
 
+.add-task-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.add-task-popup {
+  width: 80%;
+  height: 80%;
+  background-color: white;
+  border-radius: 30px;
+}
+
 .board-headline {
   display: flex;
   align-items: center;
@@ -317,13 +337,12 @@ body {
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0s 0.2s;
+  transition: opacity 0.2s ease;
 }
 
 .popup.show {
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.5s ease;
 }
 
 .popup-content {
@@ -346,6 +365,7 @@ body {
 .popup.show .popup-content {
   transform: translateX(0);
   opacity: 1;
+  transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
 .popup-content h1 {
@@ -438,7 +458,7 @@ body {
   background-image: url(../assets/icons/checked.svg);
 }
 
-.dropdown-item input:checked ~ .checkmark{
+.dropdown-item input:checked ~ .checkmark {
   background-image: url(../assets/icons/checked.svg);
   filter: grayscale(100) brightness(100);
 }
@@ -521,9 +541,9 @@ body {
   justify-content: flex-end;
 }
 
-.form-actions .add-task img{
-width: 16px;
-height: 16px;
+.form-actions .add-task img {
+  width: 16px;
+  height: 16px;
 }
 
 .priority-buttons {
@@ -693,7 +713,7 @@ height: 16px;
 .subtask-input-container button {
   margin-left: 10px;
   padding: 8px;
-  background-color: #2B3646;
+  background-color: #2b3646;
   color: white;
   border: none;
   border-radius: 10px;
@@ -702,7 +722,7 @@ height: 16px;
 }
 
 .subtask-input-container button:hover {
-  background-color: #28ABE3;
+  background-color: #28abe3;
 }
 
 .subtask-item {
@@ -759,7 +779,7 @@ height: 16px;
   margin: 0 5px;
 }
 
-.subtask-item-name{
+.subtask-item-name {
   display: flex;
   align-items: center;
   gap: 10px;
