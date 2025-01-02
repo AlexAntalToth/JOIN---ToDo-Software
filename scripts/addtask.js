@@ -284,7 +284,9 @@ async function generateAddTaskCardHTML(task) {
                     <div class="addTask-category-field" id="task-category">
                     <span>Select task category</span>
                     </div>
-                    <img class="addTask-category-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Logo Arrow Down">
+                    <div class="addTask-category-icon-wrapper">
+                        <img class="addTask-category-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Logo Arrow Down">
+                    </div>
                     <div class="addTask-category-dropdown" id="categoryDropdown" style="display: none;">
                         <div class="category-item" data-value="Technical Task">Technical Task</div>
                         <div class="category-item" data-value="User Story">User Story</div>
@@ -385,9 +387,6 @@ async function saveNewTask() {
     let [year, month, day] = dueDateISO.split("-");
     let formattedDueDate = `${day}/${month}/${year}`; // in case of saving as DD/MM/YYYY
     let taskBadge = document.getElementById('categoryDropdown').getAttribute('data-selected');
-    // let taskSubtasks = Object.values(tasks[currentTaskIndex].task.subtasks || {}).map(subtask => subtask.name.trim() || "");
-    // let taskSubtasks = document.getElementById('task-subtasks').value.split(',').map(subtask => subtask.trim());
-
     let taskSubtasks = [];
     let subtaskElements = document.querySelectorAll('.subtasks-list li span');
     subtaskElements.forEach((element) => {
@@ -462,8 +461,6 @@ function setupClearButton() {
                 item.classList.remove("selected");
             });
         }
-
-        // document.getElementById("task-subtasks").value = "";
 
         document.querySelectorAll(".contact-checkbox").forEach(checkbox => {
             checkbox.checked = false;
@@ -591,26 +588,28 @@ function setupAssignedTo() {
 function setupCategoryDropdown() {
     let categoryField = document.getElementById("task-category");
     let dropdown = document.getElementById("categoryDropdown");
-    let icon = document.querySelector(".addTask-category-icon");
+    let iconWrapper = document.querySelector(".addTask-category-icon-wrapper"); // Der Wrapper für das Icon
 
-    if (categoryField && dropdown) {
+    if (categoryField && dropdown && iconWrapper) {
+        // Klick-Event für das Textfeld (task-category)
         categoryField.addEventListener("click", () => {
-            // Toggle das Dropdown
             dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-
-            // Toggle die Klasse 'open' für das Feld und icon
             categoryField.classList.toggle("open");
         });
 
+        // Klick-Event für das Icon
+        iconWrapper.addEventListener("click", () => {
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            categoryField.classList.toggle("open");
+        });
+
+        // Klick-Event für die Auswahl einer Kategorie
         dropdown.addEventListener('click', function (event) {
             if (event.target.classList.contains('category-item')) {
                 let selectedValue = event.target.dataset.value;
                 categoryField.querySelector("span").textContent = selectedValue;
 
-                // Dropdown schließen
                 dropdown.style.display = "none";
-
-                // Entferne die 'open'-Klasse, um das Icon zurückzusetzen
                 categoryField.classList.remove("open");
 
                 dropdown.setAttribute('data-selected', selectedValue);
@@ -619,6 +618,7 @@ function setupCategoryDropdown() {
         });
     }
 }
+
 
 function setupDueDateValidation() {
     let dueDateField = document.getElementById("task-dueDate");

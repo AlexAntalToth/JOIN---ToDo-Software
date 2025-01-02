@@ -21,7 +21,7 @@
     align-items: center;
     width: 1200px;
     padding: 50px;
-    margin-top: -300px;
+    /* margin-top: -300px; */
 }
 
 .addTask-footer-left {
@@ -522,26 +522,36 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.addTask-category-icon {
+.addTask-category-icon-wrapper {
     position: absolute;
-    width: 7.21px;
-    height: 4.6px;
+    width: 24px; 
+    height: 24px; 
+    border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
     right: 20px;
     top: 50%;
-    transform: translateY(-50%) rotate(0deg);
+    transform: translateY(-50%);
+    background-color: transparent;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.addTask-category-icon-wrapper:hover {
+    background-color: rgba(128, 128, 128, 0.2); 
+}
+
+.addTask-category-field:focus + .addTask-category-icon-wrapper,
+.addTask-category-field.open + .addTask-category-icon-wrapper {
+    transform: translateY(-50%) rotate(180deg); 
+}
+
+.addTask-category-icon {
+    width: 7.21px; 
+    height: 4.6px;
+    transform: rotate(0deg); 
     cursor: pointer;
     z-index: 1;
-}
-
-.addTask-category-field:focus+.addTask-category-icon,
-.addTask-category-field.open+.addTask-category-icon {
-    transform: translateY(-50%) rotate(180deg);
-}
-
-
-
-.addTask-category-field:hover {
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .addTask-category-dropdown {
@@ -618,7 +628,37 @@
     transform: translateY(-50%);
     cursor: pointer;
     fill: #2A3647;
-    transition: fill 0.3s;
+    transition: background-color 0.3s, fill 0.3s;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.addTask-subtasks-icon-add:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+.cancel-addTask-icon,
+.create-addTask-icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    cursor: pointer;
+    background-color: transparent; 
+    transition: background-color 0.3s, fill 0.3s;
+}
+
+.cancel-addTask-icon:hover,
+.create-addTask-icon:hover {
+    background-color: rgba(128, 128, 128, 0.2); 
 }
 
 .addTask-icons-input {
@@ -722,4 +762,15 @@ li {
 
 .subtasks-list li.editing {
     padding-left: 0; 
+}
+
+.edit-subtask-icon,
+.delete-subtask-icon {
+    position: relative;
+    transition: transform 0.3s ease, fill 0.3s ease;
+}
+
+.edit-subtask-icon:hover,
+.delete-subtask-icon:hover {
+    transform: translateY(2px);
 }
