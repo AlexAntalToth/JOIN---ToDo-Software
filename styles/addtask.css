@@ -176,7 +176,9 @@
     flex-direction: row;
     flex: 1;
     gap: 16px;
-    padding: 50px;
+    /* padding: 50px; */
+    padding-left: 50px;
+    padding-right: 50px;
     width: 1200px;
 }
 
