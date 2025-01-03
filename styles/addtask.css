@@ -366,20 +366,43 @@
     margin-left: 10px;
 }
 
-.addTask-assignedTo-icon {
+.addTask-assignedTo-icon-wrapper {
     position: absolute;
-    width: 7.21px;
-    height: 4.6px;
+    width: 24px; 
+    height: 24px; 
+    border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
     right: 20px;
     top: 50%;
-    transform: translateY(-50%) rotate(0deg);
+    transform: translateY(-50%);
+    background-color: transparent;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.addTask-assignedTo-icon-wrapper:hover {
+    background-color: rgba(128, 128, 128, 0.2); 
+}
+
+.addTask-assignedTo-field.open + .addTask-assignedTo-icon-wrapper {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.addTask-assignedTo-icon {
+    width: 7.21px; 
+    height: 4.6px;
+    transform: rotate(0deg); 
     cursor: pointer;
     z-index: 1;
 }
 
-.addTask-assignedTo-field:focus+.addTask-assignedTo-icon,
-.addTask-assignedTo-field.open+.addTask-assignedTo-icon {
+.addTask-assignedTo-icon-wrapper.rotated {
     transform: translateY(-50%) rotate(180deg);
+}
+
+.addTask-assignedTo-icon-wrapper {
+    transform: translateY(-50%) rotate(0deg);
 }
 
 .addTask-prio {

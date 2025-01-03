@@ -48,10 +48,10 @@ function setupAssignedToField() {
         assignedToField.addEventListener("click", () => {
             if (contactList.style.display === "none") {
                 contactList.style.display = "block";
-                renderSearchField();
+                // renderSearchField();
             } else {
                 contactList.style.display = "none";
-                removeSearchField();
+                // removeSearchField();
             }
         });
 
@@ -224,6 +224,8 @@ async function generateAddTaskCardHTML(task) {
                 <div class="addTask-assignedTo-container">
                     <div class="addTask-assignedTo-field" id="task-assignedTo">
                         <span>Select contacts to assign</span>
+                    </div>
+                    <div class="addTask-assignedTo-icon-wrapper">
                         <img class="addTask-assignedTo-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Arrow Down">
                     </div>
                     <div class="addTask-assignedTo-contactList" id="contactList" style="display: none;">
@@ -332,8 +334,6 @@ async function generateAddTaskCardHTML(task) {
             <img class="task-created-icon" src="../../assets/icons/board.png" alt="Board Icon">
         </div>
     `;
-    document.getElementById("addSubtaskButton").addEventListener("click", addSubtask);
-    updateSubtasksList();
 }
 
 function generateAddTaskCardFooterHTML() {
@@ -588,22 +588,19 @@ function setupAssignedTo() {
 function setupCategoryDropdown() {
     let categoryField = document.getElementById("task-category");
     let dropdown = document.getElementById("categoryDropdown");
-    let iconWrapper = document.querySelector(".addTask-category-icon-wrapper"); // Der Wrapper für das Icon
+    let iconWrapper = document.querySelector(".addTask-category-icon-wrapper"); 
 
     if (categoryField && dropdown && iconWrapper) {
-        // Klick-Event für das Textfeld (task-category)
         categoryField.addEventListener("click", () => {
             dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
             categoryField.classList.toggle("open");
         });
 
-        // Klick-Event für das Icon
         iconWrapper.addEventListener("click", () => {
             dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
             categoryField.classList.toggle("open");
         });
 
-        // Klick-Event für die Auswahl einer Kategorie
         dropdown.addEventListener('click', function (event) {
             if (event.target.classList.contains('category-item')) {
                 let selectedValue = event.target.dataset.value;
@@ -618,7 +615,6 @@ function setupCategoryDropdown() {
         });
     }
 }
-
 
 function setupDueDateValidation() {
     let dueDateField = document.getElementById("task-dueDate");
