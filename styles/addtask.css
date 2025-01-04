@@ -345,6 +345,11 @@
     background-color: #f0f0f0;
 }
 
+#contactList .contact-item.selected {
+    background-color: rgb(42, 54, 71);
+    color: white;
+}
+
 .contact-initials {
     width: 40px;
     height: 40px;
@@ -362,8 +367,44 @@
     font-size: 16px;
 }
 
+/* Standard-Checkbox verstecken */
 .contact-checkbox {
+    appearance: none; /* Entfernt die Standarddarstellung */
+    -webkit-appearance: none; /* Für Safari */
+    -moz-appearance: none; /* Für Firefox */
     margin-left: 10px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+    background-color: white;
+}
+
+/* Wenn die Checkbox aktiviert ist */
+.contact-checkbox:checked {
+    border-color: white;
+    background-color:rgb(42,54,71);
+}
+
+/* Das Häkchen selbst */
+.contact-checkbox:checked::after {
+    content: "✔";
+    position: absolute;
+    top: -12px;
+    left: 2px;
+    color: white; /* Hakenfarbe */
+    font-size: 23px;
+}
+
+/* Wenn die Checkbox nicht aktiviert ist */
+.contact-checkbox::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 2px;
+    font-size: 16px;
 }
 
 .addTask-assignedTo-icon-wrapper {
@@ -412,6 +453,10 @@
 .selected-contacts {
     display: flex;
     padding-top: 8px;
+}
+
+.contact-item.selected {
+    background-color: rgb(42, 54, 71); /* Grau */
 }
 
 .addTask-prio {

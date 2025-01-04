@@ -188,14 +188,26 @@ function setupContactCheckboxes() {
             console.log("Gefundener Kontakt:", contact);
 
             if (contact) {
+                const contactItem = event.target.closest(".contact-item");
+
                 if (event.target.checked) {
                     // Kontakt hinzufügen
                     if (!selectedContacts.some((c) => c.id === contactId)) {
                         selectedContacts.push(contact);
                     }
+
+                    // Hintergrundfarbe ändern, wenn der Kontakt ausgewählt wird
+                    if (contactItem) {
+                        contactItem.classList.add("selected");
+                    }
                 } else {
                     // Kontakt entfernen
                     selectedContacts = selectedContacts.filter((c) => c.id !== contactId);
+
+                    // Hintergrundfarbe zurücksetzen, wenn der Kontakt abgewählt wird
+                    if (contactItem) {
+                        contactItem.classList.remove("selected");
+                    }
                 }
             }
 
@@ -629,6 +641,32 @@ document.addEventListener('DOMContentLoaded', function () {
     setupAssignedToField();
     setupCategoryDropdown();
     setupDueDateValidation();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const contactListElement = document.getElementById("contactList");
+
+    if (contactListElement) {
+        contactListElement.addEventListener("click", (event) => {
+            const target = event.target;
+            const contactItem = target.closest(".contact-item");
+            if (!contactItem) return;
+
+            const checkbox = contactItem.querySelector(".contact-checkbox");
+            if (!checkbox) return;
+
+            // Toggle the selection state
+            const isSelected = checkbox.checked;
+            checkbox.checked = !isSelected;
+
+            if (checkbox.checked) {
+                contactItem.classList.add("selected");
+            } else {
+                contactItem.classList.remove("selected");
+            }
+        });
+    } else {
+    }
 });
 
 function setupCategoryDropdown() {
