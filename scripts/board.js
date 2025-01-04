@@ -83,7 +83,7 @@ function generateTaskHtml(task, index, contacts){
                     const contact = contacts[contactKey];
                     if (contact) {
                         const [firstName, lastName] = contact.name.split(" ");
-                        const initials = `${firstName[0]}${lastName[0]}`;
+                        const initials = `${firstName[0]}${lastName ? lastName[0] : ""}`;
                         const bgColor = contact.color || "#cccccc";
                         return `
                             <div class="profile-circle" style="background-color: ${bgColor};">
@@ -181,18 +181,19 @@ function generateContactsHtml(assignedTo, contacts) {
         const contact = contacts[contactKey];
         if (contact) {
             const [firstName, lastName] = contact.name.split(" ");
+            const initials = `${firstName[0]}${lastName ? lastName[0] : ""}`;
             const bgColor = contact.color || "#cccccc";
-            contactsHtml += contactsHtmlTemplate(firstName, lastName, contact, bgColor);
+            contactsHtml += contactsHtmlTemplate(initials, contact, bgColor);
         }
     });
     return contactsHtml;
 }
 
-function contactsHtmlTemplate(firstName, lastName, contact, bgColor){
+function contactsHtmlTemplate(initials, contact, bgColor){
     return `
             <div class="task-contact">
                 <div class="profile-circle" style="background-color: ${bgColor};">
-                    ${firstName[0]}${lastName[0]}
+                ${initials}
                 </div>
                 <span>${contact.name}</span>
             </div>
@@ -548,13 +549,36 @@ function setPriority(priority) {
 
 function toggleDropdown() {
     const dropdown = document.querySelector(".dropdown");
+    const dropdownToggle = document.querySelector(".dropdown-toggle");
     const icon = document.querySelector(".dropdown-toggle .dropdown-icon");
     dropdown.classList.toggle("open");
     document.querySelector(".dropdown-toggle").classList.toggle("dd-highlight");
     icon.classList.toggle("rotated");
     if (dropdown.classList.contains("open")) {
+        switchToSearchInput(dropdownToggle);
         updateDropdownItems(dropdown);
+    } else {
+        resetToDropdownButton(dropdownToggle);
     }
+}
+
+function switchToSearchInput(dropdownToggle) {
+    dropdownToggle.innerHTML = `
+        <input type="text" id="dropdownSearchInput" placeholder="" oninput="filterDropdownItems()" />
+        <img class="dropdown-icon rotated" src="./assets/icons/addtask_arrowdown.png" alt="Arrow down">
+    `;
+    const searchInput = document.getElementById("dropdownSearchInput");
+    searchInput.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+    searchInput.focus();
+}
+
+function resetToDropdownButton(dropdownToggle) {
+    dropdownToggle.innerHTML = `
+        Select contacts to assign
+        <img class="dropdown-icon" src="./assets/icons/addtask_arrowdown.png" alt="Arrow down">
+    `;
 }
 
 function toggleDropdownItem(item) {
@@ -575,6 +599,20 @@ function toggleDropdownItem(item) {
         }
     }
     updateItemStyle(item, checkbox.checked);
+}
+
+function filterDropdownItems() {
+    let searchInput = document.getElementById("dropdownSearchInput")
+    const searchTerm = searchInput.value.toLowerCase();
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    dropdownItems.forEach(item => {
+        const contactName = item.querySelector("p").textContent.toLowerCase();
+        if (contactName.includes(searchTerm)) {
+            item.style.display = ""; 
+        } else {
+            item.style.display = "none";
+        }
+    });
 }
 
 function updateDropdownItems(dropdown) {
