@@ -62,7 +62,8 @@ function getCatContainerId(task) {
 }
 
 function generateTaskHtml(task, index, contacts){
-    let { completed, total } = calculateSubtaskProgress(task.subtasks);
+    const subtasks = task.subtasks || {}; 
+    const { completed, total } = calculateSubtaskProgress(subtasks);
     return `
         <div class="task" id="task-${index}" draggable="true" ondragstart="startDragging(${index})">
              ${generateTaskBadge(task.badge)}
@@ -344,6 +345,7 @@ function editTask() {
     if (currentTaskIndex === null) return;
     const task = tasks[currentTaskIndex].task;
     isEditing = true;
+    task.subtasks = task.subtasks || {};
     const taskView = document.getElementById("taskView");
     const taskEdit = document.getElementById("taskEdit");
     taskView.classList.add("hidden");
@@ -388,8 +390,9 @@ function editTask() {
                     <img class="dropdown-icon" src="./assets/icons/addtask_arrowdown.png" alt="Arrow down">
                     </button>
                     <div class="dropdown-menu" id="assignedToList">
-                        ${Object.keys(contacts).map(contactKey => {
-                            const contact = contacts[contactKey];
+                         ${Object.entries(contacts)
+                            .sort(([, a], [, b]) => a.name.localeCompare(b.name))
+                            .map(([contactKey, contact]) => {
                             const fullName = contact.name.split(" ");
                             const firstName = fullName[0] || "";
                             const lastName = fullName[1] || "";
