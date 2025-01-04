@@ -368,9 +368,9 @@
 
 .addTask-assignedTo-icon-wrapper {
     position: absolute;
-    width: 24px; 
-    height: 24px; 
-    border-radius: 50%; 
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -379,20 +379,28 @@
     transform: translateY(-50%);
     background-color: transparent;
     transition: background-color 0.3s, transform 0.3s;
+    transform: translateY(-50%) rotate(0deg);
+    z-index: 10;
+}
+
+.addTask-assignedTo-mainField {
+    margin: 0;
+    padding: 0;
+    position: relative;
 }
 
 .addTask-assignedTo-icon-wrapper:hover {
-    background-color: rgba(128, 128, 128, 0.2); 
+    background-color: rgba(128, 128, 128, 0.2);
 }
 
-.addTask-assignedTo-field.open + .addTask-assignedTo-icon-wrapper {
+.addTask-assignedTo-field.open+.addTask-assignedTo-icon-wrapper {
     transform: translateY(-50%) rotate(180deg);
 }
 
 .addTask-assignedTo-icon {
-    width: 7.21px; 
+    width: 7.21px;
     height: 4.6px;
-    transform: rotate(0deg); 
+    transform: rotate(0deg);
     cursor: pointer;
     z-index: 1;
 }
@@ -401,8 +409,9 @@
     transform: translateY(-50%) rotate(180deg);
 }
 
-.addTask-assignedTo-icon-wrapper {
-    transform: translateY(-50%) rotate(0deg);
+.selected-contacts {
+    display: flex;
+    padding-top: 8px;
 }
 
 .addTask-prio {
@@ -549,9 +558,9 @@
 
 .addTask-category-icon-wrapper {
     position: absolute;
-    width: 24px; 
-    height: 24px; 
-    border-radius: 50%; 
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -563,18 +572,18 @@
 }
 
 .addTask-category-icon-wrapper:hover {
-    background-color: rgba(128, 128, 128, 0.2); 
+    background-color: rgba(128, 128, 128, 0.2);
 }
 
-.addTask-category-field:focus + .addTask-category-icon-wrapper,
-.addTask-category-field.open + .addTask-category-icon-wrapper {
-    transform: translateY(-50%) rotate(180deg); 
+.addTask-category-field:focus+.addTask-category-icon-wrapper,
+.addTask-category-field.open+.addTask-category-icon-wrapper {
+    transform: translateY(-50%) rotate(180deg);
 }
 
 .addTask-category-icon {
-    width: 7.21px; 
+    width: 7.21px;
     height: 4.6px;
-    transform: rotate(0deg); 
+    transform: rotate(0deg);
     cursor: pointer;
     z-index: 1;
 }
@@ -675,15 +684,15 @@
     border-radius: 50%;
     display: flex;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
     cursor: pointer;
-    background-color: transparent; 
+    background-color: transparent;
     transition: background-color 0.3s, fill 0.3s;
 }
 
 .cancel-addTask-icon:hover,
 .create-addTask-icon:hover {
-    background-color: rgba(128, 128, 128, 0.2); 
+    background-color: rgba(128, 128, 128, 0.2);
 }
 
 .addTask-icons-input {
@@ -749,7 +758,7 @@ li {
 }
 
 .subtasks-list li:hover .subtask-detail-buttons {
-    display: flex; 
+    display: flex;
     padding-right: 8px;
 }
 
@@ -782,11 +791,11 @@ li {
 }
 
 .subtasks-list li.editing::before {
-    content: none; 
+    content: none;
 }
 
 .subtasks-list li.editing {
-    padding-left: 0; 
+    padding-left: 0;
 }
 
 .edit-subtask-icon,

@@ -19,6 +19,8 @@ async function loadSidebarAndHeader() {
 }
 
 async function renderAddTaskCard(task) {
+    contacts = await loadTaskContacts();
+    console.log("Kontakte für Render geladen:", contacts);
     let addTaskContainer = document.querySelector(".addTask-content");
     let addTaskFooter = document.querySelector(".addTask-footer");
 
@@ -38,41 +40,7 @@ async function renderAddTaskCard(task) {
     validateFields();
     setupDueDateValidation();
     setupSubtaskInput();
-}
-
-function setupAssignedToField() {
-    let assignedToField = document.getElementById("task-assignedTo");
-    let contactList = document.getElementById("contactList");
-
-    if (assignedToField && contactList) {
-        assignedToField.addEventListener("click", () => {
-            if (contactList.style.display === "none") {
-                contactList.style.display = "block";
-                // renderSearchField();
-            } else {
-                contactList.style.display = "none";
-                // removeSearchField();
-            }
-        });
-
-        let contactItems = document.querySelectorAll(".contact-item");
-        contactItems.forEach(contactItem => {
-            contactItem.addEventListener("click", (event) => {
-                let selectedContactId = event.target.closest('.contact-item').dataset.id;
-                let selectedContact = contacts.find(contact => contact.id === selectedContactId);
-
-                if (selectedContact) {
-                    const contactIndex = selectedContacts.findIndex(contact => contact.id === selectedContactId);
-                    if (contactIndex === -1) {
-                        selectedContacts.push(selectedContact);
-                    } else {
-                        selectedContacts.splice(contactIndex, 1);
-                    }
-                    updateAssignedToField();
-                }
-            });
-        });
-    }
+    setupContactCheckboxes();
 }
 
 function setupPriorityButtons() {
@@ -142,14 +110,98 @@ function setupPriorityButtons() {
     }
 }
 
-function updateAssignedToField() {
-    let assignedToField = document.getElementById("task-assignedTo");
+function setupAssignedToField() {
+    const assignedToField = document.getElementById("task-assignedTo");
+    const contactList = document.getElementById("contactList");
+    const assignedToContainer = document.querySelector(".addTask-assignedTo-container");
 
-    if (selectedContacts.length > 0) {
-        assignedToField.innerHTML = selectedContacts.map(contact => `<span>${contact.name}</span>`).join(", ");
-    } else {
-        assignedToField.innerHTML = `<span>Select contacts to assign</span>`;
+    if (!assignedToField || !contactList) {
+        return;
     }
+
+    // Funktion für das Öffnen/Schließen der Kontaktliste
+    function toggleContactList() {
+        const isVisible = contactList.style.display === "block";
+        if (isVisible) {
+            // Kontaktliste ausblenden
+            contactList.style.display = "none";
+            updateSelectedContactInitials();
+        } else {
+            // Kontaktliste einblenden
+            contactList.style.display = "block";
+            renderContactListWithSelection();
+        }
+    }
+
+    // Korrektes Event-Handling sicherstellen
+    assignedToField.addEventListener("click", toggleContactList);
+
+    // Kontakte initial rendern
+    function renderContactListWithSelection() {
+        const contactItems = document.querySelectorAll(".contact-item");
+
+        contactItems.forEach(contactItem => {
+            const contactId = contactItem.dataset.id;
+
+            // Setze den Haken für ausgewählte Kontakte
+            const checkbox = contactItem.querySelector(".contact-checkbox");
+            if (checkbox) {
+                checkbox.checked = selectedContacts.some(contact => contact.id === contactId);
+            }
+        });
+    }
+
+    // Aktualisiere die Initialen der ausgewählten Kontakte
+    function updateSelectedContactInitials() {
+        let selectedContactsDiv = document.querySelector(".selected-contacts");
+        if (selectedContactsDiv) {
+            selectedContactsDiv.remove(); // Bestehende Initialen entfernen
+        }
+
+        if (selectedContacts.length > 0) {
+            const initialsHTML = selectedContacts
+                .map(contact => `
+                    <div class="contact-initials" style="background-color: ${contact.color};">
+                        ${contact.name.split(" ").map(name => name[0]).join("").toUpperCase()}
+                    </div>
+                `)
+                .join("");
+
+            const newSelectedContactsDiv = document.createElement("div");
+            newSelectedContactsDiv.className = "selected-contacts";
+            newSelectedContactsDiv.innerHTML = initialsHTML;
+
+            assignedToContainer.appendChild(newSelectedContactsDiv);
+        }
+    }
+}
+
+function setupContactCheckboxes() {
+    let checkboxes = document.querySelectorAll(".contact-checkbox");
+
+    checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", (event) => {
+            let contactId = event.target.dataset.id; // Kontakt-ID aus Dataset lesen
+            console.log("Checkbox geändert, Kontakt-ID:", contactId);
+
+            let contact = contacts.find((c) => c.id === contactId); // Kontakt in `contacts` suchen
+            console.log("Gefundener Kontakt:", contact);
+
+            if (contact) {
+                if (event.target.checked) {
+                    // Kontakt hinzufügen
+                    if (!selectedContacts.some((c) => c.id === contactId)) {
+                        selectedContacts.push(contact);
+                    }
+                } else {
+                    // Kontakt entfernen
+                    selectedContacts = selectedContacts.filter((c) => c.id !== contactId);
+                }
+            }
+
+            console.log("Aktuell ausgewählte Kontakte:", selectedContacts); // Aktuelle Kontakte loggen
+        });
+    });
 }
 
 function renderSearchField() {
@@ -222,11 +274,13 @@ async function generateAddTaskCardHTML(task) {
             <div class="addTask-assignedTo">
                 <h2 class="addTask-assignedTo-header">Assigned to</h2>
                 <div class="addTask-assignedTo-container">
-                    <div class="addTask-assignedTo-field" id="task-assignedTo">
-                        <span>Select contacts to assign</span>
-                    </div>
-                    <div class="addTask-assignedTo-icon-wrapper">
-                        <img class="addTask-assignedTo-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Arrow Down">
+                    <div class="addTask-assignedTo-mainField">
+                        <div class="addTask-assignedTo-field" id="task-assignedTo">
+                            <span>Select contacts to assign</span>
+                        </div>
+                        <div class="addTask-assignedTo-icon-wrapper">
+                            <img class="addTask-assignedTo-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Arrow Down">
+                        </div>
                     </div>
                     <div class="addTask-assignedTo-contactList" id="contactList" style="display: none;">
                         <div class="contact-list-scrollable">
@@ -392,11 +446,20 @@ async function saveNewTask() {
     subtaskElements.forEach((element) => {
         taskSubtasks.push({ name: element.textContent.trim(), completed: false });
     });
+    let assignedTo = {};
+    if (selectedContacts.length > 0) {
+        selectedContacts.forEach((contact, index) => {
+            assignedTo[`contact${index + 1}`] = contact.name;
+        });
+    } else {
+        // Füge einen leeren String hinzu, wenn keine Kontakte ausgewählt sind
+        assignedTo["contact1"] = "";
+    }
 
     let newTask = {
         title: taskTitle,
         description: taskDescription,
-        assignedTo: selectedContacts.map(contact => contact.id),
+        assignedTo,
         dueDate: taskDueDate,
         priority: taskPriority,
         badge: taskBadge,
@@ -563,27 +626,10 @@ function setupCreateButton() {
 document.addEventListener('DOMContentLoaded', function () {
     setupTitleField();
     setupCreateButton();
-    setupAssignedTo();
+    setupAssignedToField();
     setupCategoryDropdown();
     setupDueDateValidation();
 });
-
-function setupAssignedTo() {
-    let assignedToElement = document.getElementById('task-assignedTo');
-    let contactList = document.querySelector('.addTask-assignedTo-contactList');
-
-    let toggleContactList = () => {
-        if (contactList) {
-            contactList.style.display = contactList.style.display === 'block' ? 'none' : 'block';
-        }
-    };
-
-    if (assignedToElement) {
-        assignedToElement.addEventListener('click', toggleContactList);
-    } else {
-        document.addEventListener('click', toggleContactList);
-    }
-}
 
 function setupCategoryDropdown() {
     let categoryField = document.getElementById("task-category");
