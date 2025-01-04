@@ -553,6 +553,12 @@
     cursor: pointer;
 }
 
+.input[type="date"]::-webkit-calendar-picker-indicator {
+    background: url(../assets/icons/addTask_date.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
 .addTask-date-icon {
     position: absolute;
     width: 18px;

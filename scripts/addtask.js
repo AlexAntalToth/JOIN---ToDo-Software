@@ -133,7 +133,18 @@ function setupAssignedToField() {
     }
 
     // Korrektes Event-Handling sicherstellen
-    assignedToField.addEventListener("click", toggleContactList);
+    assignedToField.addEventListener("click", (event) => {
+        event.stopPropagation(); // Verhindert, dass der Klick an das `document` weitergegeben wird
+        toggleContactList();
+    });
+
+    // Klicken außerhalb der Kontaktliste führt zum Schließen der Liste
+    document.addEventListener("click", (event) => {
+        if (!assignedToField.contains(event.target) && !contactList.contains(event.target)) {
+            contactList.style.display = "none";
+            updateSelectedContactInitials();
+        }
+    });
 
     // Kontakte initial rendern
     function renderContactListWithSelection() {
@@ -152,24 +163,36 @@ function setupAssignedToField() {
             contactItem.removeEventListener("click", handleContactItemClick); // Entferne vorherige Listener
             contactItem.addEventListener("click", handleContactItemClick);
 
-            // Event-Listener für die Änderung der Checkbox hinzufügen
-            checkbox.removeEventListener("change", handleCheckboxChange); // Entferne vorherige Listener
-            checkbox.addEventListener("change", handleCheckboxChange);
+            // Event-Listener für die Checkbox
+            checkbox.removeEventListener("click", handleCheckboxClick); // Entferne vorherige Listener
+            checkbox.addEventListener("click", handleCheckboxClick);
         });
     }
 
-    // Event-Handler für das Klicken auf `contact-item`
+    // Event-Handler für das Klicken auf das gesamte `contact-item` (einschließlich der Checkbox)
     function handleContactItemClick(event) {
         const contactItem = event.currentTarget;
         const checkbox = contactItem.querySelector(".contact-checkbox");
-        checkbox.checked = !checkbox.checked; // Umkehren des Checkbox-Zustands
+
+        // Umkehren des Checkbox-Zustands
+        checkbox.checked = !checkbox.checked;
+
+        // Den Kontakt entsprechend der Auswahl hinzufügen oder entfernen
         handleContactSelection(contactItem, checkbox.checked);
     }
 
-    // Event-Handler für das Ändern der Checkbox
-    function handleCheckboxChange(event) {
-        const checkbox = event.target;
+    // Event-Handler für das Klicken auf die Checkbox
+    function handleCheckboxClick(event) {
+        // Verhindern, dass das Event weiter nach oben propagiert
+        event.stopPropagation();
+
+        const checkbox = event.currentTarget;
         const contactItem = checkbox.closest(".contact-item");
+
+        // Umkehren des Checkbox-Zustands
+        checkbox.checked = !checkbox.checked;
+
+        // Den Kontakt entsprechend der Auswahl hinzufügen oder entfernen
         handleContactSelection(contactItem, checkbox.checked);
     }
 
@@ -527,11 +550,13 @@ function setupClearButton() {
     if (!clearButton) return;
 
     clearButton.addEventListener("click", () => {
+        // Zurücksetzen der Texteingabefelder
         document.getElementById("task-title").value = "";
         document.getElementById("task-description").value = "";
         document.getElementById("task-dueDate").value = "";
         document.querySelectorAll(".addTask-prio-button").forEach(button => button.classList.remove("selected"));
 
+        // Zurücksetzen des Kategoriemenüs
         let categoryField = document.getElementById("task-category");
         categoryField.innerHTML = `<span>Select task category</span>`;
         let categoryDropdown = document.getElementById("categoryDropdown");
@@ -541,14 +566,33 @@ function setupClearButton() {
             });
         }
 
+        // Zurücksetzen der "Assigned to" Kontakte
         document.querySelectorAll(".contact-checkbox").forEach(checkbox => {
-            checkbox.checked = false;
+            checkbox.checked = false;  // Alle Checkboxen zurücksetzen
         });
 
+        // Leeren der ausgewählten Kontakte-Liste
+        selectedContacts = []; // Hier wird die Liste der ausgewählten Kontakte zurückgesetzt
+
+        // Das "Assigned to"-Feld zurücksetzen
+        let assignedToField = document.getElementById("task-assignedTo");
+        assignedToField.innerHTML = "<span>Select contacts to assign</span>"; // Setze den Text zurück
+
+        // Leeren des Kontaktlistenelements
+        let contactList = document.getElementById("contactList");
+        if (contactList) {
+            contactList.style.display = "none"; // Blende die Kontaktliste aus, falls sie offen ist
+        }
+
+        // Reset der Unteraufgaben
         tasks[currentTaskIndex].subtasks = [];
 
+        // UI aktualisieren
         renderAddTaskCard();
         updateSubtasksList();
+
+        // Aktualisiere die angezeigten Initialen (nun leer)
+        updateSelectedContactInitials();
     });
 }
 
@@ -567,19 +611,13 @@ function validateFields() {
     if (!isDueDateEmpty) {
         let date = new Date(dueDateField.value);
         let today = new Date();
-        today.setHours(0, 0, 0, 0);
-        date.setHours(0, 0, 0, 0);
-        isDueDateInvalid = isNaN(date.getTime()) || date < today;
+        isDueDateInvalid = isNaN(date.getTime()) || date < today; // Gültig nur wenn heute oder in der Zukunft
     }
 
-    console.log('Due Date:', dueDateField.value);
-
+    // Überprüfe, ob eines der Felder leer oder ungültig ist
     createButton.style.backgroundColor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "grey" : "";
     createButton.style.cursor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "not-allowed" : "pointer";
     createButton.disabled = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid;
-    if (isDueDateInvalid || isDueDateEmpty) {
-        dueDateField.value = "";  // Setze das Eingabefeld zurück
-    }
 }
 
 function validateAndSaveTask(event) {
