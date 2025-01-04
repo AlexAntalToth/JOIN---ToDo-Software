@@ -40,7 +40,6 @@ async function renderAddTaskCard(task) {
     validateFields();
     setupDueDateValidation();
     setupSubtaskInput();
-    setupContactCheckboxes();
 }
 
 function setupPriorityButtons() {
@@ -142,13 +141,58 @@ function setupAssignedToField() {
 
         contactItems.forEach(contactItem => {
             const contactId = contactItem.dataset.id;
+            const checkbox = contactItem.querySelector(".contact-checkbox");
 
             // Setze den Haken für ausgewählte Kontakte
-            const checkbox = contactItem.querySelector(".contact-checkbox");
             if (checkbox) {
                 checkbox.checked = selectedContacts.some(contact => contact.id === contactId);
             }
+
+            // Event-Listener für das Klicken auf das gesamte `contact-item`
+            contactItem.removeEventListener("click", handleContactItemClick); // Entferne vorherige Listener
+            contactItem.addEventListener("click", handleContactItemClick);
+
+            // Event-Listener für die Änderung der Checkbox hinzufügen
+            checkbox.removeEventListener("change", handleCheckboxChange); // Entferne vorherige Listener
+            checkbox.addEventListener("change", handleCheckboxChange);
         });
+    }
+
+    // Event-Handler für das Klicken auf `contact-item`
+    function handleContactItemClick(event) {
+        const contactItem = event.currentTarget;
+        const checkbox = contactItem.querySelector(".contact-checkbox");
+        checkbox.checked = !checkbox.checked; // Umkehren des Checkbox-Zustands
+        handleContactSelection(contactItem, checkbox.checked);
+    }
+
+    // Event-Handler für das Ändern der Checkbox
+    function handleCheckboxChange(event) {
+        const checkbox = event.target;
+        const contactItem = checkbox.closest(".contact-item");
+        handleContactSelection(contactItem, checkbox.checked);
+    }
+
+    // Funktion, die bei Auswahl oder Abwahl eines Kontakts aufgerufen wird
+    function handleContactSelection(contactItem, isChecked) {
+        const contactId = contactItem.dataset.id;
+        const contact = contacts.find(c => c.id === contactId);
+
+        if (contact) {
+            if (isChecked) {
+                // Kontakt hinzufügen
+                if (!selectedContacts.some(c => c.id === contactId)) {
+                    selectedContacts.push(contact);
+                }
+                contactItem.classList.add("selected");
+            } else {
+                // Kontakt entfernen
+                selectedContacts = selectedContacts.filter(c => c.id !== contactId);
+                contactItem.classList.remove("selected");
+            }
+
+            updateSelectedContactInitials();
+        }
     }
 
     // Aktualisiere die Initialen der ausgewählten Kontakte
@@ -174,46 +218,6 @@ function setupAssignedToField() {
             assignedToContainer.appendChild(newSelectedContactsDiv);
         }
     }
-}
-
-function setupContactCheckboxes() {
-    let checkboxes = document.querySelectorAll(".contact-checkbox");
-
-    checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener("change", (event) => {
-            let contactId = event.target.dataset.id; // Kontakt-ID aus Dataset lesen
-            console.log("Checkbox geändert, Kontakt-ID:", contactId);
-
-            let contact = contacts.find((c) => c.id === contactId); // Kontakt in `contacts` suchen
-            console.log("Gefundener Kontakt:", contact);
-
-            if (contact) {
-                const contactItem = event.target.closest(".contact-item");
-
-                if (event.target.checked) {
-                    // Kontakt hinzufügen
-                    if (!selectedContacts.some((c) => c.id === contactId)) {
-                        selectedContacts.push(contact);
-                    }
-
-                    // Hintergrundfarbe ändern, wenn der Kontakt ausgewählt wird
-                    if (contactItem) {
-                        contactItem.classList.add("selected");
-                    }
-                } else {
-                    // Kontakt entfernen
-                    selectedContacts = selectedContacts.filter((c) => c.id !== contactId);
-
-                    // Hintergrundfarbe zurücksetzen, wenn der Kontakt abgewählt wird
-                    if (contactItem) {
-                        contactItem.classList.remove("selected");
-                    }
-                }
-            }
-
-            console.log("Aktuell ausgewählte Kontakte:", selectedContacts); // Aktuelle Kontakte loggen
-        });
-    });
 }
 
 function renderSearchField() {
