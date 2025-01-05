@@ -806,7 +806,7 @@ function updateSubtasksList() {
     list.innerHTML = subtasks
         .map(
             (subtask, index) => `
-        <li>
+        <li class="editing-subtask">
             <span>${subtask.name}</span>
             <div class="subtask-detail-buttons">
             <button class="subtask-buttons" onclick="editSubtask(${index})">

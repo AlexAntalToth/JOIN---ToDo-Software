@@ -810,7 +810,7 @@
     display: contents;
 }
 
-li {
+.editing-subtask {
     display: flex;
     align-items: center;
     justify-content: space-between;
