@@ -303,7 +303,6 @@
     overflow-y: auto;
     border: 1px solid rgba(209, 209, 209, 1);
     border-radius: 10px;
-    padding: 10px;
     background-color: white;
     z-index: 100;
     display: none;
@@ -422,6 +421,10 @@
     transition: background-color 0.3s, transform 0.3s;
     transform: translateY(-50%) rotate(0deg);
     z-index: 10;
+}
+
+.addTask-assignedTo-icon-wrapper.rotated {
+    transform: translateY(-50%) rotate(180deg); /* Rotation hinzufügen */
 }
 
 .addTask-assignedTo-mainField {
@@ -553,20 +556,20 @@
     cursor: pointer;
 }
 
-.input[type="date"]::-webkit-calendar-picker-indicator {
-    background: url(../assets/icons/addTask_date.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
+.addTask-dueDate-field input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none; /* Entfernt das Standard-Icon */
+}
 
 .addTask-date-icon {
     position: absolute;
     width: 18px;
     height: 20px;
-    right: 21px;
+    right: 32px;
     top: 50%;
     transform: translateY(-50%);
-    pointer-events: none;
+    cursor: pointer; /* Zeigt an, dass es anklickbar ist */
+    z-index: 2;
+    pointer-events: auto;
 }
 
 .addTask-category {

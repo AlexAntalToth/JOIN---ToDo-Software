@@ -113,21 +113,26 @@ function setupAssignedToField() {
     const assignedToField = document.getElementById("task-assignedTo");
     const contactList = document.getElementById("contactList");
     const assignedToContainer = document.querySelector(".addTask-assignedTo-container");
+    const assignedToIconWrapper = document.querySelector(".addTask-assignedTo-icon-wrapper");
 
-    if (!assignedToField || !contactList) {
+    if (!assignedToField || !contactList || !assignedToIconWrapper) {
         return;
     }
 
-    // Funktion für das Öffnen/Schließen der Kontaktliste
+    // Funktion für das Öffnen/Schließen der Kontaktliste und das Rotieren des Pfeils
     function toggleContactList() {
         const isVisible = contactList.style.display === "block";
         if (isVisible) {
             // Kontaktliste ausblenden
             contactList.style.display = "none";
+            assignedToField.classList.remove("open");
+            assignedToIconWrapper.classList.remove("rotated"); // Rotationsklassen entfernen
             updateSelectedContactInitials();
         } else {
             // Kontaktliste einblenden
             contactList.style.display = "block";
+            assignedToField.classList.add("open");
+            assignedToIconWrapper.classList.add("rotated"); // Rotationsklassen hinzufügen
             renderContactListWithSelection();
         }
     }
@@ -138,10 +143,18 @@ function setupAssignedToField() {
         toggleContactList();
     });
 
+    // Klicken auf das Icon löst dasselbe aus wie ein Klick auf das Feld
+    assignedToIconWrapper.addEventListener("click", (event) => {
+        event.stopPropagation(); // Verhindert, dass der Klick an das `document` weitergegeben wird
+        toggleContactList();
+    });
+
     // Klicken außerhalb der Kontaktliste führt zum Schließen der Liste
     document.addEventListener("click", (event) => {
         if (!assignedToField.contains(event.target) && !contactList.contains(event.target)) {
             contactList.style.display = "none";
+            assignedToField.classList.remove("open");
+            assignedToIconWrapper.classList.remove("rotated"); // Rotationsklassen entfernen
             updateSelectedContactInitials();
         }
     });
@@ -183,17 +196,8 @@ function setupAssignedToField() {
 
     // Event-Handler für das Klicken auf die Checkbox
     function handleCheckboxClick(event) {
-        // Verhindern, dass das Event weiter nach oben propagiert
-        event.stopPropagation();
-
-        const checkbox = event.currentTarget;
-        const contactItem = checkbox.closest(".contact-item");
-
-        // Umkehren des Checkbox-Zustands
-        checkbox.checked = !checkbox.checked;
-
-        // Den Kontakt entsprechend der Auswahl hinzufügen oder entfernen
-        handleContactSelection(contactItem, checkbox.checked);
+        // Lasse die Checkbox das gleiche tun wie der Klick auf das gesamte Item
+        handleContactItemClick({ currentTarget: event.currentTarget.closest(".contact-item") });
     }
 
     // Funktion, die bei Auswahl oder Abwahl eines Kontakts aufgerufen wird
@@ -711,6 +715,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+document.addEventListener("click", (event) => {
+    // Prüfe, ob das geklickte Element die Klasse 'addTask-date-icon' hat
+    const dateIcon = event.target.closest(".addTask-date-icon");
+    if (dateIcon) {
+        const dateInput = document.getElementById("task-dueDate");
+        if (dateInput) {
+            dateInput.showPicker(); // Öffnet den nativen Datepicker
+        } else {
+            console.error("Element '#task-dueDate' nicht gefunden.");
+        }
+    }
+});
+
 function setupCategoryDropdown() {
     let categoryField = document.getElementById("task-category");
     let dropdown = document.getElementById("categoryDropdown");
@@ -751,6 +768,11 @@ function setupDueDateValidation() {
         });
     }
 }
+
+document.querySelector(".addTask-date-icon").addEventListener("click", () => {
+    const dateInput = document.getElementById("task-dueDate");
+    dateInput.showPicker(); // Öffnet den nativen Datepicker
+});
 
 function setupSubtaskInput() {
     const subtaskInput = document.querySelector(".addTask-subtasks-content");
