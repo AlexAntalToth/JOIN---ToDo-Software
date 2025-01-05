@@ -114,10 +114,14 @@ function setupAssignedToField() {
     const contactList = document.getElementById("contactList");
     const assignedToContainer = document.querySelector(".addTask-assignedTo-container");
     const assignedToIconWrapper = document.querySelector(".addTask-assignedTo-icon-wrapper");
+    const searchContacts = document.getElementById("searchContacts");
+    const assignedToText = document.getElementById("assignedToText");
 
-    if (!assignedToField || !contactList || !assignedToIconWrapper) {
+    if (!assignedToField || !contactList || !assignedToIconWrapper || !searchContacts || !assignedToText) {
         return;
     }
+
+    let searchTerm = ""; // Variable für den Suchbegriff
 
     // Funktion für das Öffnen/Schließen der Kontaktliste und das Rotieren des Pfeils
     function toggleContactList() {
@@ -126,40 +130,70 @@ function setupAssignedToField() {
             // Kontaktliste ausblenden
             contactList.style.display = "none";
             assignedToField.classList.remove("open");
-            assignedToIconWrapper.classList.remove("rotated"); // Rotationsklassen entfernen
-            updateSelectedContactInitials();
+            assignedToIconWrapper.classList.remove("rotated");
+            searchContacts.style.display = "none";
+            assignedToText.style.display = "block";
+            resetFilter();
         } else {
             // Kontaktliste einblenden
             contactList.style.display = "block";
             assignedToField.classList.add("open");
-            assignedToIconWrapper.classList.add("rotated"); // Rotationsklassen hinzufügen
-            renderContactListWithSelection();
+            assignedToIconWrapper.classList.add("rotated");
+            searchContacts.style.display = "block";
+            assignedToText.style.display = "none";
+            searchContacts.focus();
+            renderFilteredContactList(searchTerm);
         }
     }
 
-    // Korrektes Event-Handling sicherstellen
-    assignedToField.addEventListener("click", (event) => {
-        event.stopPropagation(); // Verhindert, dass der Klick an das `document` weitergegeben wird
-        toggleContactList();
-    });
-
-    // Klicken auf das Icon löst dasselbe aus wie ein Klick auf das Feld
     assignedToIconWrapper.addEventListener("click", (event) => {
-        event.stopPropagation(); // Verhindert, dass der Klick an das `document` weitergegeben wird
+        event.stopPropagation();
         toggleContactList();
     });
 
-    // Klicken außerhalb der Kontaktliste führt zum Schließen der Liste
+    assignedToField.addEventListener("click", (event) => {
+        event.stopPropagation();
+        toggleContactList();
+    });
+
+    searchContacts.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
     document.addEventListener("click", (event) => {
         if (!assignedToField.contains(event.target) && !contactList.contains(event.target)) {
             contactList.style.display = "none";
             assignedToField.classList.remove("open");
-            assignedToIconWrapper.classList.remove("rotated"); // Rotationsklassen entfernen
-            updateSelectedContactInitials();
+            assignedToIconWrapper.classList.remove("rotated");
+            searchContacts.style.display = "none";
+            assignedToText.style.display = "block";
+            resetFilter();
         }
     });
 
-    // Kontakte initial rendern
+    searchContacts.addEventListener("input", (event) => {
+        searchTerm = event.target.value.toLowerCase();
+        renderFilteredContactList(searchTerm);
+    });
+
+    function renderFilteredContactList(filter) {
+        const contactItems = document.querySelectorAll(".contact-item");
+        contactItems.forEach(contactItem => {
+            const contactName = contactItem.querySelector(".contact-name").textContent.toLowerCase();
+            const shouldShow = contactName.startsWith(filter);
+            contactItem.style.display = shouldShow ? "flex" : "none";
+        });
+    }
+
+    function resetFilter() {
+        searchTerm = "";
+        searchContacts.value = "";
+        const contactItems = document.querySelectorAll(".contact-item");
+        contactItems.forEach(contactItem => {
+            contactItem.style.display = "flex";
+        });
+    }
+
     function renderContactListWithSelection() {
         const contactItems = document.querySelectorAll(".contact-item");
 
@@ -167,53 +201,44 @@ function setupAssignedToField() {
             const contactId = contactItem.dataset.id;
             const checkbox = contactItem.querySelector(".contact-checkbox");
 
-            // Setze den Haken für ausgewählte Kontakte
             if (checkbox) {
                 checkbox.checked = selectedContacts.some(contact => contact.id === contactId);
             }
 
-            // Event-Listener für das Klicken auf das gesamte `contact-item`
-            contactItem.removeEventListener("click", handleContactItemClick); // Entferne vorherige Listener
+            contactItem.removeEventListener("click", handleContactItemClick);
             contactItem.addEventListener("click", handleContactItemClick);
 
-            // Event-Listener für die Checkbox
-            checkbox.removeEventListener("click", handleCheckboxClick); // Entferne vorherige Listener
+            checkbox.removeEventListener("click", handleCheckboxClick);
             checkbox.addEventListener("click", handleCheckboxClick);
         });
     }
 
-    // Event-Handler für das Klicken auf das gesamte `contact-item` (einschließlich der Checkbox)
     function handleContactItemClick(event) {
         const contactItem = event.currentTarget;
         const checkbox = contactItem.querySelector(".contact-checkbox");
 
-        // Umkehren des Checkbox-Zustands
-        checkbox.checked = !checkbox.checked;
-
-        // Den Kontakt entsprechend der Auswahl hinzufügen oder entfernen
-        handleContactSelection(contactItem, checkbox.checked);
+        if (checkbox) {
+            checkbox.checked = !checkbox.checked;
+            handleContactSelection(contactItem, checkbox.checked);
+        }
     }
 
-    // Event-Handler für das Klicken auf die Checkbox
     function handleCheckboxClick(event) {
-        // Lasse die Checkbox das gleiche tun wie der Klick auf das gesamte Item
+        event.stopPropagation();
         handleContactItemClick({ currentTarget: event.currentTarget.closest(".contact-item") });
     }
 
-    // Funktion, die bei Auswahl oder Abwahl eines Kontakts aufgerufen wird
     function handleContactSelection(contactItem, isChecked) {
         const contactId = contactItem.dataset.id;
         const contact = contacts.find(c => c.id === contactId);
 
         if (contact) {
             if (isChecked) {
-                // Kontakt hinzufügen
                 if (!selectedContacts.some(c => c.id === contactId)) {
                     selectedContacts.push(contact);
                 }
                 contactItem.classList.add("selected");
             } else {
-                // Kontakt entfernen
                 selectedContacts = selectedContacts.filter(c => c.id !== contactId);
                 contactItem.classList.remove("selected");
             }
@@ -222,11 +247,10 @@ function setupAssignedToField() {
         }
     }
 
-    // Aktualisiere die Initialen der ausgewählten Kontakte
     function updateSelectedContactInitials() {
         let selectedContactsDiv = document.querySelector(".selected-contacts");
         if (selectedContactsDiv) {
-            selectedContactsDiv.remove(); // Bestehende Initialen entfernen
+            selectedContactsDiv.remove();
         }
 
         if (selectedContacts.length > 0) {
@@ -245,45 +269,8 @@ function setupAssignedToField() {
             assignedToContainer.appendChild(newSelectedContactsDiv);
         }
     }
-}
 
-function renderSearchField() {
-    let assignedToField = document.getElementById("task-assignedTo");
-
-    if (!document.getElementById("contact-search-field")) {
-        let searchField = document.createElement("input");
-        searchField.id = "contact-search-field";
-        searchField.type = "text";
-        searchField.placeholder = "Search contacts...";
-        searchField.className = "addTask-contact-search";
-
-        assignedToField.innerHTML = "";
-        assignedToField.appendChild(searchField);
-
-        searchField.addEventListener("input", filterContacts);
-    }
-}
-
-function removeSearchField() {
-    let assignedToField = document.getElementById("task-assignedTo");
-    assignedToField.innerHTML = `
-        <span>Select contacts to assign</span>
-        <img class="addTask-assignedTo-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Arrow Down">
-    `;
-}
-
-function filterContacts(event) {
-    let searchValue = event.target.value.toLowerCase();
-    let contacts = document.querySelectorAll(".contact-item");
-
-    contacts.forEach(contact => {
-        let contactName = contact.querySelector(".contact-name").textContent.toLowerCase();
-        if (contactName.includes(searchValue)) {
-            contact.style.display = "flex";
-        } else {
-            contact.style.display = "none";
-        }
-    });
+    renderContactListWithSelection();
 }
 
 async function generateAddTaskCardHTML(task) {
@@ -319,7 +306,8 @@ async function generateAddTaskCardHTML(task) {
                 <div class="addTask-assignedTo-container">
                     <div class="addTask-assignedTo-mainField">
                         <div class="addTask-assignedTo-field" id="task-assignedTo">
-                            <span>Select contacts to assign</span>
+                            <span id="assignedToText">Select contacts to assign</span>
+                            <input type="text" id="searchContacts" class="addTask-contact-search" placeholder="Search contacts..." style="display: none;" />
                         </div>
                         <div class="addTask-assignedTo-icon-wrapper">
                             <img class="addTask-assignedTo-icon" src="../../assets/icons/addTask_arrowdown.png" alt="Arrow Down">
@@ -768,11 +756,6 @@ function setupDueDateValidation() {
         });
     }
 }
-
-document.querySelector(".addTask-date-icon").addEventListener("click", () => {
-    const dateInput = document.getElementById("task-dueDate");
-    dateInput.showPicker(); // Öffnet den nativen Datepicker
-});
 
 function setupSubtaskInput() {
     const subtaskInput = document.querySelector(".addTask-subtasks-content");
