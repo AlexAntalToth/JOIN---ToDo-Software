@@ -4,6 +4,7 @@ let currentDraggedElement;
 let searchTimeout;
 let currentTaskIndex = null;
 let isEditing = false; 
+let subtaskCounter = 0;
 
 async function onloadFunc(){
     contacts = await getData("/contacts");
@@ -417,8 +418,15 @@ function editTask() {
             <div class="form-group">
                 <label>Subtasks</label>
                 <div class="subtask-input-container">
-                    <input type="text" id="newSubtaskInput" placeholder="Add new subtask" maxlength="30" />
-                    <button id="addSubtaskButton" onclick="addSubtask(event)">+</button>
+                    <input type="text" id="newSubtaskInput" placeholder="Add new subtask" maxlength="30"/>
+                    <button id="addSubtaskButton">
+                        <img src="./assets/icons/add.svg" alt="add subtask">
+                    </button>
+                    <div class="subtask-icons hidden" id="subtaskIcons">
+                        <img class="confirm-img" id="cancelSubtask" src="./assets/icons/contact_cancel.png" alt="cancel add subtask" onclick="cancelSubtaskInput()" />
+                        <div class="subtask-vertical-line"></div>
+                        <img class="confirm-img" id="createSubtask" src="./assets/icons/contact_create.png" alt="add subtask" onclick="addSubtask(event)" />
+                    </div>
                 </div>
                 <ul class="subtasks-list" id="subtasksList">
                 </ul>
@@ -432,17 +440,48 @@ function editTask() {
         </div>
     `;
     updateSubtasksList(task);
+    setupSubtaskInput();
+}
+
+function setupSubtaskInput() {
+    const subtaskInput = document.getElementById("newSubtaskInput");
+    const addIcon = document.getElementById("addSubtaskButton");
+    const iconsContainer = document.getElementById("subtaskIcons");
+
+    if (subtaskInput && addIcon && iconsContainer) {
+        addIcon.classList.remove("hidden");
+        iconsContainer.classList.add("hidden");
+        subtaskInput.addEventListener("focus", () => {
+            addIcon.classList.add("hidden");
+            iconsContainer.classList.remove("hidden");
+        });
+        subtaskInput.addEventListener("blur", () => {
+            if (!subtaskInput.value.trim()) {
+                addIcon.classList.remove("hidden");
+                iconsContainer.classList.add("hidden");
+            }
+        });
+    }
+}
+
+
+function cancelSubtaskInput() {
+    const newSubtaskInput = document.getElementById("newSubtaskInput");
+    newSubtaskInput.value = "";
+    document.getElementById("addSubtaskButton").classList.remove("hidden");
+    document.getElementById("subtaskIcons").classList.add("hidden");
 }
 
 function addSubtask(event) {
     event.preventDefault();
     const task = tasks[currentTaskIndex]?.task;
     const subtaskName = getSubtaskName();
-
+    if (subtaskName === "") return;
     if (canAddSubtask(task)) {
         addNewSubtask(task, subtaskName);
         updateSubtasksList(task);
         clearSubtaskInput();
+        unfocusInput();
     } else {
         alert("Es können nur maximal 3 Subtasks hinzugefügt werden.");
     }
@@ -457,8 +496,8 @@ function canAddSubtask(task) {
 }
 
 function addNewSubtask(task, subtaskName) {
-    const subtaskId = Object.keys(task.subtasks || {}).length;
     task.subtasks = task.subtasks || {};
+    const subtaskId = `subtask-${subtaskCounter++}`;
     task.subtasks[subtaskId] = { name: subtaskName, completed: false };
 }
 
@@ -466,34 +505,38 @@ function clearSubtaskInput() {
     document.getElementById('newSubtaskInput').value = "";
 }
 
+function unfocusInput() {
+    document.getElementById('newSubtaskInput').blur();
+}
+
 function updateSubtasksList(task) {
     const subtasksList = document.querySelector('.subtasks-list');
-    subtasksList.innerHTML = Object.entries(task.subtasks).map(([subtaskId, subtask], index) => `
-        <li id="subtask-${subtaskId}" class="subtask-item" data-index="${index}">
+    subtasksList.innerHTML = Object.entries(task.subtasks).map(([subtaskId, subtask]) => `
+        <li id="${subtaskId}" class="subtask-item">
             <div class="subtask-item-name">
                 <img class="ul-bullet" src="./assets/icons/addtask_arrowdown.png" alt="Arrow right">
                 <span>${subtask.name}</span>
             </div>
             <div class="subtask-actions">
-                <img src="./assets/icons/contact_edit.png" alt="Edit" title="Edit" onclick="editSubtask(${index})" />
+                <img src="./assets/icons/contact_edit.png" alt="Edit" title="Edit" onclick="editSubtask('${subtaskId}')" />
                 <span class="separator"></span>
-                <img src="./assets/icons/contact_basket.png" alt="Delete" title="Delete" onclick="deleteSubtask(${index})" />
+                <img src="./assets/icons/contact_basket.png" alt="Delete" title="Delete" onclick="deleteSubtask('${subtaskId}')" />
             </div>
         </li>
     `).join("");
 }
 
-function editSubtask(subtaskIndex) {
+function editSubtask(subtaskId) {
     const task = tasks[currentTaskIndex].task;
-    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
     const subtask = task.subtasks[subtaskId];
-    const subtaskElement = document.getElementById(`subtask-${subtaskId}`);
-    let inputField = createInputField(subtask);
-    let checkIcon = createCheckIcon();
+    const subtaskElement = document.getElementById(subtaskId);
+    if (!subtask || !subtaskElement) return;
+    const inputField = createInputField(subtask);
+    const checkIcon = createCheckIcon();
     subtaskElement.innerHTML = '';
     subtaskElement.appendChild(inputField);
     subtaskElement.appendChild(checkIcon);
-    checkIcon.addEventListener('click', function() {
+    checkIcon.addEventListener('click', function () {
         const newSubtaskName = inputField.value.trim();
         if (newSubtaskName) {
             subtask.name = newSubtaskName;
@@ -501,6 +544,7 @@ function editSubtask(subtaskIndex) {
         }
     });
 }
+
 
 function createCheckIcon() {
     let checkIcon = document.createElement('img');
@@ -518,13 +562,12 @@ function createInputField(subtask){
     return inputField;
 }
 
-function deleteSubtask(subtaskIndex) {
+function deleteSubtask(subtaskId) {
     const task = tasks[currentTaskIndex].task;
-    const subtaskId = Object.keys(task.subtasks)[subtaskIndex];
+    if (!task.subtasks[subtaskId]) return;
     delete task.subtasks[subtaskId];
     updateSubtasksList(task);
 }
-
 function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -552,12 +595,12 @@ function toggleDropdown() {
     const dropdownToggle = document.querySelector(".dropdown-toggle");
     const icon = document.querySelector(".dropdown-toggle .dropdown-icon");
     dropdown.classList.toggle("open");
-    document.querySelector(".dropdown-toggle").classList.toggle("dd-highlight");
     icon.classList.toggle("rotated");
     if (dropdown.classList.contains("open")) {
         switchToSearchInput(dropdownToggle);
         updateDropdownItems(dropdown);
     } else {
+        dropdownToggle.blur()
         resetToDropdownButton(dropdownToggle);
     }
 }
