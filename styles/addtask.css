@@ -18,10 +18,9 @@
 
 .addTask-footer-generated {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     width: 1200px;
     padding: 50px;
-    /* margin-top: -300px; */
 }
 
 .addTask-footer-left {
@@ -37,6 +36,7 @@
     font-size: 16px;
     font-weight: normal;
     color: black;
+    padding-bottom: 16px;
 }
 
 .addTask-footer-right {
@@ -292,7 +292,8 @@
 }
 
 .addTask-assignedTo-field.open {
-    border-color: #007bff; /* Blau wenn geöffnet */
+    border-color: #007bff;
+    /* Blau wenn geöffnet */
 }
 
 .addTask-assignedTo-field:hover {
@@ -363,9 +364,12 @@
 
 /* Standard-Checkbox verstecken */
 .contact-checkbox {
-    appearance: none; /* Entfernt die Standarddarstellung */
-    -webkit-appearance: none; /* Für Safari */
-    -moz-appearance: none; /* Für Firefox */
+    appearance: none;
+    /* Entfernt die Standarddarstellung */
+    -webkit-appearance: none;
+    /* Für Safari */
+    -moz-appearance: none;
+    /* Für Firefox */
     margin-left: 10px;
     width: 20px;
     height: 20px;
@@ -379,7 +383,7 @@
 /* Wenn die Checkbox aktiviert ist */
 .contact-checkbox:checked {
     border-color: white;
-    background-color:rgb(42,54,71);
+    background-color: rgb(42, 54, 71);
 }
 
 /* Das Häkchen selbst */
@@ -388,7 +392,8 @@
     position: absolute;
     top: -12px;
     left: 2px;
-    color: white; /* Hakenfarbe */
+    color: white;
+    /* Hakenfarbe */
     font-size: 23px;
 }
 
@@ -419,7 +424,8 @@
 }
 
 .addTask-assignedTo-icon-wrapper.rotated {
-    transform: translateY(-50%) rotate(180deg); /* Rotation hinzufügen */
+    transform: translateY(-50%) rotate(180deg);
+    /* Rotation hinzufügen */
 }
 
 .addTask-assignedTo-mainField {
@@ -454,7 +460,8 @@
 }
 
 .contact-item.selected {
-    background-color: rgb(42, 54, 71); /* Grau */
+    background-color: rgb(42, 54, 71);
+    /* Grau */
 }
 
 #searchContacts {
@@ -462,14 +469,16 @@
     width: 100%;
     height: 40px;
     padding: 8px;
-    outline: none; /* Entfernt die Standard-Fokus-Umrandung */
+    outline: none;
+    /* Entfernt die Standard-Fokus-Umrandung */
     font-size: 16px;
     border-radius: 8px;
     border-style: unset;
 }
 
 #searchContacts:focus {
-    outline: none; /* Entfernt die Standard-Fokus-Umrandung */
+    outline: none;
+    /* Entfernt die Standard-Fokus-Umrandung */
     border-style: unset;
 
 }
@@ -569,7 +578,8 @@
 }
 
 .addTask-dueDate-field input[type="date"]::-webkit-calendar-picker-indicator {
-    display: none; /* Entfernt das Standard-Icon */
+    display: none;
+    /* Entfernt das Standard-Icon */
 }
 
 .addTask-date-icon {
@@ -579,7 +589,8 @@
     right: 32px;
     top: 50%;
     transform: translateY(-50%);
-    cursor: pointer; /* Zeigt an, dass es anklickbar ist */
+    cursor: pointer;
+    /* Zeigt an, dass es anklickbar ist */
     z-index: 2;
     pointer-events: auto;
 }
@@ -873,4 +884,198 @@
 .edit-subtask-icon:hover,
 .delete-subtask-icon:hover {
     transform: translateY(2px);
+}
+
+
+@media(max-width: 1450px) {
+    .addTask-content {
+        width: 900px;
+    }
+
+    .addTask-vertical-line {
+        margin: 0 0;
+    }
+
+    .addTask-footer-generated {
+        width: 1000px;
+    }
+}
+
+@media(max-width: 1250px) {
+    .addTask-content {
+        flex-direction: column;
+        width: 100%;
+        flex: none;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .addTask-footer-generated {
+        width: 100%;
+        padding: unset;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .addTask-container h1 {
+        font-size: 47px;
+        width: 214px;
+    }
+
+    .addTask-content h2 {
+        font-size: 16px;
+        padding-bottom: 6px;
+    }
+
+    .addTask-left {
+        gap: 8px;
+        width: 396px;
+    }
+
+    .addTask-title-field {
+        width: 396px;
+        height: 40px;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-right: 21px;
+        padding-bottom: 10px;
+        padding-left: 21px;
+        gap: 2px;
+        margin-bottom: 6px;
+    }
+
+    .addTask-description-field {
+        width: 396px;
+        height: 104px;
+        font-size: 16px;
+        line-height: 19.2px;
+        padding-top: 18px;
+        padding-right: 21px;
+        padding-bottom: 18px;
+        padding-left: 21px;
+        gap: 4px;
+        margin-bottom: 6px;
+    }
+
+    .addTask-assignedTo-field {
+        width: 396px;
+        height: 48px;
+        font-size: 16px;
+    }
+
+    .addTask-assignedTo-contactList {
+        width: 396px;
+        max-height: 300px;
+        overflow-x: clip;
+    }
+
+    .contact-item {
+        padding: 6px 10px;
+    }
+
+    .contact-initials {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .contact-name {
+        font-size: 12px;
+    }
+
+    .addTask-vertical-line {
+        display: none;
+    }
+
+    .addTask-dueDate-field {
+        width: 396px;
+        height: 40px;
+        font-size: 16px;
+        padding-top: 8px;
+        padding-right: 21px;
+        padding-bottom: 8px;
+        padding-left: 21px;
+        gap: 2px;
+        margin-bottom: 6px;
+    }
+    
+    .addTask-dueDate-field input {
+        font-size: 16px;
+    }
+
+    .addTask-prio-field {
+        width: 396px;
+    }
+
+    .addTask-prio-button {
+        width: 121.33px;
+        height: 41px;
+        border-radius: 10px;
+        padding-top: 18px;
+        padding-right: 10px;
+        padding-bottom: 18px;
+        padding-left: 10px;
+        font-size: 16px;
+    }
+
+    .addTask-prio-field h2 {
+        padding-bottom: unset;
+    }
+
+    .addTask-category-field {
+        width: 396px;
+        height: 48px;
+        font-size: 16px;
+        padding-top: 12px;
+        padding-right: 40px;
+        padding-bottom: 12px;
+        padding-left: 16px;
+    }
+
+    .addTask-category-icon-wrapper {
+        right: 570px;
+    }
+
+    .addTask-category-dropdown {
+        width: 396px;
+    }
+
+    .category-item {
+        font-size: 16px;
+    }
+
+    .addTask-subtasks-field {
+        width: 396px;
+    }
+
+    .addTask-subtasks-content {
+        font-size: 16px;
+        height: 100%;
+        padding-left: 16px;
+        padding-right: 48px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .subtasks-list {
+        width: 396px;
+    }
+    .clear-addTask-button {
+        width: 110px;
+        height: 56px;
+    }
+    .create-addTask-button {
+        width: 183px;
+        height: 56px;
+    }
+
+    .addTask-right {
+        width: unset;
+    }
+}
+
+@media(max-width: 700px) {
+ .addTask-container {
+    margin-left: 0;
+ }   
 }
