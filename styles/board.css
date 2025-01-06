@@ -68,6 +68,18 @@ body {
   font-weight: 700;
 }
 
+.board-headline #plusAddTaskM {
+  display: none;
+}
+
+.board-headline #plusAddTaskM:hover {
+  cursor: pointer;
+}
+
+.board-headline #plusAddTaskM:active {
+  filter: brightness(1.5);
+}
+
 .find-and-add {
   display: flex;
   align-items: center;
@@ -92,7 +104,6 @@ body {
   width: 232px;
   font-size: 20px;
   line-height: 24px;
-  cursor: pointer;
 }
 
 .searchbar input::placeholder {
@@ -826,7 +837,7 @@ body {
   filter: grayscale(100) brightness(0);
 }
 
-.confirm-img:hover{
+.confirm-img:hover {
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 50%;
 }
@@ -882,7 +893,7 @@ body {
     padding-bottom: 12px;
   }
   .row h2 {
-    width: 204px;
+    width: 100%;
   }
   .task-list {
     justify-content: flex-start;
@@ -917,5 +928,56 @@ body {
   }
   .row h2 {
     font-size: 16px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .container {
+    padding: 40px 40px;
+  }
+  .board-headline {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    position: relative;
+  }
+  .board-headline #plusAddTaskM {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 10%;
+  }
+  .find-and-add {
+    width: 100%;
+  }
+  .add-task {
+    display: none;
+  }
+  .searchbar {
+    width: 100%;
+    margin-top: 40px;
+  }
+  .searchbar input {
+    flex: 1;
+  }
+}
+
+@media (max-width: 700px) {
+  .container {
+    margin-top: 80px;
+    margin-left: 0;
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 420px) {
+  .searchbar input {
+    width: 100%;
+  }
+  .board-headline h1 {
+    font-size: 56px;
+  }
+  .board-headline #plusAddTaskM {
+    top: 8%;
   }
 }

@@ -56,7 +56,7 @@
     </div>
     <div class="container">
         <div class="board-headline">
-            <h1>Board</h1>
+            <h1>Board</h1> <img onclick="window.location.href='./addtask.html'" id="plusAddTaskM" src="./assets/icons/plus-addtask-board.png" alt="Open Add Task">
             <div class="find-and-add">
                 <div class="searchbar">
                     <input id="search-input" type="text" placeholder="Find Task" oninput="onSearchInput()"
@@ -69,7 +69,7 @@
         </div>
         <div class="board">
             <div class="row">
-                <h2>To Do <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
+                <h2>To Do <button onclick="window.location.href='./addtask.html'" class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
                 <div id="To-Do" ondrop="moveTo('To-Do')" ondragleave="removeHighlight('To-Do')"
                     ondragover="allowDrop(event); highlight('To-Do')">
                     <div class="task-list">
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="row">
-                <h2>In Progress <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button>
+                <h2>In Progress <button onclick="window.location.href='./addtask.html'" class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button>
                 </h2>
                 <div id="In Progress" ondrop="moveTo('In Progress')" ondragleave="removeHighlight('In Progress')"
                     ondragover="allowDrop(event); highlight('In Progress')">
@@ -85,7 +85,7 @@
                 </div>
             </div>
             <div class="row">
-                <h2>Await Feedback <button class="add-task-btn"><img src="./assets/icons/plus.svg"
+                <h2>Await Feedback <button onclick="window.location.href='./addtask.html'" class="add-task-btn"><img src="./assets/icons/plus.svg"
                             alt="Add Task"></button></h2>
                 <div id="Await Feedback" ondrop="moveTo('Await Feedback')"
                     ondragleave="removeHighlight('Await Feedback')"
@@ -94,7 +94,7 @@
                 </div>
             </div>
             <div class="row">
-                <h2>Done <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
+                <h2>Done <button onclick="window.location.href='./addtask.html'" class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
                 <div id="Done" ondrop="moveTo('Done')" ondragleave="removeHighlight('Done')"
                     ondragover="allowDrop(event); highlight('Done')">
                     <div class="task-list"></div>
