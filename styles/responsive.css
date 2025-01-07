@@ -71,6 +71,12 @@
     }
 }
 
+@media (max-width: 410px) {
+    main {
+        padding: 2px;
+    }
+}
+
 @media (min-width: 1920px) {
     main {
         /* max-width: 1920px; */
