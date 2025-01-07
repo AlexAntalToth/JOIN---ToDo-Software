@@ -4,25 +4,27 @@ let urgencyCount = 0;
 let taskCount = 0;
 let progressCount = 0;
 let feedbackCount = 0;
-let currentUser = "guest";
-let greeting = getGreeting(currentUser);
+let greeting = "";
 let dueDate = "";
 let tasks = [];
 
-async function onloadFunc(){
-    let userResponse = await getData("/tasks");
-    let UserKeysArray = Object.keys(userResponse);
-    for (let i = 0; i < UserKeysArray.length; i++) {
-        const key = UserKeysArray[i];
-        tasks.push({
-            id: key,
-            task: userResponse[key],
-        });
-    }
+async function onloadFunc() {
+    await includeHTML();
+    await initApp();
+    greeting = getGreeting(currentUser);
+    const userResponse = await getData("/tasks");
+    tasks = parseTasks(userResponse);
     dueDate = getUrgentDueDate(tasks);
     updateCount(tasks);
     renderHTML();
     renderGreeting();
+}
+
+function parseTasks(userResponse) {
+    return Object.keys(userResponse).map(key => ({
+        id: key,
+        task: userResponse[key],
+    }));
 }
 
 function getToday(){
@@ -152,13 +154,13 @@ function getGreeting(currentUser) {
     } else {
         greeting = "Good Evening";
     }
-    return currentUser !== "guest" ? `${greeting},` : greeting;
+    return currentUser.name !== "guest" ? `${greeting},` : greeting;
 }
 
 function renderGreeting() {
     const greetingElement = document.querySelector('.greet');
     greetingElement.innerHTML = `
         <p>${getGreeting(currentUser)}</p>
-        ${currentUser !== "guest" ? `<span>${currentUser}</span>` : ""}
+        ${currentUser.name !== "guest" ? `<span>${currentUser.name}</span>` : ""}
     `;
 }

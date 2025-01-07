@@ -895,6 +895,9 @@ body {
   .row h2 {
     width: 100%;
   }
+  .no-tasks {
+    width: 100%;
+}
   .task-list {
     justify-content: flex-start;
     flex-wrap: nowrap;

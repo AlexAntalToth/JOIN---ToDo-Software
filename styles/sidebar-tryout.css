@@ -133,3 +133,9 @@
     height: 24px;
   }
 }
+
+@media (max-width: 420px) {
+  .sidebar nav ul {
+    gap: 2px;
+}
+}

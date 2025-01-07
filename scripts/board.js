@@ -7,6 +7,8 @@ let isEditing = false;
 let subtaskCounter = 0;
 
 async function onloadFunc(){
+    await includeHTML(); 
+    await initApp();
     contacts = await getData("/contacts");
     let userResponse = await getData("/tasks");
     let UserKeysArray = Object.keys(userResponse);
