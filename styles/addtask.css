@@ -17,7 +17,7 @@
 }
 
 .addTask-footer {
-background-color: #F4F4F4;
+    background-color: #F4F4F4;
 }
 
 .addTask-footer-generated {
@@ -919,6 +919,7 @@ background-color: #F4F4F4;
     .addTask-header {
         padding: 30px;
     }
+
     .addTask-footer-generated {
         width: 100%;
         padding: unset;
@@ -1089,10 +1090,15 @@ background-color: #F4F4F4;
 }
 
 @media(max-width: 700px) {
-    html, body {
-        height: 100%; /* Verhindert das Scrollen auf dem gesamten Bildschirm */
-        margin: 0; /* Entfernt den Standardabstand */
-        overflow: hidden; /* Verhindert den Scrollbalken des gesamten Dokuments */
+
+    html,
+    body {
+        height: 100%;
+        /* Verhindert das Scrollen auf dem gesamten Bildschirm */
+        margin: 0;
+        /* Entfernt den Standardabstand */
+        overflow: hidden;
+        /* Verhindert den Scrollbalken des gesamten Dokuments */
     }
 
     .addTask-container {
@@ -1114,46 +1120,58 @@ background-color: #F4F4F4;
         position: fixed;
         top: 110px;
         width: 100%;
-        height: 50px; /* Höhe des AddTask-Headers */
+        height: 50px;
+        /* Höhe des AddTask-Headers */
         background-color: #f4f4f4;
         z-index: 90;
-        padding: 10px 20px; /* Optionaler Abstand */
+        padding: 10px 20px;
+        /* Optionaler Abstand */
     }
 
     /* Scrollbarer AddTask-Content */
     .addTask-content {
         position: absolute;
-        top: 80px; /* Platz für Header und AddTask-Header */
-        bottom: 180px; /* Platz für Footer und Sidebar */
+        top: 80px;
+        /* Platz für Header und AddTask-Header */
+        bottom: 180px;
+        /* Platz für Footer und Sidebar */
         left: 0;
         right: 0;
-        overflow-y: scroll; /* Ermöglicht das Scrollen */
+        overflow-y: scroll;
+        /* Ermöglicht das Scrollen */
         -webkit-overflow-scrolling: touch;
-        padding: 20px; /* Optionaler Innenabstand */
-        width: 100%; /* Passt sich dem Bildschirm an */
+        padding: 20px;
+        /* Optionaler Innenabstand */
+        width: 100%;
+        /* Passt sich dem Bildschirm an */
         z-index: 1;
-        height: auto; /* Flexibles Verhalten */
+        height: auto;
+        /* Flexibles Verhalten */
         margin-bottom: 20px;
     }
 
-        /* Scrollbalken ausblenden für Webkit-Browser */
-        .addTask-content::-webkit-scrollbar {
-            width: 0px;
-            height: 0px; /* Setzt auch die Höhe auf 0, falls horizontal gescrollt wird */
-        }
-    
-        /* Für Firefox: Scrollbalken ausblenden */
-        .addTask-content {
-            scrollbar-width: none; /* Versteckt den Scrollbalken */
-        }
+    /* Scrollbalken ausblenden für Webkit-Browser */
+    .addTask-content::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
+        /* Setzt auch die Höhe auf 0, falls horizontal gescrollt wird */
+    }
+
+    /* Für Firefox: Scrollbalken ausblenden */
+    .addTask-content {
+        scrollbar-width: none;
+        /* Versteckt den Scrollbalken */
+    }
 
     /* Fixierter Footer direkt über der Sidebar */
     .addTask-footer {
         position: fixed;
-        bottom: 120px; /* Höhe der Sidebar */
+        bottom: 120px;
+        /* Höhe der Sidebar */
         left: 0;
         width: 100%;
-        height: 80px; /* Höhe des Footers */
+        height: 80px;
+        /* Höhe des Footers */
         background-color: #f4f4f4;
         z-index: 90;
         box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
@@ -1168,7 +1186,8 @@ background-color: #F4F4F4;
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 80px; /* Höhe der Sidebar */
+        height: 80px;
+        /* Höhe der Sidebar */
         background-color: #2a3647;
         color: white;
         display: flex;
@@ -1185,5 +1204,65 @@ background-color: #F4F4F4;
 
     .addTask-content {
         padding: 0;
+    }
+}
+
+@media(max-width: 399px) {
+    .addTask-left {
+        width: 316px;
+    }
+
+    .addTask-title-field {
+        width: 316px;
+    }
+
+    .addTask-description-field {
+        width: 316px;
+    }
+
+    .addTask-assignedTo-field {
+        width: 316px;
+    }
+
+    .addTask-assignedTo-contactList {
+        width: 316px;
+    }
+
+    .addTask-dueDate-field {
+        width: 316px;
+    }
+
+    .addTask-prio-field {
+        width: 316px;
+    }
+
+    .addTask-prio-field h2 {
+        display: none;
+    }
+
+    .addTask-prio-button {
+        width: 80px;
+        height: 30px;
+    }
+
+    .addTask-category-field {
+        width: 316px;
+    }
+
+    .addTask-category-icon-wrapper {
+        left: 270px;
+    }
+    .addTask-subtasks-field {
+        width: 316px;
+    }
+    .addTask-footer-generated {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+    .subtasks-list {
+        width: 316px;
+    }
+    .addTask-category-dropdown {
+        width: 316px;
     }
 }
