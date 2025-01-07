@@ -316,32 +316,10 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal-contact-content-add {
-    position: relative;
-    display: flex;
-    background-color: white;
-    border-radius: 30px;
-    width: 1212px;
-    height: 592px;
-    max-width: 90%;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    transform: translateX(200%);
-    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
-}
-
-.modal-contact-content-add.show {
-    transform: translateX(50%);
-    opacity: 1;
-}
-
-.modal-contact-content-add.hide {
-    transform: translateX(200%);
-    opacity: 0;
-}
-
+.modal-contact-content-add,
 .modal-contact-content-edit {
-    position: relative;
+    position: static;
+    /* Standardwert, wenn das Modal nicht sichtbar ist */
     display: flex;
     background-color: white;
     border-radius: 30px;
@@ -350,17 +328,27 @@
     max-width: 90%;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     opacity: 0;
-    transform: translateX(200%);
-    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    transform: translate(-50%, -50%);
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out, position 0s 0.6s;
+    /* Verzögerung für Position */
 }
 
+.modal-contact-content-add.show,
 .modal-contact-content-edit.show {
-    transform: translateX(-50%);
+    position: fixed;
+    /* Nur wenn sichtbar, positioniert es sich fix */
+    top: 50%;
+    left: 50%;
     opacity: 1;
+    transform: translate(-50%, -50%);
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out, position 0s;
+    /* Sofortige Positionänderung */
 }
 
+.modal-contact-content-add.hide,
 .modal-contact-content-edit.hide {
-    transform: translateX(200%);
+    position: static;
+    /* Zurücksetzen auf statische Position */
     opacity: 0;
 }
 
@@ -573,8 +561,8 @@
 
 .contact-created-overlay {
     position: absolute;
-    top: 70%; 
-    left: 50px; 
+    top: 70%;
+    left: 50px;
     transform: translateY(-50%) translateX(200%);
     background-color: rgba(42, 54, 71);
     color: white;
@@ -605,7 +593,7 @@
 }
 
 .edit-button:hover p {
-    color: rgba(41,171, 226);
+    color: rgba(41, 171, 226);
     font-weight: bold;
 }
 
@@ -658,7 +646,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #ff4d4d; /* Rot für Fehler */
+    background-color: #ff4d4d;
+    /* Rot für Fehler */
     color: white;
     padding: 15px 30px;
     border-radius: 8px;
@@ -674,4 +663,204 @@
 .error-message-box.show {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
+}
+
+@media(max-width: 1350px) {
+    .vertical-line {
+        display: none;
+    }
+
+    .contacts-details-header {
+        flex-direction: column;
+    }
+
+    .contacts-details-header {
+        width: unset;
+        align-items: unset;
+    }
+}
+
+@media(max-width: 1350px) {
+    .contacts-card-initials-circle {
+        width: 60px;
+        height: 60px;
+        font-size: 18px;
+    }
+
+    .contacts-card-initials h3 {
+        font-size: 36px;
+    }
+
+    .add-contact-initials_blank {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media(max-width: 1100px) {
+    .contacts-list {
+        width: 396px;
+    }
+
+    .add-contact h2 {
+        display: none;
+    }
+
+    .add-contact {
+        width: 56px;
+        border-radius: 50%;
+        bottom: 30px;
+        left: 520px;
+        position: fixed;
+        z-index: 100;
+    }
+
+    .contacts-area-button {
+        display: unset;
+    }
+
+    .contacts-area-list {
+        max-height: calc(100% - 20px);
+    }
+
+    .add-contact-logo {
+        display: none;
+    }
+
+    .add-contact-left h1 {
+        font-size: 47px;
+        padding-top: 20px;
+    }
+
+    .add-contact-left h2 {
+        font-size: 20px;
+    }
+
+    .horizontal-line {
+        margin-bottom: 20px;
+    }
+
+    .modal-contact-content-add {
+        display: flex;
+        flex-direction: column;
+        width: 396px;
+    }
+
+    .add-contact-left {
+        width: 396px;
+        height: 352px;
+        background-color: rgba(42, 54, 71, 1);
+        padding-top: 66px;
+        padding-right: 24px;
+        padding-bottom: 66px;
+        padding-left: 24px;
+        gap: 12px;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-left-radius: 0;
+    }
+
+    .close-modal-contact {
+        top: 9.43px;
+        right: 9.42px;
+        color: white;
+    }
+
+    .add-card-content {
+        flex-direction: column;
+        width: 396px;
+        height: 100%;
+        justify-content: unset;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+        background-color: white;
+        padding-bottom: 80px;
+    }
+
+    .contacts-card-initials {
+        top: -60px;
+        position: relative;
+    }
+
+    .contacts-card-initials-circle {
+        margin-right: 0;
+        width: 120px;
+        height: 120px;
+        position: relative;
+        /* top: -50%; */
+    }
+
+    .add-contact-initials_blank {
+        width: 60px;
+        height: 60px;
+    }
+
+    .add-contact-card {
+        width: 396px;
+    }
+
+    .add-contact-details {
+        width: 396px;
+        gap: 10px;
+    }
+
+    .add-contact-field {
+        width: 364px;
+        height: 41px;
+    }
+
+    .close-modal-contact:hover {
+        background-color: unset;
+    }
+
+    .add-contact-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .add-contact-icon {
+        right: 30px;
+    }
+
+    .cancel-contact-button {
+        display: none;
+    }
+
+    .save-contact-button {
+        width: 202px;
+        height: 51px;
+        padding: unset;
+        margin-top: 10px;
+    }
+
+    .add-contact-buttons {
+        flex-direction: column;
+    }
+
+    .contact-created-overlay {
+        position: fixed;
+        top: 50%;
+        /* Mittig auf dem Bildschirm */
+        left: 50%;
+        /* Horizontal zentriert */
+        transform: translateY(100%) translateX(-50%);
+        /* Startet unterhalb des sichtbaren Bereichs */
+        background-color: rgba(42, 54, 71);
+        color: white;
+        font-size: 20px;
+        font-weight: normal;
+        padding: 20px 40px;
+        border-radius: 10px;
+        opacity: 0;
+        z-index: 3;
+        transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    }
+
+    .contact-created-overlay.show {
+        transform: translateY(-50%) translateX(-50%);
+        /* Positioniert das Element in der Mitte */
+        opacity: 1;
+    }
+
 }
