@@ -63,8 +63,17 @@ function startAnimation() {
   });
 }
 
-function guestLogin() {
-  window.location.href="summary.html";
+async function guestLogin(path = "", data = {}) {
+
+  let guest = await fetch(BASE_URL + path + "guestUser.json", {
+    method: "POST",
+    headers: { "content-Type": "application/json" },
+    body: JSON.stringify({
+      name:"Guest"
+    }),
+  });
+
+  window.location.href = "summary.html";
 }
 
 async function login() {
@@ -75,17 +84,16 @@ async function login() {
   let password = document.getElementById("password").value;
 
   let signedUpContact = Object.values(contactAsJson.contacts || {}).find(
-      (c) => c.email === email && c.password === password
-    );
+    (c) => c.email === email && c.password === password
+  );
 
-  console.log(signedUpContact);
   if (signedUpContact) {
     console.log("User gefunden:", signedUpContact.name);
     alert("Login erfolgreich! Willkommen, " + signedUpContact.name)
     window.location.href = "summary.html";
   } else {
     console.log("Benutzer nicht gefunden");
-      alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.")
+    alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.")
   }
 }
 

@@ -18,7 +18,7 @@ function renderSignup() {
       </div>
       <div class="separator"></div>
   
-   <form onsubmit="if (!checkPassword()) return false; addContact(); return false;">
+   <form onsubmit="if (!checkPassword()) return false; addContact(); addCurrentUser(); return false;">
   <div class="inputfields_div">
     <input class="input1" id="name" required placeholder="Name" type="text" />
     <input class="input2" id="email" required placeholder="Email" type="email" />
@@ -64,12 +64,12 @@ async function addContact(path = "", data = {}) {
   return (contactAsJson = await contact.json());
 }
 
-
 async function addCurrentUser(path = "", data = {}) {
+
   let name = document.getElementById("name");
   let email = document.getElementById("email");
 
-  let contact = await fetch(BASE_URL + path + "contacts.json", {
+  let currentUser = await fetch(BASE_URL + path + "currentUser.json", {
     method: "POST",
     headers: { "content-Type": "application/json" },
     body: JSON.stringify({
@@ -77,9 +77,6 @@ async function addCurrentUser(path = "", data = {}) {
       email: email.value,
     }),
   });
-  
-  window.location.href = "index.html?msg=Die Registrierung war erfolgreich";
-  return (contactAsJson = await contact.json());
 }
 
 function checkPassword() {
