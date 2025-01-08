@@ -24,30 +24,32 @@ document.addEventListener("DOMContentLoaded", () => {
     waitForSidebar();
 });
 
+//script to fetch GET and PUT
 async function getData(path) {
     const response = await fetch(BASE_URL + path + ".json");
     return data = await response.json();
 }
 
+async function putData(path, data) {
+    await fetch(`${BASE_URL}/${path}.json`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+}
+
 // script for header
-async function fetchCurrentUser() {
-    const userData = await getData("/currentUser");
-    currentUser = { name: userData?.name || "guest" };
-    console.log("Fetched currentUser:", currentUser);
-}
-
-function getInitials(name) {
-    if (!name || name === "guest") return "G";
-    return name
-        .split(" ")
-        .map(part => part[0].toUpperCase())
-        .join("")
-        .slice(0, 2);
-}
-
 async function initApp() {
     await fetchCurrentUser();
     setHeaderInitials();
+}
+
+async function fetchCurrentUser() {
+    const userData = await getData("/currentUser");
+    currentUser = { name: userData?.name || "" };
+    console.log("Fetched currentUser:", currentUser);
 }
 
 function setHeaderInitials() {
@@ -60,25 +62,29 @@ function setHeaderInitials() {
     initialsElement.innerHTML = `<a>${getInitials(currentUser.name)}</a>`;
 }
 
+function getInitials(name) {
+    if (!name || name === "guest") return "G";
+    return name
+        .split(" ")
+        .map(part => part[0].toUpperCase())
+        .join("")
+        .slice(0, 2);
+}
+
 function toggleHeaderPopUp() {
     const headerPopup = document.getElementById("headerPopup");
-    if (headerPopup.classList.contains("hidden")) {
-        showHeaderPopup();
-    } else {
-        hideHeaderPopup();
-    }
+    headerPopup.classList.toggle("hidden");
 }
 
-function showHeaderPopup() {
-    const headerPopup = document.getElementById("headerPopup");
-    headerPopup.classList.remove("hidden");
+async function logout() {
+    await putData("currentUser", { name: "" });
+    currentUser = { name: "" };
+    alert("You have been successfully logged out.");
+    window.location.href = "../../index.html";
 }
 
-function hideHeaderPopup() {
-    const headerPopup = document.getElementById("headerPopup");
-    headerPopup.classList.add("hidden");
-}
-
-function logout() {
-    // delete currentUser
+//script for legal notice, etc
+async function onLoadInit() {
+    await includeHTML();
+    await initApp();
 }

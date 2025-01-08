@@ -27,16 +27,17 @@ function parseTasks(userResponse) {
     }));
 }
 
+//script for getting upcoming deadline
+function getUrgentDueDate(tasks) {
+    const today = new Date(getToday());
+    return findClosestDueDate(tasks, today);
+}
+
 function getToday(){
     let year = new Date().getFullYear();
     let month = String(new Date().getMonth() + 1).padStart(2, '0');
     let day = String(new Date().getDate()).padStart(2, '0');
     return today = `${year}-${month}-${day}`; 
-}
-
-function calculateDateDifference(dueDate, today) {
-    const dueDateObj = new Date(dueDate); 
-    return (dueDateObj - today) / (1000 * 60 * 60 * 24);
 }
 
 function findClosestDueDate(tasks, today) {
@@ -56,15 +57,15 @@ function findClosestDueDate(tasks, today) {
     return closestDueDate ? formatDateToMonthDayYear(closestDueDate) : "No Deadlines";
 }
 
+function calculateDateDifference(dueDate, today) {
+    const dueDateObj = new Date(dueDate); 
+    return (dueDateObj - today) / (1000 * 60 * 60 * 24);
+}
+
 function formatDateToMonthDayYear(dateString) {
     const date = new Date(dateString);
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString('en-US', options);
-}
-
-function getUrgentDueDate(tasks) {
-    const today = new Date(getToday());
-    return findClosestDueDate(tasks, today);
 }
 
 function updateCount(tasks) {
