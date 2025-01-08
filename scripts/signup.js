@@ -34,7 +34,7 @@ function renderSignup() {
       style="height: 16px; width: 16px; border: 2px solid rgba(42, 54, 71, 1); border-radius: 3px;"
     />
     <p>
-      I accept the <a class="checkbox_input" href="#privacypolicy">privacy policy</a>
+      I accept the <a class="checkbox_input" href="pirvacy_policy.html">privacy policy</a>
     </p>
   </div>
   <button class="blue_button1">Sign up</button>
@@ -60,6 +60,24 @@ async function addContact(path = "", data = {}) {
       password: password,
     }),
   });
+  window.location.href = "index.html?msg=Die Registrierung war erfolgreich";
+  return (contactAsJson = await contact.json());
+}
+
+
+async function addCurrentUser(path = "", data = {}) {
+  let name = document.getElementById("name");
+  let email = document.getElementById("email");
+
+  let contact = await fetch(BASE_URL + path + "contacts.json", {
+    method: "POST",
+    headers: { "content-Type": "application/json" },
+    body: JSON.stringify({
+      name: name.value,
+      email: email.value,
+    }),
+  });
+  
   window.location.href = "index.html?msg=Die Registrierung war erfolgreich";
   return (contactAsJson = await contact.json());
 }
