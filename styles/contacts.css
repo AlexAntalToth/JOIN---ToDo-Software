@@ -666,59 +666,71 @@
     transform: translate(-50%, -50%) scale(1);
 }
 
+.contacts-card-name-section-mobile {
+    display: none;
+}
+
+.contacts-card-name-section-mobile-edit {
+    width: 5.33px;
+    height: 21.33px;
+}
 
 @media(max-width: 1350px) {
     .vertical-line {
         width: 90px;
         height: 3px;
         margin: unset;
+        position: absolute;
+        top: 120px;
     }
 
-.contacts-details-header {
-    flex-direction: column;
-    width: 213px;
-    height: 104px;
-    gap: 8px;
-    align-items: unset;
-    top: unset;
-    
-}
+    .contacts-details-header {
+        flex-direction: column;
+        width: 213px;
+        height: 104px;
+        gap: 8px;
+        align-items: unset;
+        top: unset;
 
-.contacts-details-header h1 {
-    font-size: 47px;
-}
+    }
 
-.contacts-details-header h2 {
-    font-size: 20px;
+    .contacts-details-header h1 {
+        font-size: 47px;
+    }
+
+    .contacts-details-header h2 {
+        font-size: 20px;
+
+        .contacts-card-initials-circle {
+            width: 60px;
+            height: 60px;
+            font-size: 18px;
+        }
+
+        .contacts-card-initials h3 {
+            font-size: 36px;
+        }
+
+        .add-contact-initials_blank {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    .contacts-card {
+        top: 200px;
+    }
 
     .contacts-card-initials-circle {
-        width: 60px;
-        height: 60px;
-        font-size: 18px;
+        width: 80px;
+        height: 80px;
+        margin-left: 0;
+        font-size: 32px;
     }
 
     .contacts-card-initials h3 {
-        font-size: 36px;
+        font-size: 32px;
     }
-
-    .add-contact-initials_blank {
-        width: 40px;
-        height: 40px;
-    }
-}
-
-.contacts-card {
-    top: 200px;
-}
-.contacts-card-initials-circle {
-    width: 80px;
-    height: 80px;
-    margin-left: 0;
-    font-size: 32px;
-}
-.contacts-card-initials h3 {
-    font-size: 32px;
-}
 }
 
 @media(max-width: 1100px) {
@@ -736,7 +748,7 @@
         bottom: 30px;
         left: 580px;
         position: fixed;
-        z-index: 100;
+        z-index: 5;
     }
 
     .contacts-area-button {
@@ -748,8 +760,8 @@
         margin-right: 10px;
         padding-left: 23px;
         padding-right: 23px;
-        padding-top: 17px;
         padding-bottom: 17px;
+        margin-top: 17px;
     }
 
     .contacts-area-list::-webkit-scrollbar {
@@ -811,17 +823,20 @@
     }
 
     .contacts-card-initials {
-        top: -60px;
         position: relative;
     }
 
     .contacts-card-initials-circle {
         margin-right: 0;
         margin-left: 0;
-        width: 120px;
-        height: 120px;
+        width: 80px;
+        height: 80px;
         position: relative;
-        /* top: -50%; */
+    }
+
+    .contacts-card-initials h3 {
+        font-size: 36px;
+        font-weight: bold;
     }
 
     .add-contact-initials_blank {
@@ -917,12 +932,50 @@
     .contact-info {
         gap: 20px;
     }
+
+    .contacts-details {
+        position: absolute;
+        z-index: 20;
+        background-color: rgba(246, 247, 248, 1);
+        width: 428px;
+        height: calc(100vh - 96px);
+        left: 500px;
+        margin-top: 5px;
+        padding-top: 30px;
+    }
+
+    .contacts-card-name-section2 {
+        display: none; /* Bei mobilen Ansichten ausgeblendet */
+    }
+
+    .contacts-card-name-section2.visible {
+        display: flex !important; /* Mit der Klasse 'visible' wird sie wieder angezeigt */
+    }
+
+    .contacts-card-name-section-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        bottom: 30px;
+        left: 150px;
+        position: fixed;
+        z-index: 6;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        background: rgba(42, 54, 71, 1);
+        cursor: pointer;
+    }
+
 }
+
 
 @media(max-width: 700px) {
     .main-contacts {
         padding: 0;
-      }
+    }
 
     .add-contact {
         bottom: 110px;

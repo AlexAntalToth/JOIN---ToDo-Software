@@ -7,6 +7,8 @@ let taskSubtasks = [];
 let editingSubtaskIndex = null;
 
 async function init() {
+    await includeHTML();
+    await initApp();
     renderAddTaskCard();
 }
 
