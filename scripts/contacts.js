@@ -224,23 +224,91 @@ function attachEditButtonListener(contactCard) {
     }
 }
 
-function attachEditButtonListenerMobile(contactCard) {
-    let editButtonMobile = contactCard.querySelector('.contacts-card-name-section-mobile');
-    let section2 = contactCard.querySelector('.contacts-card-name-section2');
-    console.log('editButtonMobile:', editButtonMobile); 
-    if (editButtonMobile && section2) {
-        editButtonMobile.addEventListener('click', () => {
-            // Aktuelle Bildschirmbreite abfragen
-            let isMobileView = window.matchMedia('(max-width: 1100px)').matches;
+document.addEventListener('DOMContentLoaded', () => {
+    // Event-Delegation auf den Container der Kontaktkarten
+    document.body.addEventListener('click', (event) => {
+        const target = event.target;
 
-            if (isMobileView) {
-                // Klasse hinzufügen, um die Sektion bei mobilen Ansichten anzuzeigen
+        // Prüfen, ob das geklickte Element der Button oder ein Kind davon ist
+        if (target.closest('.contacts-card-name-section-mobile')) {
+            console.log('Button wurde geklickt');
+            const contactCard = target.closest('.contacts-card-header');
+            const section2 = contactCard.querySelector('.contacts-card-name-section2');
+
+            if (section2) {
                 section2.classList.toggle('visible');
-                console.log(section2);
+                console.log('Sektion sichtbar:', section2.classList.contains('visible'));
             }
-        });
-    }
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Event-Delegation auf den Container der Kontaktkarten
+    document.body.addEventListener('click', (event) => {
+        // Prüfen, ob die maximale Breite von 1100px überschritten wird
+        if (window.matchMedia("(max-width: 1100px)").matches) {
+            const target = event.target;
+
+            // Prüfen, ob das geklickte Element der Back-Button oder ein Kind davon ist
+            if (target.closest('.contacts-back-button')) {
+                console.log('Back-Button wurde geklickt');
+                const contactsDetails = document.querySelector('.contacts-details');
+                const contactsList = document.querySelector('.contacts-list');
+
+                if (contactsDetails && contactsList) {
+                    // Kontakte-Details ausblenden und z-index zurücksetzen
+                    contactsDetails.style.display = 'none';
+                    contactsDetails.style.zIndex = '0';
+                    // Kontakte-Liste anzeigen und z-index anpassen
+                    contactsList.style.display = 'block';
+                    contactsList.style.zIndex = '1';
+                    console.log('contacts-details ausgeblendet, contacts-list eingeblendet');
+
+                    // Zurücksetzen der Auswahl der Kontaktkarte
+                    resetContactSelection();
+                }
+            }
+
+            // Prüfen, ob das geklickte Element eine Kontaktkarte ist
+            if (target.closest('.contact-item')) {
+                console.log('Kontakt wurde angeklickt');
+                const contactsDetails = document.querySelector('.contacts-details');
+                const contactsList = document.querySelector('.contacts-list');
+
+                if (contactsDetails && contactsList) {
+                    // Kontakte-Details anzeigen und z-index anpassen
+                    contactsDetails.style.display = 'block';
+                    contactsDetails.style.zIndex = '2';  // Über der Liste anzeigen
+                    // Kontakte-Liste ausblenden und z-index zurücksetzen
+                    contactsList.style.display = 'none';
+                    contactsList.style.zIndex = '1'; 
+                    console.log('contacts-details eingeblendet, contacts-list ausgeblendet');
+
+                    // Auswahl der Kontaktkarte setzen
+                    ContactSelection(target.closest('.contact-item'));
+                }
+            }
+        }
+    });
+});
+
+// Funktion zum Zurücksetzen der Kontakt-Auswahl
+function resetContactSelection() {
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.classList.remove('contact-item-active');
+    });
 }
+
+
+// Funktion zum Setzen der Auswahl für eine Kontaktkarte
+function ContactSelection(selectedElement) {
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.classList.remove('contact-item-active');
+    });
+    selectedElement.classList.add('contact-item-active');
+}
+
 
 function createContactCard(contact) {
     let contactCard = createContactCardElement(contact);
@@ -654,12 +722,3 @@ function showErrorMessage(message) {
     }, 2500);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    let editButtonMobile = document.querySelector('.contacts-card-name-section-mobile');
-    console.log(editButtonMobile); // Sollte das Button-Element ausgeben
-    if (editButtonMobile) {
-        editButtonMobile.addEventListener('click', () => {
-            console.log('Button wurde geklickt');
-        });
-    }
-});

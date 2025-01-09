@@ -675,6 +675,27 @@
     height: 21.33px;
 }
 
+.contacts-details .contacts-back-button {
+    display: none;
+    /* Standardmäßig ausgeblendet */
+    position: absolute;
+    top: 30px;
+    left: 380px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1010;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+}
+
+.contacts-back-button-img {
+    width: 24.6px;
+    height: 23.92px;
+}
+
 @media(max-width: 1350px) {
     .vertical-line {
         width: 90px;
@@ -736,6 +757,8 @@
 @media(max-width: 1100px) {
     .contacts-list {
         width: 428px;
+        position: relative;
+        z-index: 1;
     }
 
     .add-contact h2 {
@@ -935,21 +958,53 @@
 
     .contacts-details {
         position: absolute;
-        z-index: 20;
-        background-color: rgba(246, 247, 248, 1);
+        z-index: 0;
+        display: none;
+        background-color: #F4F4F4;
         width: 428px;
         height: calc(100vh - 96px);
-        left: 500px;
+        margin-left: 232px;
         margin-top: 5px;
         padding-top: 30px;
     }
 
     .contacts-card-name-section2 {
-        display: none; /* Bei mobilen Ansichten ausgeblendet */
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        padding: 10px;
+        position: absolute;
+        right: -100%;
+        /* Start außerhalb des sichtbaren Bereichs */
+        top: 0;
+        width: 116px;
+        height: 100px;
+        background-color: white;
+        /* Beispiel-Hintergrund */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        /* Optional */
+        opacity: 0;
+        /* Unsichtbar */
+        transform: translateX(100%);
+        /* Position außerhalb des Containers */
+        transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        z-index: 1000;
+        /* Damit es über anderen Elementen liegt */
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        top: 870px;
+        justify-content: center;
+        gap: 8px;
     }
 
     .contacts-card-name-section2.visible {
-        display: flex !important; /* Mit der Klasse 'visible' wird sie wieder angezeigt */
+        opacity: 1;
+        /* Sichtbar */
+        transform: translateX(0);
+        /* Zurück in die Ansicht */
+        right: -100px;
+        /* Endposition */
     }
 
     .contacts-card-name-section-mobile {
@@ -960,13 +1015,37 @@
         height: 56px;
         border-radius: 50%;
         bottom: 30px;
-        left: 150px;
+        left: 580px;
         position: fixed;
-        z-index: 6;
+        z-index: 30;
         padding-top: 12px;
         padding-bottom: 12px;
+        position: fixed;
+        bottom: 30px;
         background: rgba(42, 54, 71, 1);
         cursor: pointer;
+    }
+
+    .contacts-details .contacts-back-button {
+        display: flex;
+
+    }
+
+    .contacts-card {
+        transform: unset;
+        opacity: unset;
+        transition: unset;
+    }
+
+    .contacts-card-visible {
+        transform: unset;
+        opacity: unset;
+    }
+
+    .contacts-container {
+        display: flex;
+        margin-top: 100px;
+        height: calc(100vh - 96px);
     }
 
 }
