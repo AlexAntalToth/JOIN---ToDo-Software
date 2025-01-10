@@ -234,13 +234,44 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Button wurde geklickt');
             const contactCard = target.closest('.contacts-card-header');
             const section2 = contactCard.querySelector('.contacts-card-name-section2');
+            const button = target.closest('.contacts-card-name-section-mobile');
 
             if (section2) {
-                section2.classList.toggle('visible');
-                console.log('Sektion sichtbar:', section2.classList.contains('visible'));
+                const isVisible = section2.classList.toggle('visible');
+                console.log('Sektion sichtbar:', isVisible);
+
+                if (isVisible) {
+                    // Button-Farbe ändern
+                    button.style.backgroundColor = 'rgb(41,171,226)';
+
+                    // Listener hinzufügen, um Klicks außerhalb zu erkennen
+                    document.addEventListener('click', outsideClickListener);
+                }
             }
         }
     });
+
+    // Funktion, um Klicks außerhalb von .contacts-card-name-section2 zu erkennen
+    function outsideClickListener(event) {
+        const openSection = document.querySelector('.contacts-card-name-section2.visible');
+        const button = document.querySelector('.contacts-card-name-section-mobile');
+
+        if (openSection && !event.target.closest('.contacts-card-name-section2') &&
+            !event.target.closest('.contacts-card-name-section-mobile')) {
+            // Sichtbare Sektion ausblenden
+            openSection.classList.remove('visible');
+            console.log('Sektion geschlossen durch Klick außerhalb');
+
+            // Event-Listener entfernen
+            document.removeEventListener('click', outsideClickListener);
+
+            if (button) {
+                setTimeout(() => {
+                    button.style.background = 'rgba(42, 54, 71, 1)'; 
+                }, 250);
+            }
+        }
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -255,15 +286,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Back-Button wurde geklickt');
                 const contactsDetails = document.querySelector('.contacts-details');
                 const contactsList = document.querySelector('.contacts-list');
+                const contactsCardInitials = document.querySelector('.contacts-card-initials');
+                const contactsCardInitialsCircle = document.querySelector('.contacts-card-initials-circle');
 
                 if (contactsDetails && contactsList) {
                     // Kontakte-Details ausblenden und z-index zurücksetzen
                     contactsDetails.style.display = 'none';
                     contactsDetails.style.zIndex = '0';
+                    contactsCardInitials.style.top = ''; // Ursprünglichen Wert von top zurücksetzen
+                    contactsCardInitialsCircle.style.width = ''; // Ursprünglichen Wert von top zurücksetzen
+                    contactsCardInitialsCircle.style.height = ''; // Ursprünglichen Wert von top zurücksetzen
                     // Kontakte-Liste anzeigen und z-index anpassen
                     contactsList.style.display = 'block';
                     contactsList.style.zIndex = '1';
-                    console.log('contacts-details ausgeblendet, contacts-list eingeblendet');
 
                     // Zurücksetzen der Auswahl der Kontaktkarte
                     resetContactSelection();
@@ -275,14 +310,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Kontakt wurde angeklickt');
                 const contactsDetails = document.querySelector('.contacts-details');
                 const contactsList = document.querySelector('.contacts-list');
+                const contactsCardInitials = document.querySelector('.contacts-card-initials');
+                const contactsCardInitialsCircle = document.querySelector('.contacts-card-initials-circle');
 
                 if (contactsDetails && contactsList) {
                     // Kontakte-Details anzeigen und z-index anpassen
                     contactsDetails.style.display = 'block';
-                    contactsDetails.style.zIndex = '2';  // Über der Liste anzeigen
+                    contactsDetails.style.zIndex = '2'; // Über der Liste anzeigen
+                    contactsCardInitials.style.top = '0'; // Setzt top auf 0, wenn sichtbar
+                    contactsCardInitialsCircle.style.width = '80px'; // Ursprünglichen Wert von top zurücksetzen
+                    contactsCardInitialsCircle.style.height = '80px'; // Ursprünglichen Wert von top zurücksetzen
                     // Kontakte-Liste ausblenden und z-index zurücksetzen
                     contactsList.style.display = 'none';
-                    contactsList.style.zIndex = '1'; 
+                    contactsList.style.zIndex = '1';
                     console.log('contacts-details eingeblendet, contacts-list ausgeblendet');
 
                     // Auswahl der Kontaktkarte setzen
@@ -292,6 +332,119 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    let activeContact = null; // Aktuell ausgewählter Kontakt
+    let isMobileView = window.matchMedia("(max-width: 1100px)").matches; // Initialer View-Status
+
+    // Initialer Check beim Laden
+    handleResponsiveView();
+
+    // Event-Listener für Größenänderungen
+    window.addEventListener('resize', handleResponsiveView);
+
+    // Funktion, um die Ansicht basierend auf der Breite anzupassen
+    function handleResponsiveView() {
+        const contactsDetails = document.querySelector('.contacts-details');
+        const contactsList = document.querySelector('.contacts-list');
+        const contactsCardInitials = document.querySelector('.contacts-card-initials');
+        const contactsCardInitialsCircle = document.querySelector('.contacts-card-initials-circle');
+
+        const newIsMobileView = window.matchMedia("(max-width: 1100px)").matches;
+
+        if (contactsDetails && contactsList) {
+            if (newIsMobileView) {
+                if (activeContact) {
+                    // Mobile Ansicht: Details anzeigen, Liste ausblenden
+                    contactsDetails.style.display = 'block';
+                    contactsList.style.display = 'none';
+                    contactsCardInitials.style.top = '0'; // Setzt top auf 0, wenn sichtbar
+                    contactsCardInitialsCircle.style.width = '80px'; // Ursprünglichen Wert von top zurücksetzen
+                    contactsCardInitialsCircle.style.height = '80px'; // Ursprünglichen Wert von top zurücksetzen
+                } else {
+                    // Mobile Ansicht ohne aktiven Kontakt: Liste anzeigen
+                    contactsDetails.style.display = 'none';
+                    contactsList.style.display = 'block';
+                }
+            } else {
+                // Desktop Ansicht: Beide anzeigen
+                contactsDetails.style.display = 'block';
+                contactsList.style.display = 'block';
+        }
+        }
+
+        isMobileView = newIsMobileView; // Aktualisierung des View-Status
+    }
+
+    // Event-Listener für Klicks auf Kontakte und Back-Button
+    document.body.addEventListener('click', (event) => {
+        const target = event.target;
+
+        if (target.closest('.contact-item')) {
+            // Kontakt wird ausgewählt
+            const selectedContact = target.closest('.contact-item');
+            setActiveContact(selectedContact);
+        }
+
+        if (target.closest('.contacts-back-button') && isMobileView) {
+            // Zurück-Button in der mobilen Ansicht
+            resetActiveContact();
+        }
+    });
+
+    // Funktion zum Setzen des aktiven Kontakts
+    function setActiveContact(contactElement) {
+        activeContact = contactElement; // Speichere den aktiven Kontakt
+        const contactsDetails = document.querySelector('.contacts-details');
+        const contactsList = document.querySelector('.contacts-list');
+
+        if (isMobileView) {
+            // Mobile Ansicht: Details anzeigen, Liste ausblenden
+            contactsDetails.style.display = 'block';
+            contactsList.style.display = 'none';
+        } else {
+            // Desktop Ansicht: Beide anzeigen
+            contactsDetails.style.display = 'block';
+            contactsList.style.display = 'block';
+        }
+
+        // Visuelle Hervorhebung
+        highlightSelectedContact(contactElement);
+    }
+
+    // Funktion zum Zurücksetzen des aktiven Kontakts
+    function resetActiveContact() {
+        activeContact = null; // Entferne den aktiven Kontakt
+        const contactsDetails = document.querySelector('.contacts-details');
+        const contactsList = document.querySelector('.contacts-list');
+
+        if (isMobileView) {
+            // Mobile Ansicht: Liste anzeigen, Details ausblenden
+            contactsDetails.style.display = 'none';
+            contactsList.style.display = 'block';
+        }
+
+        // Entferne visuelle Hervorhebung
+        clearHighlight();
+    }
+
+    // Funktion zur visuellen Hervorhebung des ausgewählten Kontakts
+    function highlightSelectedContact(contactElement) {
+        document.querySelectorAll('.contact-item').forEach(item => {
+            item.classList.remove('contact-item-active');
+        });
+        contactElement.classList.add('contact-item-active');
+    }
+
+    // Funktion zum Entfernen der visuellen Hervorhebung
+    function clearHighlight() {
+        document.querySelectorAll('.contact-item').forEach(item => {
+            item.classList.remove('contact-item-active');
+        });
+    }
+});
+
+
 
 // Funktion zum Zurücksetzen der Kontakt-Auswahl
 function resetContactSelection() {
