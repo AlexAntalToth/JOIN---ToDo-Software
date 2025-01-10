@@ -66,6 +66,15 @@ h2 {
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding-left: 20px;
+}
+
+.badge-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  align-items: center;
 }
 
 .badge {
@@ -73,16 +82,16 @@ h2 {
   background-color: white;
   border-radius: 30px;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
-  margin: 15px;
+  margin: 0 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .badge:hover {
-  cursor: pointer;
   transform: scale(1.1);
   background-color: #2b3747;
-  transition: all 0.3s ease;
   color: white;
-  box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.1);
 }
 
 .midsize-badge:hover img {
@@ -103,13 +112,13 @@ h2 {
 }
 
 .midsize-badge img {
-  width: 69px;
-  height: 69px;
+  max-width: 50%;
+  height: auto;
 }
 
 .big-badge img {
-  width: 60px;
-  height: 60px;
+  max-width: 50%;
+  height: auto;
 }
 
 .count {
@@ -146,6 +155,7 @@ h2 {
 .flex-column {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .align-center {
@@ -158,4 +168,92 @@ h2 {
 
 .gap-20 {
   gap: 20px;
+}
+
+@media (max-width: 700px) {
+.container {
+  padding: 0 40px;
+  padding-top: 100px;
+  margin-left: 0;
+  align-items: center;
+}
+h1 {
+  font-size: 47px;
+}
+h2 {
+  font-size: 20px;
+}
+.sum-headline {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0;
+  margin-left: 0;
+  position: relative;
+}
+
+.d-flex {
+  gap: 25px;
+}
+.separator{
+  height: 91px;
+  transform: rotate(90deg);
+  position: absolute;
+  bottom: -53px;
+  left: 43px;
+}
+.badge{
+  margin: 0;
+}
+.midsize-badge {
+  width: 186px;
+  height: 110px;
+}
+.big-badge {
+  width: 396px;
+  height: 116px;
+}
+.small-badge{
+  width: 116px;
+  height: 116px;
+}
+.count {
+  font-size: 47px;
+}
+.count-text {
+  font-size: 14px;
+}
+.midsize-badge img,
+.big-badge img {
+  width: 40px;
+}
+.separator-grey {
+  height: 68px;
+}
+.greet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  z-index: 999;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  animation: fadeOut 3s forwards;
+}
+
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      display: none;
+    }
+  }
 }
