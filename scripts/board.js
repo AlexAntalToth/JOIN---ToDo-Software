@@ -6,26 +6,47 @@ let currentTaskIndex = null;
 let isEditing = false; 
 let subtaskCounter = 0;
 
-async function onloadFunc(){
-    await includeHTML(); 
+
+/**
+ * Asynchronous function to initialize the page by including HTML templates, 
+ * fetching and processing user data, and rendering tasks in the DOM.
+ */
+async function onloadFunc() {
+    await includeHTML();
     await initApp();
     contacts = await getData("/contacts");
-    let userResponse = await getData("/tasks");
-    let UserKeysArray = Object.keys(userResponse);
-
-    for (let i = 0; i < UserKeysArray.length; i++) {
-        const key = UserKeysArray[i];
-        tasks.push({
-            id: key,
-            task: userResponse[key],
-        });
-    }
-    for (let i = 0; i < tasks.length; i++) {
-        insertTaskIntoDOM(tasks[i].task, i);
-    }
+    const userResponse = await getData("/tasks");
+    tasks = Object.entries(userResponse).map(([key, task]) => ({ id: key, task }));
+    tasks.forEach((taskObj, index) => insertTaskIntoDOM(taskObj.task, index));
     checkEmptyCategories();
-};
+}
 
+/**
+  * Inserts a task into the DOM within its corresponding category container.
+ * 
+ * This function determines the appropriate category container for the given task, 
+ * generates the HTML for the task, and appends it to the task list within the container.
+ * 
+ * @param {Object} task - The task object containing task details.
+ * @param {number} index - The index of the task in the tasks array.
+ */
+function insertTaskIntoDOM(task, index){
+    let catContainer = getCatContainerId(task);
+    let taskHTML = generateTaskHtml(task, index, contacts);
+    const taskList = catContainer.querySelector(".task-list");
+    if (taskList) {
+        taskList.innerHTML += taskHTML;
+    }
+}
+
+/**
+ * Checks if task categories are empty and inserts placeholder HTML if no tasks are present.
+ * 
+ * The function iterates through predefined task categories, finds the corresponding 
+ * DOM elements, and checks if their task list contains any tasks. If a category is empty, 
+ * it updates the DOM with a placeholder message or content.
+ * 
+ */
 function checkEmptyCategories() {
     const categories = ["To-Do", "In Progress", "Await Feedback", "Done"];
     categories.forEach(categoryId => {
@@ -48,14 +69,7 @@ function emptyCategoryHTML(categoryId) {
     `
 }
 
-function insertTaskIntoDOM(task, index){
-    let catContainer = getCatContainerId(task);
-    let taskHTML = generateTaskHtml(task, index, contacts);
-    const taskList = catContainer.querySelector(".task-list");
-    if (taskList) {
-        taskList.innerHTML += taskHTML;
-    }
-}
+
 
 function getCatContainerId(task) {
     if (!task.category) {

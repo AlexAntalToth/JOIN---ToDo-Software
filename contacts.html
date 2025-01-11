@@ -12,11 +12,11 @@
     <link rel="stylesheet" href="./styles/sidebar-tryout.css">
 </head>
 
-<body onload="init();includeHTML()">
+<body onload="init()">
     <div w3-include-html="./assets/templates/header-tryout.html"></div>
     <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
     <div class="container">
-        <main>
+        <main class="main-contacts">
             <section class="contacts-container">
                 <div class="contacts-list">
                     <div class="contacts-area-button">
@@ -29,6 +29,9 @@
                     </div>
                 </div>
                 <div class="contacts-details">
+                    <button class="contacts-back-button">
+                        <img class="contacts-back-button-img" src="../../assets/icons/arrow-left-line.png" alt="Arrow left">
+                    </button>
                     <div class="contacts-details-header">
                         <h1>Contacts</h1>
                         <div class="vertical-line">

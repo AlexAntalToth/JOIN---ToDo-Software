@@ -94,18 +94,18 @@ function renderHTML(){
 
 function generateSummaryHTML(){
     return `
-            <div class="badge-container flex-column">
+            <div class="badge-container">
                 <div class="d-flex">
                     <div onclick="window.location.href='./board.html'" class="badge midsize-badge d-flex align-center justify-evenly">
                         <img src="./assets/icons/pencil.svg" alt="ToDo-Icon">
-                        <div class="flex-column align-center">
+                        <div class="flex-column">
                             <span class="count">${ToDoCount}</span>
                             <p class="count-text">To-Do</p>
                         </div>
                     </div>
                     <div onclick="window.location.href='./board.html'" class="badge midsize-badge d-flex align-center justify-evenly">
                         <img src="./assets/icons/checkmark.svg" alt="Checked-Icon">
-                        <div class="flex-column align-center">
+                        <div class="flex-column">
                             <span class="count">${doneCount}</span>
                             <p class="count-text">Done</p>
                         </div>
@@ -114,7 +114,7 @@ function generateSummaryHTML(){
                 <div onclick="window.location.href='./board.html'" class="badge big-badge d-flex align-center justify-evenly">
                     <div class="d-flex align-center gap-20">
                         <img src="./assets/icons/urgency.svg" alt="Checked-Icon">
-                        <div class="flex-column align-center">
+                        <div class="flex-column">
                             <span class="count">${urgencyCount}</span>
                             <p class="count-text">Urgent</p>
                         </div>
@@ -126,15 +126,15 @@ function generateSummaryHTML(){
                     </div>
                 </div>
                 <div class="d-flex">
-                    <div onclick="window.location.href='./board.html'" class="badge small-badge flex-column align-center">
+                    <div onclick="window.location.href='./board.html'" class="badge small-badge flex-column">
                         <span class="count">${taskCount}</span>
                         <p class="count-text">Tasks in <br> Board</p>
                     </div>
-                    <div onclick="window.location.href='./board.html'" class="badge small-badge flex-column align-center">
+                    <div onclick="window.location.href='./board.html'" class="badge small-badge flex-column">
                         <span class="count">${progressCount}</span>
                         <p class="count-text">Tasks in <br> Progress</p>
                     </div>
-                    <div onclick="window.location.href='./board.html'" class="badge small-badge flex-column align-center">
+                    <div onclick="window.location.href='./board.html'" class="badge small-badge flex-column">
                         <span class="count">${feedbackCount}</span>
                         <p class="count-text">Awaiting <br> Feedback</p>
                     </div>

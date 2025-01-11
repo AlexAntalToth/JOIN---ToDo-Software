@@ -1,5 +1,7 @@
 async function init() {
     await loadContacts();
+    await includeHTML();
+    await initApp();
 }
 
 async function loadSidebarAndHeader() {
@@ -148,29 +150,35 @@ function generateContactCardTemplate(contact, initials) {
                 </div>
                 <div class="contacts-card-name-section">
                     <h3>${contact.name}</h3>
-                    <div class="contacts-card-name-section2">
-                        <button class="edit-button" data-id="${contact.id}"> 
-                            <svg class="edit-contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <mask id="mask0_268101_3948" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                                <rect width="24" height="24" fill="#D9D9D9"/>
-                                </mask>
-                                <g mask="url(#mask0_268101_3948)">
-                                    <path d="M5 19H6.4L15.025 10.375L13.625 8.975L5 17.6V19ZM19.3 8.925L15.05 4.725L16.45 3.325C16.8333 2.94167 17.3042 2.75 17.8625 2.75C18.4208 2.75 18.8917 2.94167 19.275 3.325L20.675 4.725C21.0583 5.10833 21.2583 5.57083 21.275 6.1125C21.2917 6.65417 21.1083 7.11667 20.725 7.5L19.3 8.925ZM17.85 10.4L7.25 21H3V16.75L13.6 6.15L17.85 10.4Z" fill="#2A3647"/>
-                                </g>
-                            </svg>
-                            <p>Edit</p>
+                    <div class="contacts-card-name-section-mobile-wrapper">
+                        <button class="contacts-card-name-section-mobile">
+                            <img class="contacts-card-name-section-mobile-edit" src="../../assets/icons/contact_edit_mobile.png"
+                                alt="Logo Edit Contact Mobile">
                         </button>
-                        <button class="delete-button" data-id="${contact.id}">
-                            <svg class="delete-contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <mask id="mask0_268101_4160" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                        <div class="contacts-card-name-section2">
+                            <button class="edit-button" data-id="${contact.id}"> 
+                                <svg class="edit-contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <mask id="mask0_268101_3948" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
                                     <rect width="24" height="24" fill="#D9D9D9"/>
-                                </mask>
-                                <g mask="url(#mask0_268101_4160)">
-                                    <path d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6C4.71667 6 4.47917 5.90417 4.2875 5.7125C4.09583 5.52083 4 5.28333 4 5C4 4.71667 4.09583 4.47917 4.2875 4.2875C4.47917 4.09583 4.71667 4 5 4H9C9 3.71667 9.09583 3.47917 9.2875 3.2875C9.47917 3.09583 9.71667 3 10 3H14C14.2833 3 14.5208 3.09583 14.7125 3.2875C14.9042 3.47917 15 3.71667 15 4H19C19.2833 4 19.5208 4.09583 19.7125 4.2875C19.9042 4.47917 20 4.71667 20 5C20 5.28333 19.9042 5.52083 19.7125 5.7125C19.5208 5.90417 19.2833 6 19 6V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM7 6V19H17V6H7ZM9 16C9 16.2833 9.09583 16.5208 9.2875 16.7125C9.47917 16.9042 9.71667 17 10 17C10.2833 17 10.5208 16.9042 10.7125 16.7125C10.9042 16.5208 11 16.2833 11 16V9C11 8.71667 10.9042 8.47917 10.7125 8.2875C10.5208 8.09583 10.2833 8 10 8C9.71667 8 9.47917 8.09583 9.2875 8.2875C9.09583 8.47917 9 8.71667 9 9V16ZM13 16C13 16.2833 13.0958 16.5208 13.2875 16.7125C13.4792 16.9042 13.7167 17 14 17C14.2833 17 14.5208 16.9042 14.7125 16.7125C14.9042 16.5208 15 16.2833 15 16V9C15 8.71667 14.9042 8.47917 14.7125 8.2875C14.5208 8.09583 14.2833 8 14 8C13.7167 8 13.4792 8.09583 13.2875 8.2875C13.0958 8.47917 13 8.71667 13 9V16Z" fill="#2A3647"/>
-                                </g>
-                            </svg>
-                            <p>Delete</p>
-                        </button>
+                                    </mask>
+                                    <g mask="url(#mask0_268101_3948)">
+                                        <path d="M5 19H6.4L15.025 10.375L13.625 8.975L5 17.6V19ZM19.3 8.925L15.05 4.725L16.45 3.325C16.8333 2.94167 17.3042 2.75 17.8625 2.75C18.4208 2.75 18.8917 2.94167 19.275 3.325L20.675 4.725C21.0583 5.10833 21.2583 5.57083 21.275 6.1125C21.2917 6.65417 21.1083 7.11667 20.725 7.5L19.3 8.925ZM17.85 10.4L7.25 21H3V16.75L13.6 6.15L17.85 10.4Z" fill="#2A3647"/>
+                                    </g>
+                                </svg>
+                                <p>Edit</p>
+                            </button>
+                            <button class="delete-button" data-id="${contact.id}">
+                                <svg class="delete-contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <mask id="mask0_268101_4160" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                                        <rect width="24" height="24" fill="#D9D9D9"/>
+                                    </mask>
+                                    <g mask="url(#mask0_268101_4160)">
+                                        <path d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6C4.71667 6 4.47917 5.90417 4.2875 5.7125C4.09583 5.52083 4 5.28333 4 5C4 4.71667 4.09583 4.47917 4.2875 4.2875C4.47917 4.09583 4.71667 4 5 4H9C9 3.71667 9.09583 3.47917 9.2875 3.2875C9.47917 3.09583 9.71667 3 10 3H14C14.2833 3 14.5208 3.09583 14.7125 3.2875C14.9042 3.47917 15 3.71667 15 4H19C19.2833 4 19.5208 4.09583 19.7125 4.2875C19.9042 4.47917 20 4.71667 20 5C20 5.28333 19.9042 5.52083 19.7125 5.7125C19.5208 5.90417 19.2833 6 19 6V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM7 6V19H17V6H7ZM9 16C9 16.2833 9.09583 16.5208 9.2875 16.7125C9.47917 16.9042 9.71667 17 10 17C10.2833 17 10.5208 16.9042 10.7125 16.7125C10.9042 16.5208 11 16.2833 11 16V9C11 8.71667 10.9042 8.47917 10.7125 8.2875C10.5208 8.09583 10.2833 8 10 8C9.71667 8 9.47917 8.09583 9.2875 8.2875C9.09583 8.47917 9 8.71667 9 9V16ZM13 16C13 16.2833 13.0958 16.5208 13.2875 16.7125C13.4792 16.9042 13.7167 17 14 17C14.2833 17 14.5208 16.9042 14.7125 16.7125C14.9042 16.5208 15 16.2833 15 16V9C15 8.71667 14.9042 8.47917 14.7125 8.2875C14.5208 8.09583 14.2833 8 14 8C13.7167 8 13.4792 8.09583 13.2875 8.2875C13.0958 8.47917 13 8.71667 13 9V16Z" fill="#2A3647"/>
+                                    </g>
+                                </svg>
+                                <p>Delete</p>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -215,6 +223,245 @@ function attachEditButtonListener(contactCard) {
         });
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Event-Delegation auf den Container der Kontaktkarten
+    document.body.addEventListener('click', (event) => {
+        const target = event.target;
+
+        // Prüfen, ob das geklickte Element der Button oder ein Kind davon ist
+        if (target.closest('.contacts-card-name-section-mobile')) {
+            console.log('Button wurde geklickt');
+            const contactCard = target.closest('.contacts-card-header');
+            const section2 = contactCard.querySelector('.contacts-card-name-section2');
+            const button = target.closest('.contacts-card-name-section-mobile');
+
+            if (section2) {
+                const isVisible = section2.classList.toggle('visible');
+                console.log('Sektion sichtbar:', isVisible);
+
+                if (isVisible) {
+                    // Button-Farbe ändern
+                    button.style.backgroundColor = 'rgb(41,171,226)';
+
+                    // Listener hinzufügen, um Klicks außerhalb zu erkennen
+                    document.addEventListener('click', outsideClickListener);
+                }
+            }
+        }
+    });
+
+    // Funktion, um Klicks außerhalb von .contacts-card-name-section2 zu erkennen
+    function outsideClickListener(event) {
+        const openSection = document.querySelector('.contacts-card-name-section2.visible');
+        const button = document.querySelector('.contacts-card-name-section-mobile');
+
+        if (openSection && !event.target.closest('.contacts-card-name-section2') &&
+            !event.target.closest('.contacts-card-name-section-mobile')) {
+            // Sichtbare Sektion ausblenden
+            openSection.classList.remove('visible');
+            console.log('Sektion geschlossen durch Klick außerhalb');
+
+            // Event-Listener entfernen
+            document.removeEventListener('click', outsideClickListener);
+
+            if (button) {
+                setTimeout(() => {
+                    button.style.background = 'rgba(42, 54, 71, 1)'; 
+                }, 250);
+            }
+        }
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Event-Delegation auf den Container der Kontaktkarten
+    document.body.addEventListener('click', (event) => {
+        // Prüfen, ob die maximale Breite von 1100px überschritten wird
+        if (window.matchMedia("(max-width: 1100px)").matches) {
+            const target = event.target;
+
+            // Prüfen, ob das geklickte Element der Back-Button oder ein Kind davon ist
+            if (target.closest('.contacts-back-button')) {
+                console.log('Back-Button wurde geklickt');
+                const contactsDetails = document.querySelector('.contacts-details');
+                const contactsList = document.querySelector('.contacts-list');
+                const contactsCardInitials = document.querySelector('.contacts-card-initials');
+                const contactsCardInitialsCircle = document.querySelector('.contacts-card-initials-circle');
+
+                if (contactsDetails && contactsList) {
+                    // Kontakte-Details ausblenden und z-index zurücksetzen
+                    contactsDetails.style.display = 'none';
+                    contactsDetails.style.zIndex = '0';
+                    contactsCardInitials.style.top = ''; // Ursprünglichen Wert von top zurücksetzen
+                    contactsCardInitialsCircle.style.width = ''; // Ursprünglichen Wert von top zurücksetzen
+                    contactsCardInitialsCircle.style.height = ''; // Ursprünglichen Wert von top zurücksetzen
+                    // Kontakte-Liste anzeigen und z-index anpassen
+                    contactsList.style.display = 'block';
+                    contactsList.style.zIndex = '1';
+
+                    // Zurücksetzen der Auswahl der Kontaktkarte
+                    resetContactSelection();
+                }
+            }
+
+            // Prüfen, ob das geklickte Element eine Kontaktkarte ist
+            if (target.closest('.contact-item')) {
+                console.log('Kontakt wurde angeklickt');
+                const contactsDetails = document.querySelector('.contacts-details');
+                const contactsList = document.querySelector('.contacts-list');
+                const contactsCardInitials = document.querySelector('.contacts-card-initials');
+                const contactsCardInitialsCircle = document.querySelector('.contacts-card-initials-circle');
+
+                if (contactsDetails && contactsList) {
+                    // Kontakte-Details anzeigen und z-index anpassen
+                    contactsDetails.style.display = 'block';
+                    contactsDetails.style.zIndex = '2'; // Über der Liste anzeigen
+                    contactsCardInitials.style.top = '0'; // Setzt top auf 0, wenn sichtbar
+                    contactsCardInitialsCircle.style.width = '80px'; // Ursprünglichen Wert von top zurücksetzen
+                    contactsCardInitialsCircle.style.height = '80px'; // Ursprünglichen Wert von top zurücksetzen
+                    // Kontakte-Liste ausblenden und z-index zurücksetzen
+                    contactsList.style.display = 'none';
+                    contactsList.style.zIndex = '1';
+                    console.log('contacts-details eingeblendet, contacts-list ausgeblendet');
+
+                    // Auswahl der Kontaktkarte setzen
+                    ContactSelection(target.closest('.contact-item'));
+                }
+            }
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    let activeContact = null; // Aktuell ausgewählter Kontakt
+    let isMobileView = window.matchMedia("(max-width: 1100px)").matches; // Initialer View-Status
+
+    // Initialer Check beim Laden
+    handleResponsiveView();
+
+    // Event-Listener für Größenänderungen
+    window.addEventListener('resize', handleResponsiveView);
+
+    // Funktion, um die Ansicht basierend auf der Breite anzupassen
+    function handleResponsiveView() {
+        const contactsDetails = document.querySelector('.contacts-details');
+        const contactsList = document.querySelector('.contacts-list');
+        const contactsCardInitials = document.querySelector('.contacts-card-initials');
+        const contactsCardInitialsCircle = document.querySelector('.contacts-card-initials-circle');
+
+        const newIsMobileView = window.matchMedia("(max-width: 1100px)").matches;
+
+        if (contactsDetails && contactsList) {
+            if (newIsMobileView) {
+                if (activeContact) {
+                    // Mobile Ansicht: Details anzeigen, Liste ausblenden
+                    contactsDetails.style.display = 'block';
+                    contactsList.style.display = 'none';
+                    contactsCardInitials.style.top = '0'; // Setzt top auf 0, wenn sichtbar
+                    contactsCardInitialsCircle.style.width = '80px'; // Ursprünglichen Wert von top zurücksetzen
+                    contactsCardInitialsCircle.style.height = '80px'; // Ursprünglichen Wert von top zurücksetzen
+                } else {
+                    // Mobile Ansicht ohne aktiven Kontakt: Liste anzeigen
+                    contactsDetails.style.display = 'none';
+                    contactsList.style.display = 'block';
+                }
+            } else {
+                // Desktop Ansicht: Beide anzeigen
+                contactsDetails.style.display = 'block';
+                contactsList.style.display = 'block';
+        }
+        }
+
+        isMobileView = newIsMobileView; // Aktualisierung des View-Status
+    }
+
+    // Event-Listener für Klicks auf Kontakte und Back-Button
+    document.body.addEventListener('click', (event) => {
+        const target = event.target;
+
+        if (target.closest('.contact-item')) {
+            // Kontakt wird ausgewählt
+            const selectedContact = target.closest('.contact-item');
+            setActiveContact(selectedContact);
+        }
+
+        if (target.closest('.contacts-back-button') && isMobileView) {
+            // Zurück-Button in der mobilen Ansicht
+            resetActiveContact();
+        }
+    });
+
+    // Funktion zum Setzen des aktiven Kontakts
+    function setActiveContact(contactElement) {
+        activeContact = contactElement; // Speichere den aktiven Kontakt
+        const contactsDetails = document.querySelector('.contacts-details');
+        const contactsList = document.querySelector('.contacts-list');
+
+        if (isMobileView) {
+            // Mobile Ansicht: Details anzeigen, Liste ausblenden
+            contactsDetails.style.display = 'block';
+            contactsList.style.display = 'none';
+        } else {
+            // Desktop Ansicht: Beide anzeigen
+            contactsDetails.style.display = 'block';
+            contactsList.style.display = 'block';
+        }
+
+        // Visuelle Hervorhebung
+        highlightSelectedContact(contactElement);
+    }
+
+    // Funktion zum Zurücksetzen des aktiven Kontakts
+    function resetActiveContact() {
+        activeContact = null; // Entferne den aktiven Kontakt
+        const contactsDetails = document.querySelector('.contacts-details');
+        const contactsList = document.querySelector('.contacts-list');
+
+        if (isMobileView) {
+            // Mobile Ansicht: Liste anzeigen, Details ausblenden
+            contactsDetails.style.display = 'none';
+            contactsList.style.display = 'block';
+        }
+
+        // Entferne visuelle Hervorhebung
+        clearHighlight();
+    }
+
+    // Funktion zur visuellen Hervorhebung des ausgewählten Kontakts
+    function highlightSelectedContact(contactElement) {
+        document.querySelectorAll('.contact-item').forEach(item => {
+            item.classList.remove('contact-item-active');
+        });
+        contactElement.classList.add('contact-item-active');
+    }
+
+    // Funktion zum Entfernen der visuellen Hervorhebung
+    function clearHighlight() {
+        document.querySelectorAll('.contact-item').forEach(item => {
+            item.classList.remove('contact-item-active');
+        });
+    }
+});
+
+
+
+// Funktion zum Zurücksetzen der Kontakt-Auswahl
+function resetContactSelection() {
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.classList.remove('contact-item-active');
+    });
+}
+
+
+// Funktion zum Setzen der Auswahl für eine Kontaktkarte
+function ContactSelection(selectedElement) {
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.classList.remove('contact-item-active');
+    });
+    selectedElement.classList.add('contact-item-active');
+}
+
 
 function createContactCard(contact) {
     let contactCard = createContactCardElement(contact);

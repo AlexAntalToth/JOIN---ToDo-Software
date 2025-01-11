@@ -101,6 +101,10 @@ header h1 {
   background-color: #2B3A54;
 }
 
+.help-in-popup {
+  display: none;
+}
+
 .hidden {
   display: none;
 }
@@ -116,6 +120,9 @@ header h1 {
   }
   .help {
     display: none;
+  }
+  .help-in-popup {
+    display: block;
   }
   header {
     padding: 20px 16px;
