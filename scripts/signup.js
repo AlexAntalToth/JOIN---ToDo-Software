@@ -15,10 +15,11 @@ function renderSignup() {
       <img onclick="navigateToLogin()" class="arrow-img" src="assets/icons/arrow-left-line.png" alt="">
       <div class="signup_titel">
         <h1>Sign up</h1>
+        <div class="separator"></div>
       </div>
-      <div class="separator"></div>
+      
   
-   <form onsubmit="if (!checkPassword()) return false; addContact(); addCurrentUser(); return false;">
+   <form class="form" onsubmit="if (!checkPassword()) return false; addContact(); addCurrentUser(); return false;">
   <div class="inputfields_div">
     <input class="input1" id="name" required placeholder="Name" type="text" />
     <input class="input2" id="email" required placeholder="Email" type="email" />

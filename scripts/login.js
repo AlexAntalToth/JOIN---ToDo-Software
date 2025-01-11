@@ -5,7 +5,7 @@ function renderLogin() {
   let wrapDivRef = document.getElementById("wrapDiv");
 
   wrapDivRef.innerHTML = `
-   <div id="wrapDiv">
+   
   <div class="animation-wrapper">
     <img id="joinImage" class="join_image" <img src="assets/img/logo_grey.png" alt="join_img">
   </div>
@@ -42,7 +42,6 @@ function renderLogin() {
     </div>
   </div>
     <div id="msgBox"></div>
-</div>
   `;
 
   startAnimation();
@@ -66,10 +65,10 @@ function startAnimation() {
 async function guestLogin(path = "", data = {}) {
 
   let guest = await fetch(BASE_URL + path + "guestUser.json", {
-    method: "POST",
+    method: "PUT",
     headers: { "content-Type": "application/json" },
     body: JSON.stringify({
-      name:"Guest"
+      name: "Guest"
     }),
   });
 

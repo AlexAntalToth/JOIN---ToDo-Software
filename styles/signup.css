@@ -5,6 +5,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 @font-face {
   font-family: inter;
   src: url(../assets/fonts/inter.ttf);
@@ -40,18 +41,19 @@ body {
   flex-direction: column;
 }
 
+
 .signup_titel {
   width: 315px;
   height: 89px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
   margin-bottom: 16px;
 }
 
 h1 {
-  margin: ;
+  margin: 0px;
   font-weight: 700px;
   font-size: 61px;
   text-align: center;
@@ -61,6 +63,15 @@ h1 {
   width: 150px;
   border: 3px solid rgba(41, 171, 226, 1);
 }
+
+
+.form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 
 .inputfields_div {
   width: 422px;
@@ -75,7 +86,7 @@ h1 {
 .input1 {
   font-size: 20px;
   font-weight: 400;
-  background-image: url(imgs/person.png);
+  background-image: url(../assets/icons/person.png);
   background-repeat: no-repeat;
   background-position: right;
   width: 380px;
@@ -91,7 +102,7 @@ h1 {
 .input2 {
   font-size: 20px;
   font-weight: 400;
-  background-image: url(imgs/mail.png);
+  background-image: url(../assets/icons/mail.png);
   background-repeat: no-repeat;
   background-position: right;
   width: 380px;
@@ -107,7 +118,7 @@ h1 {
 .input3 {
   font-size: 20px;
   font-weight: 400;
-  background-image: url(imgs/lock.png);
+  background-image: url(../assets/icons/lock.png);
   background-repeat: no-repeat;
   background-position: right;
   width: 380px;
@@ -123,7 +134,7 @@ h1 {
 .input4 {
   font-size: 20px;
   font-weight: 400;
-  background-image: url(imgs/lock.png);
+  background-image: url(../assets/icons/lock.png);
   background-repeat: no-repeat;
   background-position: right;
   width: 380px;

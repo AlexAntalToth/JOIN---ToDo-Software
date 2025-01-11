@@ -48,6 +48,7 @@ body {
     top: 50%;
     left: 50%;
   }
+
   100% {
     transform: none;
     top: 80px;
@@ -59,6 +60,7 @@ h1 {
   text-align: center;
   font-weight: 700px;
   font-size: 61px;
+  margin: 0px;
 }
 
 .login {
@@ -117,7 +119,7 @@ h1 {
 }
 
 .input1 {
-  background-image: url(imgs/mail.png);
+  background-image: url(../assets/icons/contact_email.png);
   background-repeat: no-repeat;
   background-position: right;
   width: 422px;
@@ -128,11 +130,10 @@ h1 {
   gap: 10px;
   font-size: 20px;
   font-weight: 400;
-  transition: all 0.3s ease;
 }
 
 .input2 {
-  background-image: url(imgs/lock.png);
+  background-image: url(../assets/icons/lock.png);
   background-repeat: no-repeat;
   background-position: right;
   width: 422px;
@@ -143,7 +144,7 @@ h1 {
   gap: 10px;
   font-size: 20px;
   font-weight: 400;
-  transition: all 0.3s ease;
+
 }
 
 .login_guestlogin {
