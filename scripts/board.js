@@ -463,7 +463,6 @@ function setupSubtaskInput() {
     const subtaskInput = document.getElementById("newSubtaskInput");
     const addIcon = document.getElementById("addSubtaskButton");
     const iconsContainer = document.getElementById("subtaskIcons");
-
     if (subtaskInput && addIcon && iconsContainer) {
         addIcon.classList.remove("hidden");
         iconsContainer.classList.add("hidden");
@@ -477,8 +476,15 @@ function setupSubtaskInput() {
                 iconsContainer.classList.add("hidden");
             }
         });
+        subtaskInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addSubtask(event);
+            }
+        });
     }
 }
+
 
 
 function cancelSubtaskInput() {
@@ -615,9 +621,23 @@ function toggleDropdown() {
     if (dropdown.classList.contains("open")) {
         switchToSearchInput(dropdownToggle);
         updateDropdownItems(dropdown);
+        document.addEventListener("click", handleOutsideClick);
     } else {
         dropdownToggle.blur()
         resetToDropdownButton(dropdownToggle);
+        document.removeEventListener("click", handleOutsideClick);
+    }
+}
+
+function handleOutsideClick(event) {
+    const dropdown = document.querySelector(".dropdown");
+    const dropdownToggle = document.querySelector(".dropdown-toggle");
+    if (!dropdown.contains(event.target) && !dropdownToggle.contains(event.target)) {
+        dropdown.classList.remove("open");
+        const icon = document.querySelector(".dropdown-toggle .dropdown-icon");
+        icon.classList.remove("rotated");
+        resetToDropdownButton(dropdownToggle);
+        document.removeEventListener("click", handleOutsideClick);
     }
 }
 

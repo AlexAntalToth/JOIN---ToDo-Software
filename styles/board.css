@@ -953,7 +953,7 @@ body {
   .find-and-add {
     width: 100%;
   }
-  .add-task {
+  .find-and-add .add-task {
     display: none;
   }
   .searchbar {
