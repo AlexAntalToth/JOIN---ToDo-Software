@@ -1122,7 +1122,8 @@
     }
 
     .page-contacts header h1 {
-        width: 170px;;
+        width: 170px;
+        ;
     }
 }
 
@@ -1139,10 +1140,6 @@
         padding: 0;
     }
 
-    .add-contact {
-        bottom: 110px;
-    }
-
     .contacts-list {
         margin-left: 0;
         width: 100%;
@@ -1152,33 +1149,52 @@
         left: unset;
         position: absolute;
         right: 30px;
-        bottom: 40px;
+        bottom: 110px;
     }
 
-.contacts-container {
-    padding-bottom: 80px;
-}
+    .contacts-container {
+        padding-bottom: 80px;
+    }
 
-.modal-contact-content-add,
-.modal-contact-content-edit {
-    transform: translate(-50%, 100%);
-    height: unset;
-    top: 50%;
-    left: 50%;
-    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
-    /* margin-top: 80px; */
-}
+    .modal-contact-content-add,
+    .modal-contact-content-edit {
+        transform: translate(-50%, 100%);
+        height: unset;
+        top: 50%;
+        left: 50%;
+        transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+        /* margin-top: 80px; */
+    }
 
-.modal-contact-content-add.hide,
-.modal-contact-content-edit.hide {
-    transform: translate(-50%, 100%);
-    /* Modal fliegt nach rechts hinaus */
-}
+    .modal-contact-content-add.hide,
+    .modal-contact-content-edit.hide {
+        transform: translate(-50%, 100%);
+        /* Modal fliegt nach rechts hinaus */
+    }
 
-.add-contact-left {
-    height: unset;
-}
+    .add-contact-left {
+        height: unset;
+    }
 
+    .contacts-details {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .contacts-card-name-section-mobile {
+        left: unset;
+        right: 30px;
+        bottom: 110px;
+    }
+
+    .contacts-card-name-section2 {
+        top: 790px;
+    }
+
+    .contacts-details .contacts-back-button {
+    left: unset;
+    right: 30px;
+    }
 
 
 }

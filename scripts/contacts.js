@@ -1,8 +1,14 @@
+let isMobileView = window.matchMedia("(max-width: 1100px)").matches;
+
 async function init() {
     await loadContacts();
     await includeHTML();
     await initApp();
 }
+
+window.addEventListener('resize', () => {
+    isMobileView = window.matchMedia("(max-width: 1100px)").matches;
+});
 
 async function loadSidebarAndHeader() {
     const sidebarContent = await fetch('./assets/templates/sidebar.html').then(res => res.text());
@@ -654,21 +660,31 @@ async function saveNewContact() {
     }
 }
 
-async function deleteContact(contactId) {
+async function deleteContact(contactId, contactsDetails, contactsList, isMobileView) {
     try {
         const response = await fetch(`${BASE_URL}/contacts/${contactId}.json`, {
             method: "DELETE",
         });
 
         if (response.ok) {
+            // Wenn im mobilen Modus, Kontakte-Details ausblenden
+            if (isMobileView) {
+                contactsDetails.style.display = 'none';  // Blendet die Kontakt-Details aus
+                contactsList.style.display = 'block';  // Zeigt die Kontaktliste an
+            }
+
+            // Entferne den aktiven Kontakt, falls vorhanden
             let contactCardContainer = document.querySelector(".contacts-card");
             if (contactCardContainer) {
                 contactCardContainer.innerHTML = "";
                 contactCardContainer.classList.remove("contacts-card-visible");
             }
-            loadContacts();
+
+            // Lade die Kontaktliste neu
+            await loadContacts();
         }
     } catch (error) {
+        console.error("Fehler beim Löschen des Kontakts:", error);
     }
 }
 
