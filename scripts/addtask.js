@@ -288,7 +288,7 @@ function handleSuccessfulResponse(responseData) {
     showTaskCreatedPopup();
     setTimeout(() => {
         window.location.href = "board.html";
-    }, 1500);
+    }, 1550);
     return responseData;
 }
 

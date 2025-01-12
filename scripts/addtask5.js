@@ -68,35 +68,65 @@ function validateDateValidity() {
     let month = parseInt(dueDateParts[1], 10) - 1; // Monat ist 0-indexiert
     let year = parseInt(dueDateParts[2], 10);
     let date = new Date(year, month, day);
-    
+
     // Überprüfen, ob das Datum korrekt ist (z. B. 31. Februar sollte ungültig sein)
     return isNaN(date.getTime()) || date.getDate() !== day || date.getMonth() !== month || date.getFullYear() !== year;
 }
 
 
 /**
- * Attaches event listeners to the task form fields to validate them on input/change.
- * This function listens for the 'input' event on the due date and title fields, and the 'change' event 
- * on the category dropdown. It calls the `validateFields` function each time any of these events are triggered.
+ * Attaches event listeners to the necessary form fields to trigger validation.
  * 
- * @function
+ * @function attachEventListeners
+ * @returns {void} This function does not return any value. It calls individual functions to attach event listeners.
  */
 function attachEventListeners() {
+    attachDueDateListener();
+    attachTitleListener();
+    attachCategoryListener();
+}
+
+
+/**
+ * Attaches the input event listener to the due date field to trigger validation.
+ * 
+ * @function attachDueDateListener
+ */
+function attachDueDateListener() {
     let dueDateField = document.getElementById("task-dueDate");
+    if (dueDateField) {
+        dueDateField.addEventListener("input", () => {
+            validateFields();
+        });
+    }
+}
+
+/**
+ * Attaches the input event listener to the title field to trigger validation.
+ * 
+ * @function attachTitleListener
+ */
+function attachTitleListener() {
     let titleField = document.getElementById("task-title");
+    if (titleField) {
+        titleField.addEventListener("input", () => {
+            validateFields();
+        });
+    }
+}
+
+/**
+ * Attaches the change event listener to the category dropdown to trigger validation.
+ * 
+ * @function attachCategoryListener
+ */
+function attachCategoryListener() {
     let categoryDropdown = document.getElementById("categoryDropdown");
-
-    dueDateField.addEventListener("input", () => {
-        validateFields(); // Überprüft den gesamten Zustand
-    });
-
-    titleField.addEventListener("input", () => {
-        validateFields();
-    });
-
-    categoryDropdown.addEventListener("change", () => {
-        validateFields();
-    });
+    if (categoryDropdown) {
+        categoryDropdown.addEventListener("change", () => {
+            validateFields();
+        });
+    }
 }
 
 
@@ -112,18 +142,14 @@ function validateAndSaveTask(event) {
     let titleField = document.getElementById("task-title");
     let categoryDropdown = document.getElementById("categoryDropdown");
     let dueDateField = document.getElementById("task-dueDate");
-    updateCreateButtonState(
-        isFieldEmpty(titleField, "value"),
-        isFieldEmpty(categoryDropdown, "data-selected"),
-        isFieldEmpty(dueDateField, "value"),
-    );
-    if (
-        !isFieldEmpty(titleField, "value") &&
-        !isFieldEmpty(categoryDropdown, "data-selected") &&
-        !isFieldEmpty(dueDateField, "value")
-    ) {
-        saveNewTask();
-    }
+
+    let isTitleEmpty = isFieldEmpty(titleField, "value");
+    let isCategoryEmpty = isFieldEmpty(categoryDropdown, "data-selected");
+    let isDueDateEmpty = isFieldEmpty(dueDateField, "value");
+
+    updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty);
+
+    if (!isTitleEmpty && !isCategoryEmpty && !isDueDateEmpty) saveNewTask();
 }
 
 
@@ -141,23 +167,25 @@ function isFieldEmpty(field, fieldType) {
 
 
 /**
- * Resets the form fields by clearing their values and resetting the selected contacts.
- * This function resets the following fields:
- * - Task title
- * - Task description
- * - Task due date
- * - Task category dropdown
- * It also clears the selected contacts and disables the create button.
+ * Resets the form fields to their default values. This includes clearing the input fields for 
+ * the task title, description, due date, and resetting the category dropdown. It also clears 
+ * the selected contacts and updates the state of the create button.
+ *
+ * @function resetFormFields
+ * @returns {void} This function does not return any value. It modifies the DOM elements directly.
  */
 function resetFormFields() {
-    document.getElementById("task-title").value = "";
-    document.getElementById("task-description").value = "";
-    document.getElementById("task-dueDate").value = "";
-    document.getElementById("categoryDropdown").setAttribute('data-selected', '');
+    let taskTitle = document.getElementById("task-title");
+    if (taskTitle) taskTitle.value = "";
+    let taskDescription = document.getElementById("task-description");
+    if (taskDescription) taskDescription.value = "";
+    let taskDueDate = document.getElementById("task-dueDate");
+    if (taskDueDate) taskDueDate.value = "";
+    let categoryDropdown = document.getElementById("categoryDropdown");
+    if (categoryDropdown) categoryDropdown.setAttribute('data-selected', '');
     selectedContacts = [];
     updateCreateButtonState(true, true, true);
 }
-
 
 /**
  * Updates the state and styling of the "Create" button based on input validation.
@@ -172,11 +200,10 @@ function resetFormFields() {
  */
 function updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty, isDueDateInvalid) {
     let createButton = document.querySelector(".create-addTask-button");
-
-    // Button deaktivieren, wenn eines der Felder leer oder das Datum ungültig ist
+    if (!createButton) {
+        return;
+    }
     let isDisabled = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid;
-
-    // Style-Anpassungen je nach Status
     createButton.style.backgroundColor = isDisabled ? "grey" : "";
     createButton.style.cursor = isDisabled ? "not-allowed" : "pointer";
     createButton.disabled = isDisabled;
@@ -200,7 +227,8 @@ function attachValidationListeners() {
     ];
     fields.forEach(({ id, event }) => {
         let element = document.getElementById(id);
-        if (element) {
+        if (!element) {
+        } else {
             element.addEventListener(event, () => {
                 validateAndSaveTask({ preventDefault: () => { } });
             });
@@ -221,7 +249,6 @@ function showErrorMessage(message) {
     let errorBox = document.getElementById("error-message-box");
     errorBox.textContent = message;
     errorBox.classList.add("show");
-
     setTimeout(() => {
         errorBox.classList.remove("show");
     }, 2500);
