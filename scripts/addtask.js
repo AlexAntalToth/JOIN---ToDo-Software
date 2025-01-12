@@ -6,6 +6,14 @@ let currentTaskIndex = 0;
 let taskSubtasks = [];
 let editingSubtaskIndex = null;
 
+/**
+ * Initializes the application by including HTML content, initializing the app, 
+ * and rendering the "Add Task" card.
+ * 
+ * @async
+ * @function
+ * @returns {Promise<void>} A promise that resolves when all initialization steps are complete.
+ */
 async function init() {
     await includeHTML();
     await initApp();
@@ -13,27 +21,82 @@ async function init() {
 }
 
 
+/**
+ * Loads the sidebar and header templates asynchronously and inserts them into 
+ * their respective containers in the DOM.
+ * 
+ * @async
+ * @function
+ * @returns {Promise<void>} A promise that resolves when the sidebar and header content 
+ *                          has been successfully fetched and inserted.
+ */
 async function loadSidebarAndHeader() {
     let sidebarContent = await fetch('./assets/templates/sidebar.html').then(res => res.text());
     document.getElementById('sidebar-container').innerHTML = sidebarContent;
-
     let headerContent = await fetch('./assets/templates/header.html').then(res => res.text());
     document.getElementById('header-container').innerHTML = headerContent;
 }
 
 
-async function renderAddTaskCard(task) {
+/**
+ * Initializes the page setup by invoking various setup functions for form elements and event listeners.
+ * This includes title field, create button, assigned-to field, contact list, category dropdown,
+ * due date validation, and date icon click listener.
+ *
+ * @function setupPage
+ */
+function setupPage() {
+    setupTitleField();
+    setupCreateButton();
+    setupAssignedToField();
+    setupContactList();
+    setupCategoryDropdown();
+    setupDueDateValidation();
+    setupDateIconClickListener();
+}
+
+
+/**
+ * Sets up the page by calling the `setupPage` function after the DOM content is fully loaded.
+ *
+ * @event DOMContentLoaded
+ * @listens DOMContentLoaded
+ * @function
+ */
+document.addEventListener('DOMContentLoaded', setupPage);
+
+
+/**
+ * Renders the "Add Task" card content with the provided task data or default values.
+ *
+ * @async
+ * @function renderAddTaskCardContent
+ * @param {Object} [task={}] - The task data to pre-fill the form with. Defaults to an empty task object if no data is provided.
+ * @param {string} [task.title=""] - The title of the task.
+ * @param {string} [task.description=""] - The description of the task.
+ * @param {string} [task.dueDate=""] - The due date of the task in YYYY-MM-DD format.
+ * @param {string} [task.priority=""] - The priority level of the task.
+ * @returns {Promise<void>} Resolves when the card content is rendered.
+ */
+async function renderAddTaskCardContent(task) {
     let addTaskContainer = document.querySelector(".addTask-content");
     let addTaskFooter = document.querySelector(".addTask-footer");
     contacts = await loadTaskContacts();
-
     if (!addTaskContainer) {
         return;
     }
-
     addTaskContainer.innerHTML = await generateAddTaskCardHTML(task || { title: "", description: "", dueDate: "", priority: "" });
     addTaskFooter.innerHTML = generateAddTaskCardFooterHTML();
+}
 
+
+/**
+ * Initializes all the setup functions for the "Add Task" card.
+ *
+ * @function initializeAddTaskCardSetup
+ * @returns {void}
+ */
+function initializeAddTaskCardSetup() {
     setupCreateButton();
     setupClearButton();
     setupAssignedToField();
@@ -46,22 +109,41 @@ async function renderAddTaskCard(task) {
 }
 
 
+/**
+ * Orchestrates the rendering and initialization of the "Add Task" card.
+ *
+ * @async
+ * @function renderAddTaskCard
+ * @param {Object} [task={}] - The task data to pre-fill the form with.
+ * @returns {Promise<void>} Resolves when the card is fully rendered and initialized.
+ */
+async function renderAddTaskCard(task) {
+    await renderAddTaskCardContent(task);
+    initializeAddTaskCardSetup();
+}
+
+
 async function createAddTaskCard(task) {
     let addTaskContainer = document.querySelector(".addTask-content");
     let addTaskFooter = document.querySelector(".addTask-footer");
-
     if (!addTaskContainer) {
         return;
     }
-
     addTaskContainer.innerHTML = "";
     addTaskFooter.innerHTML = "";
-
     let addTaskCardHTML = await generateAddTaskCardHTML(task || { title: "", description: "", dueDate: "", priority: "" });
     addTaskContainer.innerHTML = addTaskCardHTML;
-
     let addTaskFooterHTML = generateAddTaskCardFooterHTML();
     addTaskFooter.innerHTML = addTaskFooterHTML;
+}
+
+
+// Title
+function setupTitleField() {
+    let titleField = document.getElementById('task-title');
+    if (titleField) {
+        titleField.addEventListener('input', validateFields);
+    }
 }
 
 
@@ -272,6 +354,64 @@ function updateSelectedContactInitials() {
 }
 
 
+function setupContactList() {
+    let contactListElement = document.getElementById("contactList");
+
+    if (contactListElement) {
+        contactListElement.addEventListener("click", (event) => {
+            handleContactClick(event);
+        });
+    }
+}
+
+function handleContactClick(event) {
+    let target = event.target;
+    let contactItem = target.closest(".contact-item");
+    if (!contactItem) return;
+
+    let checkbox = contactItem.querySelector(".contact-checkbox");
+    if (!checkbox) return;
+
+    let isSelected = checkbox.checked;
+    checkbox.checked = !isSelected;
+
+    if (checkbox.checked) {
+        contactItem.classList.add("selected");
+    } else {
+        contactItem.classList.remove("selected");
+    }
+}
+
+
+//Due Date
+function setupDueDateValidation() {
+    let dueDateField = document.getElementById("task-dueDate");
+
+    if (dueDateField) {
+        dueDateField.addEventListener("input", () => {
+            validateFields();
+        });
+    }
+}
+
+
+function setupDateIconClickListener() {
+    document.addEventListener("click", (event) => {
+        handleDateIconClick(event);
+    });
+}
+
+function handleDateIconClick(event) {
+    let dateIcon = event.target.closest(".addTask-date-icon");
+    if (dateIcon) {
+        let dateInput = document.getElementById("task-dueDate");
+        if (dateInput) {
+            dateInput.showPicker();
+        }
+    }
+}
+
+
 // Prio-Buttons
 function setupPriorityButtons() {
     let urgentButton = document.getElementById('task-urgent');
@@ -351,11 +491,245 @@ function getButtonColor(button, isActive) {
 }
 
 
+//Category
+function setupCategoryDropdown() {
+    let categoryField = document.getElementById("task-category");
+    let dropdown = document.getElementById("categoryDropdown");
+    let iconWrapper = document.querySelector(".addTask-category-icon-wrapper");
+
+    if (categoryField && dropdown && iconWrapper) {
+        setupCategoryFieldToggle(categoryField, dropdown);
+        setupIconWrapperToggle(iconWrapper, categoryField, dropdown);
+        setupDropdownSelection(dropdown, categoryField);
+        setupClickOutsideDropdown(dropdown, categoryField);
+    }
+}
 
 
-//********************************************************************************** */
+function setupCategoryFieldToggle(categoryField, dropdown) {
+    categoryField.addEventListener("click", () => {
+        toggleDropdown(categoryField, dropdown);
+    });
+}
 
 
+function setupIconWrapperToggle(iconWrapper, categoryField, dropdown) {
+    iconWrapper.addEventListener("click", () => {
+        toggleDropdown(categoryField, dropdown);
+    });
+}
+
+
+function setupDropdownSelection(dropdown, categoryField) {
+    dropdown.addEventListener('click', function (event) {
+        if (event.target.classList.contains('category-item')) {
+            let selectedValue = event.target.dataset.value;
+            updateCategoryField(selectedValue, categoryField, dropdown);
+        }
+    });
+}
+
+
+function setupClickOutsideDropdown(dropdown, categoryField) {
+    document.addEventListener("click", (event) => {
+        // Schließe das Dropdown, wenn der Klick außerhalb des Dropdowns und des Kategorie-Feldes erfolgt
+        if (!categoryField.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.style.display = "none";
+            categoryField.classList.remove("open");
+        }
+    });
+}
+
+function toggleDropdown(categoryField, dropdown) {
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    categoryField.classList.toggle("open");
+}
+
+function updateCategoryField(selectedValue, categoryField, dropdown) {
+    categoryField.querySelector("span").textContent = selectedValue;
+    dropdown.style.display = "none";
+    categoryField.classList.remove("open");
+    dropdown.setAttribute('data-selected', selectedValue);
+    console.log('Selected category:', selectedValue);
+}
+
+
+// Subtasks
+function setupSubtaskInput() {
+    let subtaskInput = document.querySelector(".addTask-subtasks-content");
+    let addIcon = document.querySelector(".addTask-subtasks-icon-add");
+    let iconsContainer = document.querySelector(".addTask-icons-input");
+
+    if (subtaskInput && addIcon && iconsContainer) {
+        initializeSubtaskInput(subtaskInput, addIcon, iconsContainer);
+    }
+
+    const cancelButton = document.querySelector('.cancel-addTask-icon');
+    if (cancelButton) {
+        setupCancelButton(cancelButton);
+    }
+}
+
+
+function initializeSubtaskInput(subtaskInput, addIcon, iconsContainer) {
+    showAddIconAndIconsContainer(addIcon, iconsContainer);
+
+    subtaskInput.addEventListener("focus", () => handleFocus(addIcon, iconsContainer));
+    subtaskInput.addEventListener("blur", () => handleBlur(subtaskInput, addIcon, iconsContainer));
+    subtaskInput.addEventListener("keydown", (event) => handleEnterKey(event));
+}
+
+
+function showAddIconAndIconsContainer(addIcon, iconsContainer) {
+    addIcon.classList.remove("hidden");
+    iconsContainer.classList.remove("active");
+}
+
+
+function handleFocus(addIcon, iconsContainer) {
+    addIcon.classList.add("hidden");
+    iconsContainer.classList.add("active");
+}
+
+
+function handleBlur(subtaskInput, addIcon, iconsContainer) {
+    if (!subtaskInput.value.trim()) {
+        addIcon.classList.remove("hidden");
+        iconsContainer.classList.remove("active");
+    }
+}
+
+
+function handleEnterKey(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        addSubtask();
+    }
+}
+
+
+function setupCancelButton(cancelButton) {
+    cancelButton.addEventListener('click', clearSubtaskInput);
+}
+
+
+function clearSubtaskInput() {
+    const subtaskInput = document.getElementById('addTaskNewSubTaskInput');
+
+    if (subtaskInput) {
+        subtaskInput.value = '';
+    }
+}
+
+
+function addSubtask() {
+    let input = document.getElementById("addTaskNewSubTaskInput");
+    let subtaskName = input.value.trim();
+
+    if (subtaskName === "") {
+        showErrorMessage("Please enter a subtask.");
+        return;
+    }
+    if (tasks[currentTaskIndex].subtasks.length >= 3) {
+        showErrorMessage("Maximum 3 subtasks are allowed.");
+        return;
+    }
+    tasks[currentTaskIndex].subtasks.push({ name: subtaskName, completed: false });
+    input.value = "";
+    updateSubtasksList();
+}
+
+
+function deleteSubtask(index) {
+    tasks[currentTaskIndex].subtasks.splice(index, 1);
+    updateSubtasksList();
+}
+
+
+function saveSubtask(index) {
+    let input = document.getElementById("editSubtaskInput");
+    let newName = input.value.trim();
+
+    if (newName === "") {
+        showErrorMessage("Please enter a valid name.");
+        return;
+    }
+
+    tasks[currentTaskIndex].subtasks[index].name = newName;
+    editingSubtaskIndex = null;
+    updateSubtasksList();
+}
+
+
+//Clear and Create Buttons
+function setupCreateButton() {
+    let createButton = document.querySelector(".create-addTask-button");
+    if (createButton) {
+        createButton.addEventListener("click", validateAndSaveTask);
+    }
+}
+
+
+function setupClearButton() {
+    let clearButton = document.querySelector(".clear-addTask-button");
+    if (!clearButton) return;
+
+    clearButton.addEventListener("click", () => {
+        clearFields();
+        resetCategory();
+        resetContacts();
+        clearSubtasks();
+        renderAddTaskCard();
+        updateSubtasksList();
+        updateSelectedContactInitials();
+    });
+}
+
+
+function clearFields() {
+    document.getElementById("task-title").value = "";
+    document.getElementById("task-description").value = "";
+    document.getElementById("task-dueDate").value = "";
+    document.querySelectorAll(".addTask-prio-button").forEach(button => button.classList.remove("selected"));
+}
+
+
+function resetCategory() {
+    let categoryField = document.getElementById("task-category");
+    categoryField.innerHTML = `<span>Select task category</span>`;
+
+    let categoryDropdown = document.getElementById("categoryDropdown");
+    if (categoryDropdown) {
+        categoryDropdown.querySelectorAll(".category-item").forEach(item => {
+            item.classList.remove("selected");
+        });
+    }
+}
+
+
+function resetContacts() {
+    document.querySelectorAll(".contact-checkbox").forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    selectedContacts = [];
+
+    let assignedToField = document.getElementById("task-assignedTo");
+    assignedToField.innerHTML = "<span>Select contacts to assign</span>";
+
+    let contactList = document.getElementById("contactList");
+    if (contactList) {
+        contactList.style.display = "none";
+    }
+}
+
+
+function clearSubtasks() {
+    tasks[currentTaskIndex].subtasks = [];
+}
+
+
+//Save New Task
 async function saveNewTask() {
     let taskTitle = document.getElementById('task-title').value;
     let taskDescription = document.getElementById('task-description').value;
@@ -375,7 +749,6 @@ async function saveNewTask() {
             assignedTo[`contact${index + 1}`] = contact.name;
         });
     } else {
-        // Füge einen leeren String hinzu, wenn keine Kontakte ausgewählt sind
         assignedTo["contact1"] = "";
     }
 
@@ -400,18 +773,19 @@ async function saveNewTask() {
 
         if (response.ok) {
             let responseData = await response.json();
-            console.log("Neue Aufgabe gespeichert:", responseData);
             showTaskCreatedPopup();
+            setTimeout(() => {
+                window.location.href = "board.html";
+            }, 1500);
             return responseData;
         } else {
-            console.error("Fehler beim Speichern der Aufgabe:", response.statusText);
             return null;
         }
     } catch (error) {
-        console.error("Fehler beim Speichern der Aufgabe:", error);
         return null;
     }
 }
+
 
 function showTaskCreatedPopup() {
     let popup = document.getElementById('task-created-popup');
@@ -422,87 +796,25 @@ function showTaskCreatedPopup() {
     }, 1500);
 }
 
-function setupCreateButton() {
-    let createButton = document.querySelector(".create-addTask-button");
-    if (createButton) {
-        createButton.addEventListener("click", validateAndSaveTask);
-    }
-}
 
-function setupClearButton() {
-    let clearButton = document.querySelector(".clear-addTask-button");
-    if (!clearButton) return;
-
-    clearButton.addEventListener("click", () => {
-        // Zurücksetzen der Texteingabefelder
-        document.getElementById("task-title").value = "";
-        document.getElementById("task-description").value = "";
-        document.getElementById("task-dueDate").value = "";
-        document.querySelectorAll(".addTask-prio-button").forEach(button => button.classList.remove("selected"));
-
-        // Zurücksetzen des Kategoriemenüs
-        let categoryField = document.getElementById("task-category");
-        categoryField.innerHTML = `<span>Select task category</span>`;
-        let categoryDropdown = document.getElementById("categoryDropdown");
-        if (categoryDropdown) {
-            categoryDropdown.querySelectorAll(".category-item").forEach(item => {
-                item.classList.remove("selected");
-            });
-        }
-
-        // Zurücksetzen der "Assigned to" Kontakte
-        document.querySelectorAll(".contact-checkbox").forEach(checkbox => {
-            checkbox.checked = false;  // Alle Checkboxen zurücksetzen
-        });
-
-        // Leeren der ausgewählten Kontakte-Liste
-        selectedContacts = []; // Hier wird die Liste der ausgewählten Kontakte zurückgesetzt
-
-        // Das "Assigned to"-Feld zurücksetzen
-        let assignedToField = document.getElementById("task-assignedTo");
-        assignedToField.innerHTML = "<span>Select contacts to assign</span>"; // Setze den Text zurück
-
-        // Leeren des Kontaktlistenelements
-        let contactList = document.getElementById("contactList");
-        if (contactList) {
-            contactList.style.display = "none"; // Blende die Kontaktliste aus, falls sie offen ist
-        }
-
-        // Reset der Unteraufgaben
-        tasks[currentTaskIndex].subtasks = [];
-
-        // UI aktualisieren
-        renderAddTaskCard();
-        updateSubtasksList();
-
-        // Aktualisiere die angezeigten Initialen (nun leer)
-        updateSelectedContactInitials();
-    });
-}
-
+//Validation
 function validateFields() {
     let titleField = document.getElementById("task-title");
     let categoryDropdown = document.getElementById("categoryDropdown");
     let dueDateField = document.getElementById("task-dueDate");
-    let createButton = document.querySelector(".create-addTask-button");
-
     let isTitleEmpty = titleField.value.trim() === "";
     let isCategoryEmpty = !categoryDropdown.getAttribute("data-selected");
-
     let isDueDateEmpty = dueDateField.value.trim() === "";
     let isDueDateInvalid = false;
 
     if (!isDueDateEmpty) {
         let date = new Date(dueDateField.value);
         let today = new Date();
-        isDueDateInvalid = isNaN(date.getTime()) || date < today; // Gültig nur wenn heute oder in der Zukunft
+        isDueDateInvalid = isNaN(date.getTime()) || date < today;
     }
-
-    // Überprüfe, ob eines der Felder leer oder ungültig ist
-    createButton.style.backgroundColor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "grey" : "";
-    createButton.style.cursor = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid ? "not-allowed" : "pointer";
-    createButton.disabled = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid;
+    updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty, isDueDateInvalid);
 }
+
 
 function validateAndSaveTask(event) {
     event.preventDefault();
@@ -513,201 +825,44 @@ function validateAndSaveTask(event) {
 
     let isValid = true;
 
-    removeErrorMessages();
-
-    if (!titleField.value.trim()) {
-        isValid = false;
-        showError(titleField, "This field is required");
-    }
-
-    if (!categoryDropdown.getAttribute("data-selected")) {
-        isValid = false;
-        showError(categoryDropdown, "This field is required");
-    }
-
-    if (!dueDateField.value.trim()) {
-        isValid = false;
-        showError(dueDateField, "This field is required");
-    }
+    isValid &= validateField(titleField, "This field is required", "value");
+    isValid &= validateField(categoryDropdown, "This field is required", "data-selected");
+    isValid &= validateField(dueDateField, "This field is required", "value");
 
     if (isValid) {
         saveNewTask();
     }
 }
 
-function showError(field, message) {
-    let errorSpan = document.createElement("span");
-    errorSpan.style.color = "red";
-    errorSpan.textContent = message;
-    field.parentNode.appendChild(errorSpan);
-}
 
-function removeErrorMessages() {
-    let errorMessages = document.querySelectorAll(".error-message");
-    errorMessages.forEach(msg => msg.remove());
-}
+function validateField(field, errorMessage, fieldType) {
+    let fieldValue = fieldType === "value" ? field.value.trim() : field.getAttribute(fieldType);
 
-function setupTitleField() {
-    let titleField = document.getElementById('task-title');
-    if (titleField) {
-        titleField.addEventListener('input', validateFields);
+    if (!fieldValue) {
+        showError(field, errorMessage);
+        return false;
     }
+    return true;
 }
 
-function setupCreateButton() {
+
+function updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty, isDueDateInvalid) {
     let createButton = document.querySelector(".create-addTask-button");
-    if (createButton) {
-        createButton.addEventListener("click", validateAndSaveTask);
-    }
-}
+    let isDisabled = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid;
 
-document.addEventListener('DOMContentLoaded', function () {
-    setupTitleField();
-    setupCreateButton();
-    setupAssignedToField();
-    setupCategoryDropdown();
-    setupDueDateValidation();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    let contactListElement = document.getElementById("contactList");
-
-    if (contactListElement) {
-        contactListElement.addEventListener("click", (event) => {
-            let target = event.target;
-            let contactItem = target.closest(".contact-item");
-            if (!contactItem) return;
-
-            let checkbox = contactItem.querySelector(".contact-checkbox");
-            if (!checkbox) return;
-
-            // Toggle the selection state
-            let isSelected = checkbox.checked;
-            checkbox.checked = !isSelected;
-
-            if (checkbox.checked) {
-                contactItem.classList.add("selected");
-            } else {
-                contactItem.classList.remove("selected");
-            }
-        });
-    } else {
-    }
-});
-
-document.addEventListener("click", (event) => {
-    // Prüfe, ob das geklickte Element die Klasse 'addTask-date-icon' hat
-    let dateIcon = event.target.closest(".addTask-date-icon");
-    if (dateIcon) {
-        let dateInput = document.getElementById("task-dueDate");
-        if (dateInput) {
-            dateInput.showPicker(); // Öffnet den nativen Datepicker
-        } else {
-            console.error("Element '#task-dueDate' nicht gefunden.");
-        }
-    }
-});
-
-function setupCategoryDropdown() {
-    let categoryField = document.getElementById("task-category");
-    let dropdown = document.getElementById("categoryDropdown");
-    let iconWrapper = document.querySelector(".addTask-category-icon-wrapper");
-
-    if (categoryField && dropdown && iconWrapper) {
-        categoryField.addEventListener("click", () => {
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-            categoryField.classList.toggle("open");
-        });
-
-        iconWrapper.addEventListener("click", () => {
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-            categoryField.classList.toggle("open");
-        });
-
-        dropdown.addEventListener('click', function (event) {
-            if (event.target.classList.contains('category-item')) {
-                let selectedValue = event.target.dataset.value;
-                categoryField.querySelector("span").textContent = selectedValue;
-
-                dropdown.style.display = "none";
-                categoryField.classList.remove("open");
-
-                dropdown.setAttribute('data-selected', selectedValue);
-                console.log('Selected category:', selectedValue);
-            }
-        });
-    }
-}
-
-function setupDueDateValidation() {
-    let dueDateField = document.getElementById("task-dueDate");
-
-    if (dueDateField) {
-        dueDateField.addEventListener("input", () => {
-            validateFields();
-        });
-    }
-}
-
-function setupSubtaskInput() {
-    let subtaskInput = document.querySelector(".addTask-subtasks-content");
-    let addIcon = document.querySelector(".addTask-subtasks-icon-add");
-    let iconsContainer = document.querySelector(".addTask-icons-input");
-
-    if (subtaskInput && addIcon && iconsContainer) {
-        addIcon.classList.remove("hidden");
-        iconsContainer.classList.remove("active");
-
-        subtaskInput.addEventListener("focus", () => {
-            addIcon.classList.add("hidden");
-            iconsContainer.classList.add("active");
-        });
-
-        subtaskInput.addEventListener("blur", () => {
-            if (!subtaskInput.value.trim()) {
-                addIcon.classList.remove("hidden");
-                iconsContainer.classList.remove("active");
-            }
-        });
-    }
-}
-
-function addSubtask() {
-    let input = document.getElementById("addTaskNewSubTaskInput");
-    let subtaskName = input.value.trim();
-
-    if (subtaskName === "") {
-        alert("Bitte geben Sie einen Namen für die Subtask ein.");
-        return;
-    }
-
-    if (tasks[currentTaskIndex].subtasks.length >= 3) {
-        alert("Es können maximal 3 Subtasks hinzugefügt werden.");
-        return;
-    }
-
-    tasks[currentTaskIndex].subtasks.push({ name: subtaskName, completed: false });
-    input.value = "";
-    updateSubtasksList();
+    createButton.style.backgroundColor = isDisabled ? "grey" : "";
+    createButton.style.cursor = isDisabled ? "not-allowed" : "pointer";
+    createButton.disabled = isDisabled;
 }
 
 
-function deleteSubtask(index) {
-    tasks[currentTaskIndex].subtasks.splice(index, 1);
-    updateSubtasksList();
-}
+//Error message
+function showErrorMessage(message) {
+    let errorBox = document.getElementById("error-message-box");
+    errorBox.textContent = message;
+    errorBox.classList.add("show");
 
-
-function saveSubtask(index) {
-    let input = document.getElementById("editSubtaskInput");
-    let newName = input.value.trim();
-
-    if (newName === "") {
-        alert("Bitte geben Sie einen gültigen Namen für den Subtask ein.");
-        return;
-    }
-
-    tasks[currentTaskIndex].subtasks[index].name = newName;
-    editingSubtaskIndex = null;
-    updateSubtasksList();
+    setTimeout(() => {
+        errorBox.classList.remove("show");
+    }, 2500);
 }

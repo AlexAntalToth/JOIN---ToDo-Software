@@ -1120,16 +1120,6 @@
 
 }
 
-@media(max-width: 800px) {
-    .page-contacts header {
-        flex-direction: row;
-    }
-
-    .page-contacts header h1 {
-        width: 170px;
-        ;
-    }
-}
 
 @media(max-width: 768px) {
     .page-contacts main {
