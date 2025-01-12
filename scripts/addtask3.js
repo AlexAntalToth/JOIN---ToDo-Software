@@ -27,10 +27,8 @@ function setupDateIconClickListener() {
 
 
 /**
- * Handles the click event on the date icon and opens the date picker for 
- * selecting a due date. Adds a change event listener to validate the due date 
- * after a date is selected.
- * 
+ * Handles a click on the date icon and attaches a validation listener to the date input field.
+ *
  * @param {Event} event - The click event triggered by the user.
  */
 function handleDateIconClick(event) {
@@ -38,9 +36,8 @@ function handleDateIconClick(event) {
     if (dateIcon) {
         let dateInput = document.getElementById("task-dueDate");
         if (dateInput) {
-            // dateInput.showPicker();
             dateInput.addEventListener("change", () => {
-                validateFields(); // Validierung nach Auswahl eines Datums
+                validateFields();
             });
         }
     }
