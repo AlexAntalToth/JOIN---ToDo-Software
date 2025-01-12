@@ -30,12 +30,9 @@ function validateFields() {
  * @returns {boolean} True if the date input is invalid (either format or date), otherwise false.
  */
 function validateDateInput() {
-    // Überprüfen des Formats
     if (validateDateFormat()) {
-        return true; // Wenn das Format ungültig ist
+        return true;
     }
-
-    // Überprüfen der Gültigkeit des Datums
     return validateDateValidity();
 }
 
@@ -50,7 +47,7 @@ function validateDateFormat() {
     let dueDateField = document.getElementById("task-dueDate");
     let dueDateValue = dueDateField.value.trim();
     let datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
-    return !datePattern.test(dueDateValue); // Gibt true zurück, wenn das Format ungültig ist
+    return !datePattern.test(dueDateValue);
 }
 
 
@@ -65,11 +62,9 @@ function validateDateValidity() {
     let dueDateValue = dueDateField.value.trim();
     let dueDateParts = dueDateValue.split("/");
     let day = parseInt(dueDateParts[0], 10);
-    let month = parseInt(dueDateParts[1], 10) - 1; // Monat ist 0-indexiert
+    let month = parseInt(dueDateParts[1], 10) - 1;
     let year = parseInt(dueDateParts[2], 10);
     let date = new Date(year, month, day);
-
-    // Überprüfen, ob das Datum korrekt ist (z. B. 31. Februar sollte ungültig sein)
     return isNaN(date.getTime()) || date.getDate() !== day || date.getMonth() !== month || date.getFullYear() !== year;
 }
 
@@ -142,13 +137,10 @@ function validateAndSaveTask(event) {
     let titleField = document.getElementById("task-title");
     let categoryDropdown = document.getElementById("categoryDropdown");
     let dueDateField = document.getElementById("task-dueDate");
-
     let isTitleEmpty = isFieldEmpty(titleField, "value");
     let isCategoryEmpty = isFieldEmpty(categoryDropdown, "data-selected");
     let isDueDateEmpty = isFieldEmpty(dueDateField, "value");
-
     updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty);
-
     if (!isTitleEmpty && !isCategoryEmpty && !isDueDateEmpty) saveNewTask();
 }
 

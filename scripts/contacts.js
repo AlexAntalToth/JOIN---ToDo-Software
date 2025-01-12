@@ -669,8 +669,17 @@ async function deleteContact(contactId, contactsDetails, contactsList, isMobileV
         if (response.ok) {
             // Wenn im mobilen Modus, Kontakte-Details ausblenden
             if (isMobileView) {
-                contactsDetails.style.display = 'none';  // Blendet die Kontakt-Details aus
-                contactsList.style.display = 'block';  // Zeigt die Kontaktliste an
+                if (contactsDetails) {
+                    contactsDetails.style.display = 'none';  // Blendet die Kontakt-Details aus
+                    console.log('111');
+                } else {
+                    console.log('222');
+                }
+
+                // Hier kannst du die Kontaktliste anzeigen, wenn gewünscht
+                if (contactsList) {
+                    contactsList.style.display = 'block';  // Zeigt die Kontaktliste an
+                }
             }
 
             // Entferne den aktiven Kontakt, falls vorhanden
@@ -688,10 +697,10 @@ async function deleteContact(contactId, contactsDetails, contactsList, isMobileV
     }
 }
 
-function showContactCreatedOverlay() {
-    let isMobileView = window.matchMedia("(max-width: 1100px)").matches;
-    let parentContainer = document.querySelector(".contacts-details");
 
+function showContactCreatedOverlay() {
+
+    let parentContainer = document.querySelector(".contacts-details");
     if (isMobileView) {
         // Kontaktdetails werden eingeblendet, wenn die Bildschirmbreite unter 1100px liegt
         parentContainer.style.display = 'block';
