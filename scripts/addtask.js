@@ -22,26 +22,9 @@ async function init() {
 
 
 /**
- * Loads the sidebar and header templates asynchronously and inserts them into 
- * their respective containers in the DOM.
- * 
- * @async
- * @function
- * @returns {Promise<void>} A promise that resolves when the sidebar and header content 
- *                          has been successfully fetched and inserted.
- */
-async function loadSidebarAndHeader() {
-    let sidebarContent = await fetch('./assets/templates/sidebar.html').then(res => res.text());
-    document.getElementById('sidebar-container').innerHTML = sidebarContent;
-    let headerContent = await fetch('./assets/templates/header.html').then(res => res.text());
-    document.getElementById('header-container').innerHTML = headerContent;
-}
-
-
-/**
  * Initializes the page setup by invoking various setup functions for form elements and event listeners.
  * This includes title field, create button, assigned-to field, contact list, category dropdown,
- * due date validation, and date icon click listener.
+ * due date validation, date icon click listener and (reset of) validation rules.
  *
  * @function setupPage
  */
@@ -53,6 +36,9 @@ function setupPage() {
     setupCategoryDropdown();
     setupDueDateValidation();
     setupDateIconClickListener();
+    attachValidationListeners();
+    resetFormFields();
+    attachEventListeners();
 }
 
 
@@ -123,6 +109,20 @@ async function renderAddTaskCard(task) {
 }
 
 
+/**
+ * Asynchronously generates and adds an "Add Task" card with optional task data to the page.
+ * Clears the existing content in the add task container and footer before updating with the new card and footer.
+ *
+ * @async
+ * @function createAddTaskCard
+ * @param {Object} [task] - The task object to pre-fill the "Add Task" card with. 
+ * If no task is provided, an empty task with default values will be used.
+ * @param {string} [task.title=""] - The title of the task.
+ * @param {string} [task.description=""] - The description of the task.
+ * @param {string} [task.dueDate=""] - The due date of the task.
+ * @param {string} [task.priority=""] - The category of the task.
+ * @returns {Promise<void>} - A promise that resolves when the task card and footer are successfully added to the DOM.
+ */
 async function createAddTaskCard(task) {
     let addTaskContainer = document.querySelector(".addTask-content");
     let addTaskFooter = document.querySelector(".addTask-footer");
@@ -138,655 +138,165 @@ async function createAddTaskCard(task) {
 }
 
 
-// Title
-function setupTitleField() {
-    let titleField = document.getElementById('task-title');
-    if (titleField) {
-        titleField.addEventListener('input', validateFields);
-    }
-}
-
-
-// Assigned to
-function setupAssignedToField() {
-    let elements = getAssignedToElements();
-    if (!elements) return;
-
-    initializeAssignedToField(elements);
-}
-
-
-function getAssignedToElements() {
-    let assignedToField = document.getElementById("task-assignedTo");
-    let contactList = document.getElementById("contactList");
-    let assignedToContainer = document.querySelector(".addTask-assignedTo-container");
-    let assignedToIconWrapper = document.querySelector(".addTask-assignedTo-icon-wrapper");
-    let searchContacts = document.getElementById("searchContacts");
-    let assignedToText = document.getElementById("assignedToText");
-
-    if (!assignedToField || !contactList || !assignedToIconWrapper || !searchContacts || !assignedToText) {
-        return null;
-    }
-
-    return {
-        assignedToField,
-        contactList,
-        assignedToContainer,
-        assignedToIconWrapper,
-        searchContacts,
-        assignedToText,
-    };
-}
-
-
-function initializeAssignedToField(elements) {
-    let searchTerm = "";
-
-    setupToggleListeners(elements, searchTerm);
-    setupSearchListener(elements, searchTerm);
-    setupGlobalClickListener(elements);
-    renderContactListWithSelection();
-}
-
-
-function setupToggleListeners(elements, searchTerm) {
-    elements.assignedToIconWrapper.addEventListener("click", (event) => {
-        event.stopPropagation();
-        toggleContactList(elements, searchTerm);
-    });
-
-    elements.assignedToField.addEventListener("click", (event) => {
-        event.stopPropagation();
-        toggleContactList(elements, searchTerm);
-    });
-}
-
-
-function setupSearchListener(elements, searchTerm) {
-    elements.searchContacts.addEventListener("input", (event) => {
-        searchTerm = event.target.value.toLowerCase();
-        renderFilteredContactList(searchTerm);
-    });
-}
-
-
-function setupGlobalClickListener(elements) {
-    document.addEventListener("click", (event) => {
-        if (
-            !elements.assignedToField.contains(event.target) &&
-            !elements.contactList.contains(event.target)
-        ) {
-            closeContactList(elements);
-        }
-    });
-}
-
-
-function toggleContactList(elements, searchTerm) {
-    let isVisible = elements.contactList.style.display === "block";
-    if (isVisible) {
-        closeContactList(elements);
-    } else {
-        openContactList(elements, searchTerm);
-    }
-}
-
-
-function openContactList(elements, searchTerm) {
-    elements.contactList.style.display = "block";
-    elements.assignedToField.classList.add("open");
-    elements.assignedToIconWrapper.classList.add("rotated");
-    elements.searchContacts.style.display = "block";
-    elements.assignedToText.style.display = "none";
-    elements.searchContacts.focus();
-    renderFilteredContactList(searchTerm);
-}
-
-
-function closeContactList(elements) {
-    elements.contactList.style.display = "none";
-    elements.assignedToField.classList.remove("open");
-    elements.assignedToIconWrapper.classList.remove("rotated");
-    elements.searchContacts.style.display = "none";
-    elements.assignedToText.style.display = "block";
-    resetFilter();
-}
-
-
-function renderFilteredContactList(filter) {
-    let contactItems = document.querySelectorAll(".contact-item");
-    contactItems.forEach(contactItem => {
-        let contactName = contactItem.querySelector(".contact-name").textContent.toLowerCase();
-        let shouldShow = contactName.startsWith(filter);
-        contactItem.style.display = shouldShow ? "flex" : "none";
-    });
-}
-
-
-function resetFilter() {
-    let searchContacts = document.getElementById("searchContacts");
-    let contactItems = document.querySelectorAll(".contact-item");
-
-    if (searchContacts) searchContacts.value = "";
-    contactItems.forEach(contactItem => {
-        contactItem.style.display = "flex";
-    });
-}
-
-
-function renderContactListWithSelection() {
-    let contactItems = document.querySelectorAll(".contact-item");
-
-    contactItems.forEach(contactItem => {
-        let contactId = contactItem.dataset.id;
-        let checkbox = contactItem.querySelector(".contact-checkbox");
-        if (checkbox) {
-            checkbox.checked = selectedContacts.some(contact => contact.id === contactId);
-        }
-        contactItem.removeEventListener("click", handleContactItemClick);
-        contactItem.addEventListener("click", handleContactItemClick);
-        if (checkbox) {
-            checkbox.removeEventListener("click", handleCheckboxClick);
-            checkbox.addEventListener("click", handleCheckboxClick);
-        }
-    });
-}
-
-
-function handleContactItemClick(event) {
-    let contactItem = event.currentTarget;
-    let checkbox = contactItem.querySelector(".contact-checkbox");
-
-    if (checkbox) {
-        checkbox.checked = !checkbox.checked;
-        handleContactSelection(contactItem, checkbox.checked);
-    }
-}
-
-
-function handleCheckboxClick(event) {
-    event.stopPropagation();
-    handleContactItemClick({ currentTarget: event.currentTarget.closest(".contact-item") });
-}
-
-
-function handleContactSelection(contactItem, isChecked) {
-    let contactId = contactItem.dataset.id;
-    let contact = contacts.find(c => c.id === contactId);
-
-    if (contact) {
-        if (isChecked) {
-            if (!selectedContacts.some(c => c.id === contactId)) {
-                selectedContacts.push(contact);
-            }
-            contactItem.classList.add("selected");
-        } else {
-            selectedContacts = selectedContacts.filter(c => c.id !== contactId);
-            contactItem.classList.remove("selected");
-        }
-
-        updateSelectedContactInitials();
-    }
-}
-
-
-function updateSelectedContactInitials() {
-    let assignedToContainer = document.querySelector(".addTask-assignedTo-container");
-    let selectedContactsDiv = document.querySelector(".selected-contacts");
-
-    if (selectedContactsDiv) selectedContactsDiv.remove();
-
-    if (selectedContacts.length > 0) {
-        let initialsHTML = selectedContacts
-            .map(contact => `
-                <div class="contact-initials" style="background-color: ${contact.color};">
-                    ${contact.name.split(" ").map(name => name[0]).join("").toUpperCase()}
-                </div>
-            `)
-            .join("");
-
-        let newSelectedContactsDiv = document.createElement("div");
-        newSelectedContactsDiv.className = "selected-contacts";
-        newSelectedContactsDiv.innerHTML = initialsHTML;
-
-        assignedToContainer.appendChild(newSelectedContactsDiv);
-    }
-}
-
-
-function setupContactList() {
-    let contactListElement = document.getElementById("contactList");
-
-    if (contactListElement) {
-        contactListElement.addEventListener("click", (event) => {
-            handleContactClick(event);
-        });
-    }
-}
-
-function handleContactClick(event) {
-    let target = event.target;
-    let contactItem = target.closest(".contact-item");
-    if (!contactItem) return;
-
-    let checkbox = contactItem.querySelector(".contact-checkbox");
-    if (!checkbox) return;
-
-    let isSelected = checkbox.checked;
-    checkbox.checked = !isSelected;
-
-    if (checkbox.checked) {
-        contactItem.classList.add("selected");
-    } else {
-        contactItem.classList.remove("selected");
-    }
-}
-
-
-//Due Date
-function setupDueDateValidation() {
-    let dueDateField = document.getElementById("task-dueDate");
-
-    if (dueDateField) {
-        dueDateField.addEventListener("input", () => {
-            validateFields();
-        });
-    }
-}
-
-
-function setupDateIconClickListener() {
-    document.addEventListener("click", (event) => {
-        handleDateIconClick(event);
-    });
-}
-
-function handleDateIconClick(event) {
-    let dateIcon = event.target.closest(".addTask-date-icon");
-    if (dateIcon) {
-        let dateInput = document.getElementById("task-dueDate");
-        if (dateInput) {
-            dateInput.showPicker();
-        }
-    }
-}
-
-
-// Prio-Buttons
-function setupPriorityButtons() {
-    let urgentButton = document.getElementById('task-urgent');
-    let mediumButton = document.getElementById('task-medium');
-    let lowButton = document.getElementById('task-low');
-
-    if (urgentButton && mediumButton && lowButton) {
-        let priorityButtons = [urgentButton, mediumButton, lowButton];
-        priorityButtons.forEach(button => {
-            button.addEventListener('click', () => handlePriorityClick(button, priorityButtons));
-        });
-    }
-}
-
-
-function handlePriorityClick(selectedButton, allButtons) {
-    let isActive = checkIfButtonActive(selectedButton);
-    resetAllButtons(allButtons);
-
-    if (!isActive) {
-        activateButton(selectedButton);
-    } else {
-        taskPriority = "";
-    }
-}
-
-
-function checkIfButtonActive(button) {
-    return button.classList.contains('urgent-active') ||
-        button.classList.contains('middle-active') ||
-        button.classList.contains('low-active');
-}
-
-
-function resetAllButtons(buttons) {
-    buttons.forEach(button => {
-        button.classList.remove('urgent-active', 'middle-active', 'low-active');
-        updateButtonSVG(button, false);
-    });
-}
-
-
-function activateButton(button) {
-    if (button.id === 'task-urgent') {
-        button.classList.add('urgent-active');
-        taskPriority = "high";
-    } else if (button.id === 'task-medium') {
-        button.classList.add('middle-active');
-        taskPriority = "medium";
-    } else if (button.id === 'task-low') {
-        button.classList.add('low-active');
-        taskPriority = "low";
-    }
-
-    updateButtonSVG(button, true);
-}
-
-
-function updateButtonSVG(button, isActive) {
-    let svgPaths = button.querySelectorAll("svg path");
-    let color = getButtonColor(button, isActive);
-
-    svgPaths.forEach(path => {
-        path.setAttribute("fill", color);
-    });
-}
-
-
-function getButtonColor(button, isActive) {
-    if (isActive) return "white";
-
-    if (button.id === 'task-urgent') return "#FF3D00";
-    if (button.id === 'task-medium') return "#FF9900";
-    if (button.id === 'task-low') return "#7ae229";
-
-    return "";
-}
-
-
-//Category
-function setupCategoryDropdown() {
-    let categoryField = document.getElementById("task-category");
-    let dropdown = document.getElementById("categoryDropdown");
-    let iconWrapper = document.querySelector(".addTask-category-icon-wrapper");
-
-    if (categoryField && dropdown && iconWrapper) {
-        setupCategoryFieldToggle(categoryField, dropdown);
-        setupIconWrapperToggle(iconWrapper, categoryField, dropdown);
-        setupDropdownSelection(dropdown, categoryField);
-        setupClickOutsideDropdown(dropdown, categoryField);
-    }
-}
-
-
-function setupCategoryFieldToggle(categoryField, dropdown) {
-    categoryField.addEventListener("click", () => {
-        toggleDropdown(categoryField, dropdown);
-    });
-}
-
-
-function setupIconWrapperToggle(iconWrapper, categoryField, dropdown) {
-    iconWrapper.addEventListener("click", () => {
-        toggleDropdown(categoryField, dropdown);
-    });
-}
-
-
-function setupDropdownSelection(dropdown, categoryField) {
-    dropdown.addEventListener('click', function (event) {
-        if (event.target.classList.contains('category-item')) {
-            let selectedValue = event.target.dataset.value;
-            updateCategoryField(selectedValue, categoryField, dropdown);
-        }
-    });
-}
-
-
-function setupClickOutsideDropdown(dropdown, categoryField) {
-    document.addEventListener("click", (event) => {
-        // Schließe das Dropdown, wenn der Klick außerhalb des Dropdowns und des Kategorie-Feldes erfolgt
-        if (!categoryField.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.style.display = "none";
-            categoryField.classList.remove("open");
-        }
-    });
-}
-
-function toggleDropdown(categoryField, dropdown) {
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-    categoryField.classList.toggle("open");
-}
-
-function updateCategoryField(selectedValue, categoryField, dropdown) {
-    categoryField.querySelector("span").textContent = selectedValue;
-    dropdown.style.display = "none";
-    categoryField.classList.remove("open");
-    dropdown.setAttribute('data-selected', selectedValue);
-    console.log('Selected category:', selectedValue);
-}
-
-
-// Subtasks
-function setupSubtaskInput() {
-    let subtaskInput = document.querySelector(".addTask-subtasks-content");
-    let addIcon = document.querySelector(".addTask-subtasks-icon-add");
-    let iconsContainer = document.querySelector(".addTask-icons-input");
-
-    if (subtaskInput && addIcon && iconsContainer) {
-        initializeSubtaskInput(subtaskInput, addIcon, iconsContainer);
-    }
-
-    const cancelButton = document.querySelector('.cancel-addTask-icon');
-    if (cancelButton) {
-        setupCancelButton(cancelButton);
-    }
-}
-
-
-function initializeSubtaskInput(subtaskInput, addIcon, iconsContainer) {
-    showAddIconAndIconsContainer(addIcon, iconsContainer);
-
-    subtaskInput.addEventListener("focus", () => handleFocus(addIcon, iconsContainer));
-    subtaskInput.addEventListener("blur", () => handleBlur(subtaskInput, addIcon, iconsContainer));
-    subtaskInput.addEventListener("keydown", (event) => handleEnterKey(event));
-}
-
-
-function showAddIconAndIconsContainer(addIcon, iconsContainer) {
-    addIcon.classList.remove("hidden");
-    iconsContainer.classList.remove("active");
-}
-
-
-function handleFocus(addIcon, iconsContainer) {
-    addIcon.classList.add("hidden");
-    iconsContainer.classList.add("active");
-}
-
-
-function handleBlur(subtaskInput, addIcon, iconsContainer) {
-    if (!subtaskInput.value.trim()) {
-        addIcon.classList.remove("hidden");
-        iconsContainer.classList.remove("active");
-    }
-}
-
-
-function handleEnterKey(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        addSubtask();
-    }
-}
-
-
-function setupCancelButton(cancelButton) {
-    cancelButton.addEventListener('click', clearSubtaskInput);
-}
-
-
-function clearSubtaskInput() {
-    const subtaskInput = document.getElementById('addTaskNewSubTaskInput');
-
-    if (subtaskInput) {
-        subtaskInput.value = '';
-    }
-}
-
-
-function addSubtask() {
-    let input = document.getElementById("addTaskNewSubTaskInput");
-    let subtaskName = input.value.trim();
-
-    if (subtaskName === "") {
-        showErrorMessage("Please enter a subtask.");
-        return;
-    }
-    if (tasks[currentTaskIndex].subtasks.length >= 3) {
-        showErrorMessage("Maximum 3 subtasks are allowed.");
-        return;
-    }
-    tasks[currentTaskIndex].subtasks.push({ name: subtaskName, completed: false });
-    input.value = "";
-    updateSubtasksList();
-}
-
-
-function deleteSubtask(index) {
-    tasks[currentTaskIndex].subtasks.splice(index, 1);
-    updateSubtasksList();
-}
-
-
-function saveSubtask(index) {
-    let input = document.getElementById("editSubtaskInput");
-    let newName = input.value.trim();
-
-    if (newName === "") {
-        showErrorMessage("Please enter a valid name.");
-        return;
-    }
-
-    tasks[currentTaskIndex].subtasks[index].name = newName;
-    editingSubtaskIndex = null;
-    updateSubtasksList();
-}
-
-
-//Clear and Create Buttons
-function setupCreateButton() {
-    let createButton = document.querySelector(".create-addTask-button");
-    if (createButton) {
-        createButton.addEventListener("click", validateAndSaveTask);
-    }
-}
-
-
-function setupClearButton() {
-    let clearButton = document.querySelector(".clear-addTask-button");
-    if (!clearButton) return;
-
-    clearButton.addEventListener("click", () => {
-        clearFields();
-        resetCategory();
-        resetContacts();
-        clearSubtasks();
-        renderAddTaskCard();
-        updateSubtasksList();
-        updateSelectedContactInitials();
-    });
-}
-
-
-function clearFields() {
-    document.getElementById("task-title").value = "";
-    document.getElementById("task-description").value = "";
-    document.getElementById("task-dueDate").value = "";
-    document.querySelectorAll(".addTask-prio-button").forEach(button => button.classList.remove("selected"));
-}
-
-
-function resetCategory() {
-    let categoryField = document.getElementById("task-category");
-    categoryField.innerHTML = `<span>Select task category</span>`;
-
-    let categoryDropdown = document.getElementById("categoryDropdown");
-    if (categoryDropdown) {
-        categoryDropdown.querySelectorAll(".category-item").forEach(item => {
-            item.classList.remove("selected");
-        });
-    }
-}
-
-
-function resetContacts() {
-    document.querySelectorAll(".contact-checkbox").forEach(checkbox => {
-        checkbox.checked = false;
-    });
-
-    selectedContacts = [];
-
-    let assignedToField = document.getElementById("task-assignedTo");
-    assignedToField.innerHTML = "<span>Select contacts to assign</span>";
-
-    let contactList = document.getElementById("contactList");
-    if (contactList) {
-        contactList.style.display = "none";
-    }
-}
-
-
-function clearSubtasks() {
-    tasks[currentTaskIndex].subtasks = [];
-}
-
-
 //Save New Task
+/**
+ * Saves a new task by gathering task details and posting it to the server.
+ * Resets the form fields after submission.
+ * 
+ * @returns {Promise<Object>} The response data from the server after posting the task.
+ */
 async function saveNewTask() {
-    let taskTitle = document.getElementById('task-title').value;
-    let taskDescription = document.getElementById('task-description').value;
-    let taskDueDate = document.getElementById('task-dueDate').value;
-    let dueDateISO = document.getElementById('task-dueDate').value;
-    let [year, month, day] = dueDateISO.split("-");
-    let formattedDueDate = `${day}/${month}/${year}`; // in case of saving as DD/MM/YYYY
-    let taskBadge = document.getElementById('categoryDropdown').getAttribute('data-selected');
-    let taskSubtasks = [];
-    let subtaskElements = document.querySelectorAll('.subtasks-list li span');
-    subtaskElements.forEach((element) => {
-        taskSubtasks.push({ name: element.textContent.trim(), completed: false });
-    });
-    let assignedTo = {};
-    if (selectedContacts.length > 0) {
-        selectedContacts.forEach((contact, index) => {
-            assignedTo[`contact${index + 1}`] = contact.name;
-        });
-    } else {
-        assignedTo["contact1"] = "";
-    }
-
+    let { taskTitle, taskDescription, taskDueDate, taskBadge } = getTaskDetails();
+    let taskSubtasks = getSubtasks();
+    let assignedTo = getAssignedContacts();
+    let formattedDueDateISO = convertDateToISO(taskDueDate);
     let newTask = {
         title: taskTitle,
         description: taskDescription,
         assignedTo,
-        dueDate: taskDueDate,
+        dueDate: formattedDueDateISO,
         priority: taskPriority,
         badge: taskBadge,
         subtasks: taskSubtasks
     };
+    let responseData = await postTaskToServer(newTask);
+    resetFormFields();
+    return responseData;
+}
 
-    try {
-        let response = await fetch(BASE_URL + "tasks.json", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newTask)
-        });
 
-        if (response.ok) {
-            let responseData = await response.json();
-            showTaskCreatedPopup();
-            setTimeout(() => {
-                window.location.href = "board.html";
-            }, 1500);
-            return responseData;
-        } else {
-            return null;
-        }
-    } catch (error) {
+/**
+ * Retrieves the details of the task from the form fields.
+ * 
+ * @returns {Object} An object containing the task's title, description, due date (in DD/MM/YYYY), and badge.
+ */
+function getTaskDetails() {
+    let taskTitle = document.getElementById('task-title').value;
+    let taskDescription = document.getElementById('task-description').value;
+    let taskDueDate = document.getElementById('task-dueDate').value;
+    let taskBadge = document.getElementById('categoryDropdown').getAttribute('data-selected');
+
+    return { taskTitle, taskDescription, taskDueDate, taskBadge };
+}
+
+
+/**
+ * Converts a date string from DD/MM/YYYY format to ISO format (YYYY-MM-DD).
+ * 
+ * @param {string} dateStr - The date string in DD/MM/YYYY format.
+ * @returns {string} The date string in ISO format (YYYY-MM-DD).
+ */
+function convertDateToISO(dateStr) {
+    let [day, month, year] = dateStr.split("/");
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+}
+
+
+/**
+ * Retrieves the list of subtasks from the UI.
+ * 
+ * @returns {Array} An array of objects representing each subtask, with a name and completed status (defaulted to false).
+ */
+function getSubtasks() {
+    let subtaskElements = document.querySelectorAll('.subtasks-list li span');
+    return Array.from(subtaskElements).map(element => ({
+        name: element.textContent.trim(),
+        completed: false
+    }));
+}
+
+
+/**
+ * Retrieves the list of assigned contacts from the selectedContacts array.
+ * 
+ * @returns {Object} An object with keys `contact1`, `contact2`, etc., representing the assigned contacts.
+ *                   If no contacts are selected, the object will contain `contact1` with an empty string value.
+ */
+function getAssignedContacts() {
+    if (selectedContacts.length > 0) {
+        return selectedContacts.reduce((assignedTo, contact, index) => {
+            assignedTo[`contact${index + 1}`] = contact.name;
+            return assignedTo;
+        }, {});
+    }
+    return { contact1: "" };
+}
+
+
+/**
+ * Sends a POST request to the server to create a new task.
+ * 
+ * @param {Object} newTask The task data to be sent to the server.
+ * @returns {Promise<Object|null>} The server's response data if the request is successful, or `null` if there is an error.
+ */
+async function postTaskToServer(newTask) {
+    let options = buildPostRequestOptions(newTask);
+    let response = await sendPostRequest(BASE_URL + "tasks.json", options);
+
+    if (response && response.ok) {
+        let responseData = await response.json();
+        return handleSuccessfulResponse(responseData);
+    } else {
         return null;
     }
 }
 
 
+/**
+ * Builds the options for the POST request to create a new task.
+ * 
+ * @param {Object} newTask The task data to be sent in the request body.
+ * @returns {Object} The options object to be used in the `fetch` request.
+ */
+function buildPostRequestOptions(newTask) {
+    return {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newTask)
+    };
+}
+
+
+/**
+ * Sends a POST request to the specified URL with the given options.
+ * 
+ * @param {string} url The URL to which the POST request will be sent.
+ * @param {Object} options The options to be used in the `fetch` request (including method, headers, and body).
+ * @returns {Promise<Response|null>} The response object if the request is successful, or `null` if an error occurs.
+ */
+async function sendPostRequest(url, options) {
+    try {
+        let response = await fetch(url, options);
+        return response;
+    } catch (error) {
+        console.error("Error sending POST request:", error);
+        return null;
+    }
+}
+
+
+/**
+ * Handles the successful response from the server after creating a task.
+ * Displays a popup and redirects to the board page after a brief delay.
+ * 
+ * @param {Object} responseData The data received in the response from the server.
+ * @returns {Object} The same response data, returned for further handling if needed.
+ */
+function handleSuccessfulResponse(responseData) {
+    showTaskCreatedPopup();
+    setTimeout(() => {
+        window.location.href = "board.html";
+    }, 1550);
+    return responseData;
+}
+
+
+/**
+ * Displays a popup indicating that the task has been created successfully.
+ * The popup is shown for 1.5 seconds before being hidden.
+ */
 function showTaskCreatedPopup() {
     let popup = document.getElementById('task-created-popup');
     popup.classList.add('show');
@@ -794,75 +304,4 @@ function showTaskCreatedPopup() {
     setTimeout(() => {
         popup.classList.remove('show');
     }, 1500);
-}
-
-
-//Validation
-function validateFields() {
-    let titleField = document.getElementById("task-title");
-    let categoryDropdown = document.getElementById("categoryDropdown");
-    let dueDateField = document.getElementById("task-dueDate");
-    let isTitleEmpty = titleField.value.trim() === "";
-    let isCategoryEmpty = !categoryDropdown.getAttribute("data-selected");
-    let isDueDateEmpty = dueDateField.value.trim() === "";
-    let isDueDateInvalid = false;
-
-    if (!isDueDateEmpty) {
-        let date = new Date(dueDateField.value);
-        let today = new Date();
-        isDueDateInvalid = isNaN(date.getTime()) || date < today;
-    }
-    updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty, isDueDateInvalid);
-}
-
-
-function validateAndSaveTask(event) {
-    event.preventDefault();
-
-    let titleField = document.getElementById("task-title");
-    let categoryDropdown = document.getElementById("categoryDropdown");
-    let dueDateField = document.getElementById("task-dueDate");
-
-    let isValid = true;
-
-    isValid &= validateField(titleField, "This field is required", "value");
-    isValid &= validateField(categoryDropdown, "This field is required", "data-selected");
-    isValid &= validateField(dueDateField, "This field is required", "value");
-
-    if (isValid) {
-        saveNewTask();
-    }
-}
-
-
-function validateField(field, errorMessage, fieldType) {
-    let fieldValue = fieldType === "value" ? field.value.trim() : field.getAttribute(fieldType);
-
-    if (!fieldValue) {
-        showError(field, errorMessage);
-        return false;
-    }
-    return true;
-}
-
-
-function updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty, isDueDateInvalid) {
-    let createButton = document.querySelector(".create-addTask-button");
-    let isDisabled = isTitleEmpty || isCategoryEmpty || isDueDateEmpty || isDueDateInvalid;
-
-    createButton.style.backgroundColor = isDisabled ? "grey" : "";
-    createButton.style.cursor = isDisabled ? "not-allowed" : "pointer";
-    createButton.disabled = isDisabled;
-}
-
-
-//Error message
-function showErrorMessage(message) {
-    let errorBox = document.getElementById("error-message-box");
-    errorBox.textContent = message;
-    errorBox.classList.add("show");
-
-    setTimeout(() => {
-        errorBox.classList.remove("show");
-    }, 2500);
 }
