@@ -1,3 +1,4 @@
+//Main
 async function generateAddTaskCardHTML(task) {
     let contacts = await loadTaskContacts();
     let contactList = contacts
@@ -146,6 +147,49 @@ async function generateAddTaskCardHTML(task) {
 }
 
 
+//AssignedTo
+function getAssignedToElements() {
+    let assignedToField = document.getElementById("task-assignedTo");
+    let contactList = document.getElementById("contactList");
+    let assignedToContainer = document.querySelector(".addTask-assignedTo-container");
+    let assignedToIconWrapper = document.querySelector(".addTask-assignedTo-icon-wrapper");
+    let searchContacts = document.getElementById("searchContacts");
+    let assignedToText = document.getElementById("assignedToText");
+    if (!assignedToField || !contactList || !assignedToIconWrapper || !searchContacts || !assignedToText) {
+        return null;
+    }
+    return {
+        assignedToField,
+        contactList,
+        assignedToContainer,
+        assignedToIconWrapper,
+        searchContacts,
+        assignedToText,
+    };
+}
+
+
+function updateSelectedContactInitials() {
+    let assignedToContainer = document.querySelector(".addTask-assignedTo-container");
+    let selectedContactsDiv = document.querySelector(".selected-contacts");
+    if (selectedContactsDiv) selectedContactsDiv.remove();
+    if (selectedContacts.length > 0) {
+        let initialsHTML = selectedContacts
+            .map(contact => `
+                <div class="contact-initials" style="background-color: ${contact.color};">
+                    ${contact.name.split(" ").map(name => name[0]).join("").toUpperCase()}
+                </div>
+            `)
+            .join("");
+        let newSelectedContactsDiv = document.createElement("div");
+        newSelectedContactsDiv.className = "selected-contacts";
+        newSelectedContactsDiv.innerHTML = initialsHTML;
+        assignedToContainer.appendChild(newSelectedContactsDiv);
+    }
+}
+
+
+//Footer
 function generateAddTaskCardFooterHTML() {
     return `
         <div class="addTask-footer-generated">
@@ -172,6 +216,7 @@ function generateAddTaskCardFooterHTML() {
 }
 
 
+//Subtasks
 function updateSubtasksList() {
     let list = document.getElementById("addTaskSubtasksList");
     let subtasks = tasks[currentTaskIndex].subtasks;
