@@ -4,7 +4,6 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #ff4d4d;
-    /* Rot für Fehler */
     color: white;
     padding: 15px 30px;
     border-radius: 8px;
@@ -149,7 +148,6 @@
 .task-created-popup {
     position: fixed;
     bottom: -100px;
-    /* Start außerhalb des Bildschirms */
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(42, 54, 71, 0.95);
@@ -163,14 +161,11 @@
     transition: bottom 0.4s ease-in-out;
     z-index: 1000;
     opacity: 0;
-    /* Unsichtbar starten */
 }
 
 .task-created-popup.show {
     bottom: 50%;
-    /* Position in der Mitte */
     opacity: 1;
-    /* Sichtbar */
 }
 
 .task-created-icon {
@@ -204,7 +199,6 @@
     flex-direction: row;
     flex: 1;
     gap: 16px;
-    /* padding: 50px; */
     padding-left: 50px;
     padding-right: 50px;
     width: 1200px;
@@ -222,7 +216,6 @@
     padding-bottom: unset;
     margin-right: 8px;
 }
-
 
 .addTask-content p {
     color: red;
@@ -269,9 +262,7 @@
     border-color: green;
 }
 
-
 .addTask-description-header {
-    /* display: flex; */
     padding-bottom: 8px;
 }
 
@@ -321,7 +312,6 @@
 
 .addTask-assignedTo-field.open {
     border-color: #007bff;
-    /* Blau wenn geöffnet */
 }
 
 .addTask-assignedTo-field:hover {
@@ -343,16 +333,13 @@
 
 .contact-list-scrollable {
     max-height: 250px;
-    /* Passt die Scrollhöhe an */
     overflow-y: auto;
-    /* Setzt das Scrollen für die Liste */
     padding: 5px 0;
     width: 100%;
 }
 
 .addTask-assignedTo-field.open+.addTask-assignedTo-contactList {
     display: block;
-    /* Zeige die Kontaktliste, wenn das Dropdown geöffnet ist */
 }
 
 .contact-item {
@@ -390,14 +377,10 @@
     font-size: 16px;
 }
 
-/* Standard-Checkbox verstecken */
 .contact-checkbox {
     appearance: none;
-    /* Entfernt die Standarddarstellung */
     -webkit-appearance: none;
-    /* Für Safari */
     -moz-appearance: none;
-    /* Für Firefox */
     margin-left: 10px;
     width: 20px;
     height: 20px;
@@ -408,13 +391,11 @@
     background-color: white;
 }
 
-/* Wenn die Checkbox aktiviert ist */
 .contact-checkbox:checked {
     border-color: white;
     background-color: rgb(42, 54, 71);
 }
 
-/* Das Häkchen selbst */
 .contact-checkbox:checked::after {
     content: "✔";
     position: absolute;
@@ -425,7 +406,6 @@
     font-size: 23px;
 }
 
-/* Wenn die Checkbox nicht aktiviert ist */
 .contact-checkbox::after {
     content: "";
     position: absolute;
@@ -453,7 +433,6 @@
 
 .addTask-assignedTo-icon-wrapper.rotated {
     transform: translateY(-50%) rotate(180deg);
-    /* Rotation hinzufügen */
 }
 
 .addTask-assignedTo-mainField {
@@ -498,7 +477,6 @@
     height: 40px;
     padding: 8px;
     outline: none;
-    /* Entfernt die Standard-Fokus-Umrandung */
     font-size: 16px;
     border-radius: 8px;
     border-style: unset;
@@ -506,7 +484,6 @@
 
 #searchContacts:focus {
     outline: none;
-    /* Entfernt die Standard-Fokus-Umrandung */
     border-style: unset;
 
 }
@@ -607,7 +584,6 @@
 
 .addTask-dueDate-field input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
-    /* Entfernt das Standard-Icon */
 }
 
 .addTask-date-icon {
@@ -618,7 +594,6 @@
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    /* Zeigt an, dass es anklickbar ist */
     z-index: 2;
     pointer-events: auto;
 }
@@ -644,7 +619,6 @@
     font-size: 20px;
     border: 1px solid rgba(209, 209, 209, 1);
     border-radius: 10px;
-    /* padding: 12px 16px; */
     padding-top: 12px;
     padding-right: 40px;
     padding-bottom: 12px;
@@ -914,7 +888,6 @@
     transform: translateY(2px);
 }
 
-
 @media(max-width: 1450px) {
     .addTask-content {
         width: 900px;
@@ -1118,11 +1091,8 @@
     html,
     body {
         height: 100%;
-        /* Verhindert das Scrollen auf dem gesamten Bildschirm */
         margin: 0;
-        /* Entfernt den Standardabstand */
         overflow: hidden;
-        /* Verhindert den Scrollbalken des gesamten Dokuments */
     }
 
     .addTask-container {
@@ -1145,57 +1115,41 @@
         top: 110px;
         width: 100%;
         height: 50px;
-        /* Höhe des AddTask-Headers */
         background-color: #f4f4f4;
         z-index: 90;
         padding: 10px 20px;
-        /* Optionaler Abstand */
     }
 
-    /* Scrollbarer AddTask-Content */
     .addTask-content {
         position: absolute;
         top: 80px;
-        /* Platz für Header und AddTask-Header */
         bottom: 180px;
-        /* Platz für Footer und Sidebar */
         left: 0;
         right: 0;
         overflow-y: scroll;
-        /* Ermöglicht das Scrollen */
         -webkit-overflow-scrolling: touch;
         padding: 20px;
-        /* Optionaler Innenabstand */
         width: 100%;
-        /* Passt sich dem Bildschirm an */
         z-index: 1;
         height: auto;
-        /* Flexibles Verhalten */
         margin-bottom: 20px;
     }
 
-    /* Scrollbalken ausblenden für Webkit-Browser */
     .addTask-content::-webkit-scrollbar {
         width: 0px;
         height: 0px;
-        /* Setzt auch die Höhe auf 0, falls horizontal gescrollt wird */
     }
 
-    /* Für Firefox: Scrollbalken ausblenden */
     .addTask-content {
         scrollbar-width: none;
-        /* Versteckt den Scrollbalken */
     }
 
-    /* Fixierter Footer direkt über der Sidebar */
     .addTask-footer {
         position: fixed;
         bottom: 120px;
-        /* Höhe der Sidebar */
         left: 0;
         width: 100%;
         height: 80px;
-        /* Höhe des Footers */
         background-color: #f4f4f4;
         z-index: 90;
         box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
@@ -1204,14 +1158,12 @@
         align-items: center;
     }
 
-    /* Fixierte horizontale Sidebar am unteren Rand */
     .sidebar {
         position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
         height: 80px;
-        /* Höhe der Sidebar */
         background-color: #2a3647;
         color: white;
         display: flex;
@@ -1276,16 +1228,20 @@
     .addTask-category-icon-wrapper {
         left: 270px;
     }
+
     .addTask-subtasks-field {
         width: 316px;
     }
+
     .addTask-footer-generated {
         padding-left: 1px;
         padding-right: 1px;
     }
+
     .subtasks-list {
         width: 316px;
     }
+
     .addTask-category-dropdown {
         width: 316px;
     }
