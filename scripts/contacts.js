@@ -296,9 +296,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function setActiveContact(contactElement) {
         activeContact = contactElement;
         highlightContact(contactElement);
-        isMobileView ? showDetails() : showBoth();
+        if (isMobileView) {
+            showDetails(); // Im mobilen Modus: Nur Details anzeigen
+        } else {
+            showBoth(); // Im Desktop-Modus: Beide Ansichten anzeigen
+        }
     }
-
+    window.setActiveContact = setActiveContact; 
     function resetActiveContact() {
         activeContact = null;
         clearHighlight();
@@ -343,6 +347,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+function clearHighlight() {
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.classList.remove('contact-item-active');
+    });
+}
 
 
 // Funktion zum Setzen der Auswahl für eine Kontaktkarte
@@ -603,6 +613,7 @@ function attachCloseListeners() {
     });
 }
 
+
 async function saveNewContact() {
     let nameField = document.getElementById("contact-name");
     let emailField = document.getElementById("contact-email");
@@ -652,42 +663,34 @@ async function saveNewContact() {
                 if (newContactElement) {
                     ContactSelection(newContactElement);
 
+                    // Prüfe den Modus und zeige Details bei mobiler Ansicht an
+                    if (isMobileView) {
+                        setActiveContact(newContactElement);
+                    } else {
+                    }
+
                     newContactElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }, 1600);
         }
     } catch (error) {
+        console.error("Fehler beim Speichern des neuen Kontakts:", error);
     }
 }
 
-async function deleteContact(contactId, contactsDetails, contactsList, isMobileView) {
+
+async function deleteContact(contactId) {
     try {
         const response = await fetch(`${BASE_URL}/contacts/${contactId}.json`, {
             method: "DELETE",
         });
 
         if (response.ok) {
-            // Wenn im mobilen Modus, Kontakte-Details ausblenden
-            if (isMobileView) {
-                if (contactsDetails) {
-                    contactsDetails.style.display = 'none';  // Blendet die Kontakt-Details aus
-                    console.log('111');
-                } else {
-                    console.log('222');
-                }
+            // Entferne den aktiven Kontakt
+            activeContact = null;
 
-                // Hier kannst du die Kontaktliste anzeigen, wenn gewünscht
-                if (contactsList) {
-                    contactsList.style.display = 'block';  // Zeigt die Kontaktliste an
-                }
-            }
-
-            // Entferne den aktiven Kontakt, falls vorhanden
-            let contactCardContainer = document.querySelector(".contacts-card");
-            if (contactCardContainer) {
-                contactCardContainer.innerHTML = "";
-                contactCardContainer.classList.remove("contacts-card-visible");
-            }
+            // Blendet die Details aus und zeigt die Liste an, falls im mobilen Modus
+            updateViewAfterDelete();
 
             // Lade die Kontaktliste neu
             await loadContacts();
@@ -697,6 +700,46 @@ async function deleteContact(contactId, contactsDetails, contactsList, isMobileV
     }
 }
 
+function updateViewAfterDelete() {
+    const contactsDetails = document.querySelector('.contacts-details');
+    const contactsList = document.querySelector('.contacts-list');
+    let contactCardContainer = document.querySelector(".contacts-card");
+
+    if (!contactsDetails || !contactsList) {
+        return;
+    }
+
+    if (isMobileView) {
+        contactsDetails.style.display = "none";
+        contactsList.style.display = "block";
+        if (contactCardContainer) {
+            contactCardContainer.innerHTML = "";
+            contactCardContainer.classList.remove("contacts-card-visible");
+        }
+        loadContacts();
+    } else {
+        contactsDetails.style.display = "block";
+        contactsList.style.display = "block";
+        if (contactCardContainer) {
+            contactCardContainer.innerHTML = "";
+            contactCardContainer.classList.remove("contacts-card-visible");
+        }
+        loadContacts();
+    }
+
+    // Entferne die Hervorhebung aller Kontakte
+    clearHighlight();
+}
+
+
+document.body.addEventListener('click', async (event) => {
+    const target = event.target;
+
+    if (target.closest('.delete-contact-button')) {
+        const contactId = target.closest('.contact-item').dataset.contactId;
+        await deleteContact(contactId);
+    }
+});
 
 function showContactCreatedOverlay() {
 
@@ -705,7 +748,7 @@ function showContactCreatedOverlay() {
         // Kontaktdetails werden eingeblendet, wenn die Bildschirmbreite unter 1100px liegt
         parentContainer.style.display = 'block';
         parentContainer.style.zIndex = '2';
-        
+
         // Overlay ebenfalls einblenden
         let overlay = document.createElement("div");
         overlay.className = "contact-created-overlay";
@@ -714,25 +757,25 @@ function showContactCreatedOverlay() {
 
         setTimeout(() => {
             overlay.classList.add("show");
-        }, 10);
+        }, 1000);
 
         setTimeout(() => {
             overlay.classList.remove("show");
             setTimeout(() => {
                 overlay.remove();
             }, 600);
-        }, 1500);
+        }, 3000);
     } else {
         // Andernfalls zeigen wir nur das Overlay
         let overlay = document.createElement("div");
         overlay.className = "contact-created-overlay";
         overlay.textContent = "Contact successfully created";
         parentContainer.appendChild(overlay);
-        
+
         setTimeout(() => {
             overlay.classList.add("show");
         }, 10);
-        
+
         setTimeout(() => {
             overlay.classList.remove("show");
             setTimeout(() => {
@@ -777,7 +820,7 @@ async function saveExistingContact(contactId) {
             email,
             phone
         };
-        
+
         let responsePut = await fetch(`${BASE_URL}/contacts/${contactId}.json`, {
             method: "PUT",
             headers: {
