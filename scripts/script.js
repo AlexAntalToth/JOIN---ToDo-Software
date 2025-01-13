@@ -74,10 +74,15 @@ function toggleHeaderPopUp() {
 }
 
 async function logout() {
-    await putData("currentUser", { name: "" });
-    currentUser = { name: "" };
-    alert("You have been successfully logged out.");
-    window.location.href = "../../index.html";
+    try {
+        await putData("currentUser", { name: "" });
+        currentUser = { name: "" };
+        alert("You have been successfully logged out.");
+            window.location.href = "../../index.html";
+    } catch (error) {
+        console.error("Logout failed:", error);
+        alert("An error occurred while logging out. Please try again.");
+    }
 }
 
 //script for loading header
