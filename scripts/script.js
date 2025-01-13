@@ -49,14 +49,11 @@ async function initApp() {
 async function fetchCurrentUser() {
     const userData = await getData("/currentUser");
     currentUser = { name: userData?.name || "" };
-    console.log("Fetched currentUser:", currentUser);
 }
 
 function setHeaderInitials() {
-    console.log("currentUser:", currentUser);
     const initialsElement = document.getElementById("headerInitials");
     if (!initialsElement) {
-        console.error("Element mit ID 'headerInitials' nicht gefunden.");
         return;
     }
     initialsElement.innerHTML = `<a>${getInitials(currentUser.name)}</a>`;
@@ -83,7 +80,7 @@ async function logout() {
     window.location.href = "../../index.html";
 }
 
-//script for legal notice, etc
+//script for loading header
 async function onLoadInit() {
     await includeHTML();
     await initApp();
