@@ -407,6 +407,7 @@ function editTask() {
                     Select contacts to assign
                     <img class="dropdown-icon" src="./assets/icons/addtask_arrowdown.png" alt="Arrow down">
                     </button>
+                    <div class="selected-contacts" id="selectedContacts"></div>
                     <div class="dropdown-menu" id="assignedToList">
                          ${Object.entries(contacts)
                             .sort(([, a], [, b]) => a.name.localeCompare(b.name))
@@ -457,6 +458,20 @@ function editTask() {
     `;
     updateSubtasksList(task);
     setupSubtaskInput();
+    populateSelectedContacts();
+}
+
+function populateSelectedContacts() {
+    const selectedContacts = document.getElementById("selectedContacts");
+    selectedContacts.innerHTML = "";
+    if (!tasks[currentTaskIndex]?.task?.assignedTo) return;
+    Object.keys(tasks[currentTaskIndex].task.assignedTo).forEach((contactKey) => {
+        const contact = contacts[contactKey];
+        if (contact) {
+            const profileCircle = createProfileCircle(contact);
+            selectedContacts.appendChild(profileCircle);
+        }
+    });
 }
 
 function setupSubtaskInput() {
@@ -665,7 +680,7 @@ function toggleDropdownItem(item) {
     if (!checkbox) return;
     const contactKey = checkbox.value;
     checkbox.checked = !checkbox.checked;
-
+    const contact = contacts[contactKey];
     if (checkbox.checked) {
         tasks[currentTaskIndex].task.assignedTo = tasks[currentTaskIndex].task.assignedTo || {};
         tasks[currentTaskIndex].task.assignedTo[contactKey] = true;
@@ -678,6 +693,39 @@ function toggleDropdownItem(item) {
         }
     }
     updateItemStyle(item, checkbox.checked);
+    updateSelectedContactsDisplay(contact, checkbox.checked);
+}
+
+function updateSelectedContactsDisplay(contact, isSelected) {
+    const selectedContacts = document.getElementById("selectedContacts");
+    if (isSelected) {
+        const profileCircle = createProfileCircle(contact);
+        selectedContacts.appendChild(profileCircle);
+    } else {
+        removeProfileCircle(contact.id);
+    }
+}
+
+function createProfileCircle(contact) {
+    const fullName = contact.name.split(" ");
+    const firstName = fullName[0] || "";
+    const lastName = fullName[1] || "";
+    const initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
+    const bgColor = contact.color || "#cccccc";
+    const profileCircle = document.createElement("div");
+    profileCircle.className = "profile-circle";
+    profileCircle.style.backgroundColor = bgColor;
+    profileCircle.textContent = initials;
+    profileCircle.dataset.contactKey = contact.id;
+    return profileCircle;
+}
+
+function removeProfileCircle(contactKey) {
+    const selectedContacts = document.getElementById("selectedContacts");
+    const profileCircle = selectedContacts.querySelector(`[data-contact-key="${contactKey}"]`);
+    if (profileCircle) {
+        selectedContacts.removeChild(profileCircle);
+    }
 }
 
 function filterDropdownItems() {
