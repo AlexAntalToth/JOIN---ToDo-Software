@@ -123,7 +123,7 @@ function resetAllButtons(buttons) {
 function activateButton(button) {
     if (button.id === 'task-urgent') {
         button.classList.add('urgent-active');
-        taskPriority = "high";
+        taskPriority = "urgent";
     } else if (button.id === 'task-medium') {
         button.classList.add('middle-active');
         taskPriority = "medium";
