@@ -1,0 +1,312 @@
+.add-contact-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 467px;
+    background-color: rgba(42, 54, 71, 1);
+    padding-top: 66px;
+    padding-right: 48px;
+    padding-bottom: 66px;
+    padding-left: 48px;
+    gap: 12px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.add-contact-logo {
+    width: 55.6px;
+    height: 66.5px;
+}
+
+.add-contact-left h1 {
+    font-size: 61px;
+    color: white;
+    font-weight: bold;
+}
+
+.add-contact-left h2 {
+    font-size: 27px;
+    color: white;
+    font-weight: normal;
+}
+
+.horizontal-line {
+    width: 90px;
+    height: 3px;
+    background-color: rgba(41, 171, 226, 1);
+}
+
+.add-contact-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-contact-details {
+    width: 422px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.add-contact-container {
+    position: relative;
+    display: inline-block;
+}
+
+.add-contact-field {
+    width: 422px;
+    height: 50px;
+    font-size: 16px;
+    border-width: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding-top: 13px;
+    padding-right: 21px;
+    padding-bottom: 13px;
+    padding-left: 21px;
+    gap: 10px;
+}
+
+.add-contact-field:focus {
+    outline: 1px solid blue;
+}
+
+.add-contact-icon {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    right: 21px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.add-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-contact-buttons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.cancel-contact-button h2 {
+    font-size: 21px;
+    font-weight: normal;
+    color: rgba(42, 54, 71);
+}
+
+.cancel-contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    width: 126px;
+    height: 57px;
+    padding: 16px;
+    gap: 4px;
+    border-radius: 10px;
+    border: 1px solid;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.cancel-contact-button:hover {
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid;
+    border-color: rgba(41, 171, 226);
+}
+
+.cancel-contact-button:hover h2 {
+    color: rgba(41, 171, 226);
+}
+
+.cancel-contact-button:hover .cancel-contact-icon path {
+    stroke: rgba(41, 171, 226);
+}
+
+.create-contact-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.save-contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(42, 54, 71, 1);
+    width: 214px;
+    height: 57px;
+    padding: 16px;
+    gap: 4px;
+    border-radius: 10px;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.save-contact-button h2 {
+    font-size: 21px;
+    font-weight: bold;
+    color: white;
+}
+
+.save-contact-button:hover {
+    background-color: rgba(41, 171, 226);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.contacts-details {
+    position: relative;
+}
+
+.contact-created-overlay {
+    position: absolute;
+    top: 70%;
+    left: 50px;
+    transform: translateY(-50%) translateX(200%);
+    background-color: rgba(42, 54, 71);
+    color: white;
+    font-size: 20px;
+    font-weight: normal;
+    padding: 20px 40px;
+    border-radius: 10px;
+    opacity: 0;
+    z-index: 3;
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+}
+
+.contact-created-overlay.show {
+    transform: translateY(-50%) translateX(0);
+    opacity: 1;
+}
+
+.edit-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-contact-buttons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.edit-button:hover p {
+    color: rgba(41, 171, 226);
+    font-weight: bold;
+}
+
+.edit-button:hover .edit-contact-icon path {
+    fill: rgba(41, 171, 226);
+}
+
+.delete-button:hover p {
+    color: rgba(41, 171, 226);
+    font-weight: bold;
+}
+
+.delete-button:hover .delete-contact-icon path {
+    fill: rgba(41, 171, 226);
+}
+
+.delete-contact-button h2 {
+    font-size: 21px;
+    font-weight: normal;
+    color: rgba(42, 54, 71);
+}
+
+.delete-contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    width: 126px;
+    height: 57px;
+    padding: 16px;
+    gap: 4px;
+    border-radius: 10px;
+    border: 1px solid;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.delete-contact-button:hover {
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid;
+    border-color: rgba(41, 171, 226);
+}
+
+.delete-contact-button:hover h2 {
+    color: rgba(41, 171, 226);
+}
+
+.error-message-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ff4d4d;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0;
+    z-index: 1000;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.error-message-box.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.contacts-card-name-section-mobile-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.contacts-card-name-section-mobile {
+    display: none;
+}
+
+.contacts-card-name-section-mobile-edit {
+    width: 5.33px;
+    height: 21.33px;
+}
+
+.contacts-details .contacts-back-button {
+    display: none;
+    position: absolute;
+    top: 30px;
+    left: 380px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1010;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+}
+
+.contacts-back-button:active {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+}
+
+.contacts-back-button-img {
+    width: 24.6px;
+    height: 23.92px;
+}

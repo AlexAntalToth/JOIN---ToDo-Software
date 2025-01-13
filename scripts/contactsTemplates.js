@@ -1,3 +1,17 @@
+
+/**
+ * Generates the HTML template for displaying a contact's details.
+ * 
+ * This function creates a template string containing the HTML structure for a contact's name, 
+ * email, and initials. The template is used to display contact information in the UI.
+ * 
+ * @param {Object} contact - The contact object containing the contact's details.
+ * @param {string} contact.name - The name of the contact.
+ * @param {string} contact.email - The email address of the contact.
+ * @param {string} initials - The initials to display in a circle representing the contact.
+ * 
+ * @returns {string} The HTML string representing the contact's details template.
+ */
 function getContactsTemplate(contact, initials) {
     return `
         <div class="contact-info">
@@ -12,6 +26,24 @@ function getContactsTemplate(contact, initials) {
     `;
 }
 
+
+/**
+ * Creates a base contact element with attributes for displaying contact information.
+ * 
+ * This function creates a `div` element with class `contact-item` and sets various
+ * data attributes (such as `data-id`, `data-name`, `data-email`, etc.) based on the
+ * provided contact details. It is intended to create the basic structure for a contact
+ * element to be added to the UI.
+ * 
+ * @param {Object} contact - The contact object containing the contact's details.
+ * @param {string} contact.id - The unique identifier of the contact.
+ * @param {string} contact.name - The name of the contact.
+ * @param {string} contact.email - The email address of the contact.
+ * @param {string} contact.phone - The phone number of the contact.
+ * @param {string} [contact.color] - An optional background color associated with the contact.
+ * 
+ * @returns {HTMLElement} The created `div` element representing the contact.
+ */
 function createBaseContactElement(contact) {
     let contactElement = document.createElement("div");
     contactElement.classList.add("contact-item");
@@ -25,6 +57,24 @@ function createBaseContactElement(contact) {
     return contactElement;
 }
 
+
+/**
+ * Generates an HTML template for a contact card.
+ * 
+ * This function generates the full HTML markup for a contact card, which includes the contact's
+ * initials, name, email, and phone number. It also includes buttons for editing and deleting
+ * the contact, with the option to add a custom background color to the initials circle.
+ * 
+ * @param {Object} contact - The contact object containing the contact's details.
+ * @param {string} contact.id - The unique identifier of the contact.
+ * @param {string} contact.name - The name of the contact.
+ * @param {string} contact.email - The email address of the contact.
+ * @param {string} contact.phone - The phone number of the contact.
+ * @param {string} [contact.color] - An optional background color associated with the contact's initials circle.
+ * @param {string} initials - The initials of the contact to display in the circle.
+ * 
+ * @returns {string} The HTML markup for the contact card.
+ */
 function generateContactCardTemplate(contact, initials) {
     return `
         <div class="contacts-card-header">
@@ -77,6 +127,17 @@ function generateContactCardTemplate(contact, initials) {
     `;
 }
 
+
+/**
+ * Generates an HTML template for the "Add Contact" card.
+ * 
+ * This function generates the HTML markup for a contact creation form, including fields for entering 
+ * a contact's name, email, and phone number. It also includes buttons for cancelling or saving the 
+ * contact, as well as the contact's initials displayed in a circle.
+ * 
+ * @param {string} initials - The initials of the contact to display in the circle.
+ * @returns {string} The HTML markup for the "Add Contact" card.
+ */
 function generateAddContactCardHTML(initials) {
     return `
         <div class="contacts-card-initials">
@@ -115,6 +176,24 @@ function generateAddContactCardHTML(initials) {
     `;
 }
 
+
+/**
+ * Generates an HTML template for the "Edit Contact" card.
+ * 
+ * This function generates the HTML markup for editing an existing contact. The contact's name, email, 
+ * and phone fields are pre-filled with the contact's existing values, and there are buttons to delete 
+ * or save the edited contact. The contact's initials are displayed in a circle, with an optional background color.
+ * 
+ * @param {Object} contact - The contact object to be edited.
+ * @param {string} initials - The initials of the contact to display in the circle.
+ * @param {string} contact.id - The ID of the contact.
+ * @param {string} contact.name - The name of the contact.
+ * @param {string} contact.email - The email of the contact.
+ * @param {string} contact.phone - The phone number of the contact.
+ * @param {string} [contact.color] - The background color of the initials circle (optional).
+ * 
+ * @returns {string} The HTML markup for the "Edit Contact" card.
+ */
 function generateEditContactCardHTML(contact, initials) {
     return `
         <div class="contacts-card-initials">
