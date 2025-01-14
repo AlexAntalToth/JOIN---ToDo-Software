@@ -828,3 +828,56 @@ function refreshTaskPopup() {
     document.getElementById("taskContacts").innerHTML = generateContactsHtml(task.assignedTo, contacts);
     document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks, currentTaskIndex);
 }
+
+// function hideIframeElements(iframeId) {
+//     const iframe = document.getElementById(iframeId);
+//     console.log(iframeId);
+//     let iframeDocument = iframe.contentDocument;
+//    let header = iframeDocument.querySelector("header");
+//    if (header) {
+//     console.log("Header found");
+// }
+// }
+
+function hideIframeElements(iframeId) {
+    const iframe = document.getElementById(iframeId);
+    console.log(iframeId);
+
+    const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+    
+    if (iframeDocument) {
+        // Warte, bis der Inhalt geladen ist
+        waitForIncludeToLoad(iframeDocument, function () {
+            let header = iframeDocument.querySelector("header");
+            let sidebar = iframeDocument.querySelector("aside.sidebar");
+            let container = iframeDocument.querySelector(".addTask-container")
+
+            if (header) {
+                console.log("Header found");
+                header.style.display = "none"; // Header ausblenden
+                container.style.marginTop = "0";
+            }
+
+            if (sidebar) {
+                console.log("Sidebar found");
+                sidebar.style.display = "none"; // Sidebar ausblenden
+                container.style.marginLeft = "0"
+            }
+        });
+    } else {
+        console.error("Unable to access iframe document.");
+    }
+}
+
+function waitForIncludeToLoad(iframeDocument, callback) {
+    const interval = setInterval(function () {
+
+        const header = iframeDocument.querySelector("header");
+        const sidebar = iframeDocument.querySelector("aside.sidebar");
+
+        if (header && sidebar) {
+            clearInterval(interval);
+            callback();
+        }
+    }, 100);
+}
