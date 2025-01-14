@@ -278,26 +278,22 @@ async function sendPostRequest(url, options) {
 
 
 /**
- * Handles the successful response from the server after creating a task.
- * Displays a popup and redirects to the board page after a brief delay.
- * 
- * @param {Object} responseData The data received in the response from the server.
- * @returns {Object} The same response data, returned for further handling if needed.
+ * Handles the response after a successful task creation.
+ * Displays a task creation popup and checks if the page is loaded inside an iframe.
+ * If the page is inside an iframe, no redirection occurs. If the page is not inside an iframe, it redirects to the "board.html" page after a short delay.
+ *
+ * @param {Object} responseData - The data received in the response, typically containing task details.
+ * @returns {Object} The original responseData that was passed to the function.
  */
 function handleSuccessfulResponse(responseData) {
     showTaskCreatedPopup();
-    
-    // Überprüfe, ob die Seite in einem Iframe geladen wurde
     if (window.self !== window.top) {
-        // Seite ist in einem Iframe, keine Weiterleitung
         return;
     } else {
-        // Seite ist nicht in einem Iframe, leite weiter
         setTimeout(() => {
             window.location.href = "board.html";
         }, 1550);
     }
-
     return responseData;
 }
 
