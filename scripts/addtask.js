@@ -286,9 +286,18 @@ async function sendPostRequest(url, options) {
  */
 function handleSuccessfulResponse(responseData) {
     showTaskCreatedPopup();
-    setTimeout(() => {
-        window.location.href = "board.html";
-    }, 1550);
+    
+    // Überprüfe, ob die Seite in einem Iframe geladen wurde
+    if (window.self !== window.top) {
+        // Seite ist in einem Iframe, keine Weiterleitung
+        return;
+    } else {
+        // Seite ist nicht in einem Iframe, leite weiter
+        setTimeout(() => {
+            window.location.href = "board.html";
+        }, 1550);
+    }
+
     return responseData;
 }
 

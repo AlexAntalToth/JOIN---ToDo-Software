@@ -15,7 +15,7 @@ async function onloadFunc() {
     await includeHTML();
     await initApp();
     contacts = await getData("/contacts");
-    const userResponse = await getData("/tasks");
+    let userResponse = await getData("/tasks");
     tasks = Object.entries(userResponse).map(([key, task]) => ({ id: key, task }));
     tasks.forEach((taskObj, index) => insertTaskIntoDOM(taskObj.task, index));
     checkEmptyCategories();
@@ -33,7 +33,7 @@ async function onloadFunc() {
 function insertTaskIntoDOM(task, index){
     let catContainer = getCatContainerId(task);
     let taskHTML = generateTaskHtml(task, index, contacts);
-    const taskList = catContainer.querySelector(".task-list");
+    let taskList = catContainer.querySelector(".task-list");
     if (taskList) {
         taskList.innerHTML += taskHTML;
     }
@@ -48,10 +48,10 @@ function insertTaskIntoDOM(task, index){
  * 
  */
 function checkEmptyCategories() {
-    const categories = ["To-Do", "In Progress", "Await Feedback", "Done"];
+    let categories = ["To-Do", "In Progress", "Await Feedback", "Done"];
     categories.forEach(categoryId => {
-        const categoryElement = document.getElementById(categoryId);
-        const taskList = categoryElement.querySelector(".task-list");
+        let categoryElement = document.getElementById(categoryId);
+        let taskList = categoryElement.querySelector(".task-list");
         if (taskList.children.length === 0) {
             taskList.innerHTML = emptyCategoryHTML(categoryId);
         }
@@ -79,8 +79,8 @@ function getCatContainerId(task) {
 }
 
 function generateTaskHtml(task, index, contacts){
-    const subtasks = task.subtasks || {}; 
-    const { completed, total } = calculateSubtaskProgress(subtasks);
+    let subtasks = task.subtasks || {}; 
+    let { completed, total } = calculateSubtaskProgress(subtasks);
     return `
         <div class="task" id="task-${index}" draggable="true" ondragstart="startDragging(${index})">
              ${generateTaskBadge(task.badge)}
@@ -97,11 +97,11 @@ function generateTaskHtml(task, index, contacts){
             <div class="task-footer">
                 <div class="contacts">
                 ${task.assignedTo ? Object.keys(task.assignedTo).map(contactKey => {
-                    const contact = contacts[contactKey];
+                    let contact = contacts[contactKey];
                     if (contact) {
-                        const [firstName, lastName] = contact.name.split(" ");
-                        const initials = `${firstName[0]}${lastName ? lastName[0] : ""}`;
-                        const bgColor = contact.color || "#cccccc";
+                        let [firstName, lastName] = contact.name.split(" ");
+                        let initials = `${firstName[0]}${lastName ? lastName[0] : ""}`;
+                        let bgColor = contact.color || "#cccccc";
                         return `
                             <div class="profile-circle" style="background-color: ${bgColor};">
                               ${initials}
@@ -124,8 +124,8 @@ function generateTaskHtml(task, index, contacts){
 function calculateSubtaskProgress(subtasks) {
     let subtaskArray = Object.values(subtasks);
     if (!subtaskArray || subtaskArray.length === 0) return { completed: 0, total: 0 };
-    const total = subtaskArray.length;
-    const completed = subtaskArray.filter(subtask => subtask.completed === true).length;
+    let total = subtaskArray.length;
+    let completed = subtaskArray.filter(subtask => subtask.completed === true).length;
     return { completed, total };
 }
 
@@ -145,7 +145,7 @@ function openTaskPopup(index){
 }
 
 function disableButtonWhileEdit() {
-    const closeButton = document.querySelector(".close-btn");
+    let closeButton = document.querySelector(".close-btn");
     if (closeButton) {
         closeButton.disabled = isEditing;
     }
@@ -163,8 +163,11 @@ function generateTaskPriorityElement(priority){
     }
 }
 
-function deleteTask() {
+async function deleteTask() {
     if (currentTaskIndex !== null) {
+        const taskToDelete = tasks[currentTaskIndex];
+        const taskId = taskToDelete.id;
+        await deleteData(`tasks/${taskId}`);
         tasks.splice(currentTaskIndex, 1);
         document.querySelectorAll(".task-list").forEach(taskList => (taskList.innerHTML = ""));
         tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
@@ -175,7 +178,7 @@ function deleteTask() {
 
 function closeTaskPopup() {
     if (!isEditing) {
-        const taskPopup = document.getElementById("taskPopup");
+        let taskPopup = document.getElementById("taskPopup");
         if (taskPopup) {
             taskPopup.classList.remove("show");
             currentTaskIndex = null;
@@ -183,7 +186,7 @@ function closeTaskPopup() {
         }
       }
     }
-    const taskPopup = document.getElementById("taskPopup");
+    let taskPopup = document.getElementById("taskPopup");
     if (taskPopup) {
         taskPopup.classList.remove("show");
         currentTaskIndex = null;
@@ -195,11 +198,11 @@ function generateContactsHtml(assignedTo, contacts) {
     if (!assignedTo) return "";
     let contactsHtml = "";
     Object.keys(assignedTo).forEach(contactKey => {
-        const contact = contacts[contactKey];
+        let contact = contacts[contactKey];
         if (contact) {
-            const [firstName, lastName] = contact.name.split(" ");
-            const initials = `${firstName[0]}${lastName ? lastName[0] : ""}`;
-            const bgColor = contact.color || "#cccccc";
+            let [firstName, lastName] = contact.name.split(" ");
+            let initials = `${firstName[0]}${lastName ? lastName[0] : ""}`;
+            let bgColor = contact.color || "#cccccc";
             contactsHtml += contactsHtmlTemplate(initials, contact, bgColor);
         }
     });
@@ -244,19 +247,19 @@ function generateSubtasksHtml(subtasks, taskIndex) {
 }
 
 function toggleSubtask(taskIndex, subtaskId) {
-    const task = tasks[taskIndex];
-    const subtask = task.task.subtasks[subtaskId];
+    let task = tasks[taskIndex];
+    let subtask = task.task.subtasks[subtaskId];
     subtask.completed = !subtask.completed;
     updateSubtaskBar(taskIndex);
     updatePopupSubtasks(taskIndex);
 }
 
 function updateSubtaskBar(taskIndex) {
-    const task = tasks[taskIndex];
-    const subtasks = task.task.subtasks;
-    const total = Object.keys(subtasks).length;
-    const completed = Object.values(subtasks).filter(subtask => subtask.completed).length;
-    const subtaskBar = document.querySelector(`#subtaskBar-${taskIndex}`);
+    let task = tasks[taskIndex];
+    let subtasks = task.task.subtasks;
+    let total = Object.keys(subtasks).length;
+    let completed = Object.values(subtasks).filter(subtask => subtask.completed).length;
+    let subtaskBar = document.querySelector(`#subtaskBar-${taskIndex}`);
     if (subtaskBar) {
         subtaskBar.querySelector(".pb-blue").style.width = `${(completed / total) * 100}%`;
         subtaskBar.querySelector("span").innerText = `${completed}/${total} Subtasks`;
@@ -264,8 +267,8 @@ function updateSubtaskBar(taskIndex) {
 }
 
 function updatePopupSubtasks(taskIndex) {
-    const task = tasks[taskIndex].task;
-    const subtasksList = document.getElementById("subtasksList");
+    let task = tasks[taskIndex].task;
+    let subtasksList = document.getElementById("subtasksList");
     if (subtasksList) {
         subtasksList.innerHTML = generateSubtasksHtml(task.subtasks, taskIndex);
     }
@@ -293,23 +296,23 @@ function highlight(categoryId) {
     if (existingHighlight) {
         existingHighlight.remove();
     }
-    const highlightElement = document.createElement("div");
+    let highlightElement = document.createElement("div");
     highlightElement.classList.add("highlight");
     taskList.appendChild(highlightElement);
 }
 
 function removeHighlight(categoryId) {
-    const taskList = document.getElementById(categoryId).querySelector(".task-list");
-    const highlightElement = taskList.querySelector(".highlight");
+    let taskList = document.getElementById(categoryId).querySelector(".task-list");
+    let highlightElement = taskList.querySelector(".highlight");
     if (highlightElement) {
         highlightElement.remove();
     }
 }
 
 function findTask() {
-    const searchInput = document.getElementById("search-input");
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    const filteredTasks = filterTasksWithIndex(tasks, searchTerm);
+    let searchInput = document.getElementById("search-input");
+    let searchTerm = searchInput.value.trim().toLowerCase();
+    let filteredTasks = filterTasksWithIndex(tasks, searchTerm);
     clearTaskLists();
     displayFilteredTasks(filteredTasks, searchTerm);
 }
@@ -327,7 +330,7 @@ function displayFilteredTasks(filteredTasks, searchTerm) {
     if (filteredTasks.length > 0) {
         filteredTasks.forEach((task) => insertTaskIntoDOM(task.task, task.originalIndex));
     } else {
-        const taskLists = document.querySelectorAll(".task-list");
+        let taskLists = document.querySelectorAll(".task-list");
         taskLists.forEach(taskList => {
             taskList.innerHTML = `
                 <div class="no-tasks">
@@ -346,14 +349,14 @@ function onSearchInput() {
 }
 
 function clearTaskLists() {
-    const taskLists = document.querySelectorAll(".task-list");
+    let taskLists = document.querySelectorAll(".task-list");
     taskLists.forEach(taskList => {
         taskList.innerHTML = "";
     });
 }
 
 function formatDateToDDMMYYYY(dateString) {
-    const [year, month, day] = dateString.split("-");
+    let [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
 }
 
@@ -361,11 +364,11 @@ function formatDateToDDMMYYYY(dateString) {
 
 function editTask() {
     if (currentTaskIndex === null) return;
-    const task = tasks[currentTaskIndex].task;
+    let task = tasks[currentTaskIndex].task;
     isEditing = true;
     task.subtasks = task.subtasks || {};
-    const taskView = document.getElementById("taskView");
-    const taskEdit = document.getElementById("taskEdit");
+    let taskView = document.getElementById("taskView");
+    let taskEdit = document.getElementById("taskEdit");
     taskView.classList.add("hidden");
     taskEdit.classList.remove("hidden");
 
@@ -412,11 +415,11 @@ function editTask() {
                          ${Object.entries(contacts)
                             .sort(([, a], [, b]) => a.name.localeCompare(b.name))
                             .map(([contactKey, contact]) => {
-                            const fullName = contact.name.split(" ");
-                            const firstName = fullName[0] || "";
-                            const lastName = fullName[1] || "";
-                            const initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
-                            const bgColor = contact.color || "#cccccc";
+                            let fullName = contact.name.split(" ");
+                            let firstName = fullName[0] || "";
+                            let lastName = fullName[1] || "";
+                            let initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
+                            let bgColor = contact.color || "#cccccc";
                                 return ` 
                                     <div class="dropdown-item" onclick="toggleDropdownItem(this)">
                                         <div class="dd-name">
@@ -462,22 +465,22 @@ function editTask() {
 }
 
 function populateSelectedContacts() {
-    const selectedContacts = document.getElementById("selectedContacts");
+    let selectedContacts = document.getElementById("selectedContacts");
     selectedContacts.innerHTML = "";
     if (!tasks[currentTaskIndex]?.task?.assignedTo) return;
     Object.keys(tasks[currentTaskIndex].task.assignedTo).forEach((contactKey) => {
-        const contact = contacts[contactKey];
+        let contact = contacts[contactKey];
         if (contact) {
-            const profileCircle = createProfileCircle(contact);
+            let profileCircle = createProfileCircle(contact);
             selectedContacts.appendChild(profileCircle);
         }
     });
 }
 
 function setupSubtaskInput() {
-    const subtaskInput = document.getElementById("newSubtaskInput");
-    const addIcon = document.getElementById("addSubtaskButton");
-    const iconsContainer = document.getElementById("subtaskIcons");
+    let subtaskInput = document.getElementById("newSubtaskInput");
+    let addIcon = document.getElementById("addSubtaskButton");
+    let iconsContainer = document.getElementById("subtaskIcons");
     if (subtaskInput && addIcon && iconsContainer) {
         addIcon.classList.remove("hidden");
         iconsContainer.classList.add("hidden");
@@ -503,7 +506,7 @@ function setupSubtaskInput() {
 
 
 function cancelSubtaskInput() {
-    const newSubtaskInput = document.getElementById("newSubtaskInput");
+    let newSubtaskInput = document.getElementById("newSubtaskInput");
     newSubtaskInput.value = "";
     document.getElementById("addSubtaskButton").classList.remove("hidden");
     document.getElementById("subtaskIcons").classList.add("hidden");
@@ -511,8 +514,8 @@ function cancelSubtaskInput() {
 
 function addSubtask(event) {
     event.preventDefault();
-    const task = tasks[currentTaskIndex]?.task;
-    const subtaskName = getSubtaskName();
+    let task = tasks[currentTaskIndex]?.task;
+    let subtaskName = getSubtaskName();
     if (subtaskName === "") return;
     if (canAddSubtask(task)) {
         addNewSubtask(task, subtaskName);
@@ -534,7 +537,7 @@ function canAddSubtask(task) {
 
 function addNewSubtask(task, subtaskName) {
     task.subtasks = task.subtasks || {};
-    const subtaskId = `subtask-${subtaskCounter++}`;
+    let subtaskId = `subtask-${subtaskCounter++}`;
     task.subtasks[subtaskId] = { name: subtaskName, completed: false };
 }
 
@@ -547,7 +550,7 @@ function unfocusInput() {
 }
 
 function updateSubtasksList(task) {
-    const subtasksList = document.querySelector('.subtasks-list');
+    let subtasksList = document.querySelector('.subtasks-list');
     subtasksList.innerHTML = Object.entries(task.subtasks).map(([subtaskId, subtask]) => `
         <li id="${subtaskId}" class="subtask-item">
             <div class="subtask-item-name">
@@ -564,17 +567,17 @@ function updateSubtasksList(task) {
 }
 
 function editSubtask(subtaskId) {
-    const task = tasks[currentTaskIndex].task;
-    const subtask = task.subtasks[subtaskId];
-    const subtaskElement = document.getElementById(subtaskId);
+    let task = tasks[currentTaskIndex].task;
+    let subtask = task.subtasks[subtaskId];
+    let subtaskElement = document.getElementById(subtaskId);
     if (!subtask || !subtaskElement) return;
-    const inputField = createInputField(subtask);
-    const checkIcon = createCheckIcon();
+    let inputField = createInputField(subtask);
+    let checkIcon = createCheckIcon();
     subtaskElement.innerHTML = '';
     subtaskElement.appendChild(inputField);
     subtaskElement.appendChild(checkIcon);
     checkIcon.addEventListener('click', function () {
-        const newSubtaskName = inputField.value.trim();
+        let newSubtaskName = inputField.value.trim();
         if (newSubtaskName) {
             subtask.name = newSubtaskName;
             updateSubtasksList(task);
@@ -600,7 +603,7 @@ function createInputField(subtask){
 }
 
 function deleteSubtask(subtaskId) {
-    const task = tasks[currentTaskIndex].task;
+    let task = tasks[currentTaskIndex].task;
     if (!task.subtasks[subtaskId]) return;
     delete task.subtasks[subtaskId];
     updateSubtasksList(task);
@@ -610,7 +613,7 @@ function capitalizeFirstLetter(str) {
 }
 
 function setPriority(priority) {
-    const priorityButtons = document.querySelectorAll(".priority-btn");
+    let priorityButtons = document.querySelectorAll(".priority-btn");
     let activeButton = null;
     priorityButtons.forEach(btn => {
         if (btn.classList.contains("active")) {
@@ -618,7 +621,7 @@ function setPriority(priority) {
         }
         btn.classList.remove("active");
     });
-    const clickedButton = document.querySelector(`.priority-btn[data-priority="${priority}"]`);
+    let clickedButton = document.querySelector(`.priority-btn[data-priority="${priority}"]`);
     if (clickedButton === activeButton) {
         return;
     }
@@ -628,9 +631,9 @@ function setPriority(priority) {
 }
 
 function toggleDropdown() {
-    const dropdown = document.querySelector(".dropdown");
-    const dropdownToggle = document.querySelector(".dropdown-toggle");
-    const icon = document.querySelector(".dropdown-toggle .dropdown-icon");
+    let dropdown = document.querySelector(".dropdown");
+    let dropdownToggle = document.querySelector(".dropdown-toggle");
+    let icon = document.querySelector(".dropdown-toggle .dropdown-icon");
     dropdown.classList.toggle("open");
     icon.classList.toggle("rotated");
     if (dropdown.classList.contains("open")) {
@@ -645,11 +648,11 @@ function toggleDropdown() {
 }
 
 function handleOutsideClick(event) {
-    const dropdown = document.querySelector(".dropdown");
-    const dropdownToggle = document.querySelector(".dropdown-toggle");
+    let dropdown = document.querySelector(".dropdown");
+    let dropdownToggle = document.querySelector(".dropdown-toggle");
     if (!dropdown.contains(event.target) && !dropdownToggle.contains(event.target)) {
         dropdown.classList.remove("open");
-        const icon = document.querySelector(".dropdown-toggle .dropdown-icon");
+        let icon = document.querySelector(".dropdown-toggle .dropdown-icon");
         icon.classList.remove("rotated");
         resetToDropdownButton(dropdownToggle);
         document.removeEventListener("click", handleOutsideClick);
@@ -661,7 +664,7 @@ function switchToSearchInput(dropdownToggle) {
         <input type="text" id="dropdownSearchInput" placeholder="" oninput="filterDropdownItems()" />
         <img class="dropdown-icon rotated" src="./assets/icons/addtask_arrowdown.png" alt="Arrow down">
     `;
-    const searchInput = document.getElementById("dropdownSearchInput");
+    let searchInput = document.getElementById("dropdownSearchInput");
     searchInput.addEventListener("click", (event) => {
         event.stopPropagation();
     });
@@ -676,11 +679,11 @@ function resetToDropdownButton(dropdownToggle) {
 }
 
 function toggleDropdownItem(item) {
-    const checkbox = item.querySelector("input[type='checkbox']");
+    let checkbox = item.querySelector("input[type='checkbox']");
     if (!checkbox) return;
-    const contactKey = checkbox.value;
+    let contactKey = checkbox.value;
     checkbox.checked = !checkbox.checked;
-    const contact = contacts[contactKey];
+    let contact = contacts[contactKey];
     if (checkbox.checked) {
         tasks[currentTaskIndex].task.assignedTo = tasks[currentTaskIndex].task.assignedTo || {};
         tasks[currentTaskIndex].task.assignedTo[contactKey] = true;
@@ -697,9 +700,9 @@ function toggleDropdownItem(item) {
 }
 
 function updateSelectedContactsDisplay(contact, isSelected) {
-    const selectedContacts = document.getElementById("selectedContacts");
+    let selectedContacts = document.getElementById("selectedContacts");
     if (isSelected) {
-        const profileCircle = createProfileCircle(contact);
+        let profileCircle = createProfileCircle(contact);
         selectedContacts.appendChild(profileCircle);
     } else {
         removeProfileCircle(contact.id);
@@ -707,12 +710,12 @@ function updateSelectedContactsDisplay(contact, isSelected) {
 }
 
 function createProfileCircle(contact) {
-    const fullName = contact.name.split(" ");
-    const firstName = fullName[0] || "";
-    const lastName = fullName[1] || "";
-    const initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
-    const bgColor = contact.color || "#cccccc";
-    const profileCircle = document.createElement("div");
+    let fullName = contact.name.split(" ");
+    let firstName = fullName[0] || "";
+    let lastName = fullName[1] || "";
+    let initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
+    let bgColor = contact.color || "#cccccc";
+    let profileCircle = document.createElement("div");
     profileCircle.className = "profile-circle";
     profileCircle.style.backgroundColor = bgColor;
     profileCircle.textContent = initials;
@@ -721,8 +724,8 @@ function createProfileCircle(contact) {
 }
 
 function removeProfileCircle(contactKey) {
-    const selectedContacts = document.getElementById("selectedContacts");
-    const profileCircle = selectedContacts.querySelector(`[data-contact-key="${contactKey}"]`);
+    let selectedContacts = document.getElementById("selectedContacts");
+    let profileCircle = selectedContacts.querySelector(`[data-contact-key="${contactKey}"]`);
     if (profileCircle) {
         selectedContacts.removeChild(profileCircle);
     }
@@ -730,10 +733,10 @@ function removeProfileCircle(contactKey) {
 
 function filterDropdownItems() {
     let searchInput = document.getElementById("dropdownSearchInput")
-    const searchTerm = searchInput.value.toLowerCase();
-    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    let searchTerm = searchInput.value.toLowerCase();
+    let dropdownItems = document.querySelectorAll(".dropdown-item");
     dropdownItems.forEach(item => {
-        const contactName = item.querySelector("p").textContent.toLowerCase();
+        let contactName = item.querySelector("p").textContent.toLowerCase();
         if (contactName.includes(searchTerm)) {
             item.style.display = ""; 
         } else {
@@ -743,9 +746,9 @@ function filterDropdownItems() {
 }
 
 function updateDropdownItems(dropdown) {
-    const items = dropdown.querySelectorAll(".dropdown-item");
+    let items = dropdown.querySelectorAll(".dropdown-item");
     items.forEach(item => {
-        const checkbox = item.querySelector("input[type='checkbox']");
+        let checkbox = item.querySelector("input[type='checkbox']");
         if (checkbox) {
             updateItemStyle(item, checkbox.checked);
         }
@@ -757,7 +760,7 @@ function updateItemStyle(item, isChecked) {
 }
 
 function saveTaskChanges() {
-    const task = tasks[currentTaskIndex].task;
+    let task = tasks[currentTaskIndex].task;
     task.title = document.getElementById("editTaskTitle").value;
     task.description = document.getElementById("editTaskDescription").value;
     task.dueDate = document.getElementById("editTaskDueDate").value;
@@ -771,20 +774,20 @@ function saveTaskChanges() {
 }
 
 function updateTaskHtml(taskIndex) {
-    const task = tasks[taskIndex].task;
-    const taskDiv = document.getElementById(`task-${taskIndex}`);
+    let task = tasks[taskIndex].task;
+    let taskDiv = document.getElementById(`task-${taskIndex}`);
     if (taskDiv) {
         taskDiv.outerHTML = generateTaskHtml(task, taskIndex, contacts);
     }
 }
 
 function getAssignedContacts() {
-    const assignedContacts = {};
-    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    let assignedContacts = {};
+    let dropdownItems = document.querySelectorAll(".dropdown-item");
     dropdownItems.forEach(item => {
-        const checkbox = item.querySelector("input[type='checkbox']");
+        let checkbox = item.querySelector("input[type='checkbox']");
         if (checkbox && checkbox.checked) {
-            const contactKey = checkbox.value;
+            let contactKey = checkbox.value;
             if (contacts[contactKey]) {
                 assignedContacts[contactKey] = contacts[contactKey];
             } else {
@@ -797,11 +800,11 @@ function getAssignedContacts() {
 
 
 function getCurrentSubtasks() {
-    const subtasksList = document.querySelectorAll(".subtasks-list .subtask-item");
-    const subtasks = {};
+    let subtasksList = document.querySelectorAll(".subtasks-list .subtask-item");
+    let subtasks = {};
 
     subtasksList.forEach((subtaskElement, index) => {
-        const subtaskName = subtaskElement.querySelector(".subtask-item-name span").textContent.trim();
+        let subtaskName = subtaskElement.querySelector(".subtask-item-name span").textContent.trim();
         if (subtaskName) {
             subtasks[index] = { name: subtaskName, completed: false };
         }
@@ -811,15 +814,15 @@ function getCurrentSubtasks() {
 }
 
 function refreshTaskPopup() {
-    const taskView = document.getElementById("taskView");
-    const taskEdit = document.getElementById("taskEdit");
-    const taskPopup = document.getElementById("taskPopup");
+    let taskView = document.getElementById("taskView");
+    let taskEdit = document.getElementById("taskEdit");
+    let taskPopup = document.getElementById("taskPopup");
     taskView.classList.remove("hidden");
     taskEdit.classList.add("hidden");
     if (!taskPopup.classList.contains("show")) {
         taskPopup.classList.add("show");
     }
-    const task = tasks[currentTaskIndex].task;
+    let task = tasks[currentTaskIndex].task;
     document.getElementById("taskBadge").innerHTML = generateTaskBadge(task.badge);
     document.getElementById("taskTitle").innerHTML = task.title;
     document.getElementById("taskDescription").innerHTML = task.description;
@@ -829,38 +832,22 @@ function refreshTaskPopup() {
     document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks, currentTaskIndex);
 }
 
-// function hideIframeElements(iframeId) {
-//     const iframe = document.getElementById(iframeId);
-//     console.log(iframeId);
-//     let iframeDocument = iframe.contentDocument;
-//    let header = iframeDocument.querySelector("header");
-//    if (header) {
-//     console.log("Header found");
-// }
-// }
 
 function hideIframeElements(iframeId) {
-    const iframe = document.getElementById(iframeId);
-    console.log(iframeId);
-
-    const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-    
+    let iframe = document.getElementById(iframeId);
+    let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
     if (iframeDocument) {
-        // Warte, bis der Inhalt geladen ist
         waitForIncludeToLoad(iframeDocument, function () {
             let header = iframeDocument.querySelector("header");
             let sidebar = iframeDocument.querySelector("aside.sidebar");
             let container = iframeDocument.querySelector(".addTask-container")
-
+            container.style.height = "100%";
             if (header) {
-                console.log("Header found");
-                header.style.display = "none"; // Header ausblenden
+                header.style.display = "none";
                 container.style.marginTop = "0";
             }
-
             if (sidebar) {
-                console.log("Sidebar found");
-                sidebar.style.display = "none"; // Sidebar ausblenden
+                sidebar.style.display = "none";
                 container.style.marginLeft = "0"
             }
         });
@@ -870,11 +857,9 @@ function hideIframeElements(iframeId) {
 }
 
 function waitForIncludeToLoad(iframeDocument, callback) {
-    const interval = setInterval(function () {
-
-        const header = iframeDocument.querySelector("header");
-        const sidebar = iframeDocument.querySelector("aside.sidebar");
-
+    let interval = setInterval(function () {
+        let header = iframeDocument.querySelector("header");
+        let sidebar = iframeDocument.querySelector("aside.sidebar");
         if (header && sidebar) {
             clearInterval(interval);
             callback();

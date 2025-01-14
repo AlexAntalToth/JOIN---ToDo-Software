@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     waitForSidebar();
 });
 
-//script to fetch GET and PUT
+//script to fetch GET, PUT and DELETE
 async function getData(path) {
     const response = await fetch(BASE_URL + path + ".json");
     return data = await response.json();
@@ -39,6 +39,16 @@ async function putData(path, data) {
         body: JSON.stringify(data),
     });
 }
+
+async function deleteData(path) {
+    await fetch(`${BASE_URL}/${path}.json`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
+
 
 // script for header
 async function initApp() {
