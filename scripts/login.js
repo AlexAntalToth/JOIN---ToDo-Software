@@ -1,4 +1,5 @@
 
+// rendering page
 function renderLogin() {
   let wrapDivRef = document.getElementById("wrapDiv");
 
@@ -56,6 +57,7 @@ function renderLogin() {
   startAnimation();
 }
 
+// fade in animation
 function startAnimation() {
   let joinImage = document.getElementById("joinImage");
   let content = document.querySelector(".content");
@@ -71,6 +73,7 @@ function startAnimation() {
   });
 }
 
+//Log in as a Guest
 async function guestLogin(path = "", data = {}) {
 
   await fetch(BASE_URL + path + "currentUser.json", {
@@ -83,6 +86,7 @@ async function guestLogin(path = "", data = {}) {
   window.location.href = "summary.html";
 }
 
+//Log in as a signed user
 async function login() {
   try {
     let contact = await fetch(BASE_URL + ".json");
@@ -99,17 +103,21 @@ async function login() {
   }
 }
 
+//create a pop up if log in succesfull
 async function processLogin(signedUpContact) {
-
   if (signedUpContact) {
-    alert("Login erfolgreich! Willkommen, " + signedUpContact.name);
-    putData( "currentUser",{name:signedUpContact.name} )
+    let popup = document.getElementById('task-created-popup');
+    popup.classList.add('show'); 
+    setTimeout(() => {
+      popup.classList.remove('show');
+    }, 1500);
     window.location.href = "summary.html";
   } else {
     alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
   }
 }
 
+//shows Passwort
 function ShowPassword() {
   let passwordField = document.getElementById("password");
   let togglePasswordIcon = document.getElementById("togglePassword");
@@ -125,15 +133,7 @@ function ShowPassword() {
   }
 }
 
-let msgBox = document.getElementById("msgBox");
-let urlParams = new URLSearchParams(window.location.search);
-let msg = urlParams.get("msg");
-if (msg) {
-  msgBox.innerHTML = msg;
-} else {
-  msgBox.style.display = "none";
-}
-
+//navigate to sign up page
 function navigateToSignup() {
   window.location.href = "signup.html";
 }

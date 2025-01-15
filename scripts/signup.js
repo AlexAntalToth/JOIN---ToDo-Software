@@ -1,11 +1,14 @@
 const BASE_URL =
   "https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
 
+
+// getting data from database
 async function getContacts() {
   let contact = await fetch(BASE_URL + ".json");
   let contactAsJson = await contact.json();
 }
 
+//rendering page
 function renderSignup() {
   let wrapDiv = document.getElementById("wrapDiv");
 
@@ -64,6 +67,7 @@ function renderSignup() {
     </div>`;
 }
 
+//signup function
 async function addContact(path = "", data = {}) {
   let name = document.getElementById("name");
   let email = document.getElementById("email");
@@ -82,6 +86,7 @@ async function addContact(path = "", data = {}) {
   return (contactAsJson = await contact.json());
 }
 
+//push database 
 async function addCurrentUser(path = "", data = {}) {
 
   let name = document.getElementById("name");
@@ -97,6 +102,7 @@ async function addCurrentUser(path = "", data = {}) {
   });
 }
 
+//Controlling if password is correct
 function checkPassword() {
   let password = document.getElementById("password").value.trim();
   let confirmPassword = document.getElementById("confirmPassword").value.trim();
@@ -114,8 +120,7 @@ function checkPassword() {
   return true;
 }
 
-
-
+// navigate baack to log in page
 function navigateToLogin() {
   window.location.href = "index.html";
 }
