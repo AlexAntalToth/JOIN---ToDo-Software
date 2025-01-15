@@ -1,0 +1,314 @@
+@media (max-width: 790px) {
+  .signup_div {
+    position: relative;
+    margin-top: 250px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: 396px;
+    height: 630px;
+    padding: 48px 88px 48px 88px;
+    gap: 32px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 590px) {
+  .signup_div {
+    position: relative;
+    margin-top: 250px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: 314px;
+    height: 630px;
+    padding: 48px 88px 48px 88px;
+    gap: 32px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 510px) {
+  .signup_div {
+    position: relative;
+    margin-top: 250px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: 280px;
+    height: 630px;
+    padding: 48px 88px 48px 88px;
+    gap: 32px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 470px) {
+  .signup_div {
+    position: relative;
+    margin-top: 250px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: 220px;
+    height: 630px;
+    padding: 48px 88px 48px 88px;
+    gap: 32px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .inputfields_div {
+    width: 357px;
+    height: 326px;
+    gap: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .input1 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 326px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .input2 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 326px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .input3 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 326px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .input4 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 326px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .arrow-img {
+    position: absolute;
+    top: 85px;
+    left: 13px;
+    transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 411px) {
+  h1 {
+    margin: 0px;
+    font-weight: 700px;
+    font-size: 50px;
+    text-align: center;
+  }
+
+  .signup_div {
+    position: relative;
+    margin-top: 250px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: 144px;
+    height: 630px;
+    padding: 48px 88px 48px 88px;
+    gap: 32px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .inputfields_div {
+    width: 288px;
+    height: 326px;
+    gap: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .input1 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 242px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .input2 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 242px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .input3 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 242px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .input4 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 242px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .arrow-img {
+    position: absolute;
+    top: 85px;
+    left: 2px;
+    transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 350px) {
+  h1 {
+    margin: 0px;
+    font-weight: 700px;
+    font-size: 50px;
+    text-align: center;
+  }
+
+  .signup_div {
+    position: relative;
+    margin-top: 250px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: 100px;
+    height: 630px;
+    padding: 48px 88px 48px 88px;
+    gap: 32px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .inputfields_div {
+    width: 246px;
+    height: 326px;
+    gap: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .input1 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 199px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .input2 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 199px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .input3 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 199px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .input4 {
+    font-size: 20px;
+    font-weight: 400;
+    width: 199px;
+    height: 24px;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding: 12px 21px 12px 21px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 330px) {}
