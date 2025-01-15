@@ -22,25 +22,36 @@ function renderLogin() {
         <div class="separator"></div>
       </div>
 
-    <form onsubmit="login(); return false;">
 
-       <div class="email_password">
-      <input class="input1" id="email"   required placeholder="Email" type="email"/>
-      <input class="input2" id="password" required placeholder="Password" type="password"/>
-      </div>
+<form class="form" onsubmit="login(); return false;">
+  <div class="input-icon">
+    <div class="input-wrapper">
+  <input
+    class="input1"
+    id="email"
+    required
+    placeholder="Email"
+    type="email"
+  />
+  <i class="icon mail"></i> 
+</div>
 
-      <div class="login_guestlogin">
-        <button class="blue_button2">Log in</button>
-        <button onclick="guestLogin()" class="white_button">Guest Log in</button>
-      </div>
-    </div>
-    </form>
+<div class="input-wrapper">
+  <input
+    class="input2"
+    id="password"
+    required
+    placeholder="Password"
+    type="password"
+  />
+  <i class="icon lock" id="togglePassword" onclick="ShowPassword()"></i>
+</div>
 
-    <div class="dataprotection_div">
-      <a href="privacy_policy.html">Privacy Policy</a>
-      <a href="legal_notice.html">Legal Notice</a>
-    </div>
+  <div class="login_guestlogin">
+    <button class="blue_button2">Log in</button>
+    <button onclick="guestLogin()" class="white_button">Guest Log in</button>
   </div>
+</form>
     <div id="msgBox"></div>
   `;
 
@@ -48,8 +59,8 @@ function renderLogin() {
 }
 
 function startAnimation() {
-  const joinImage = document.getElementById("joinImage");
-  const content = document.querySelector(".content");
+  let joinImage = document.getElementById("joinImage");
+  let content = document.querySelector(".content");
 
   joinImage.classList.add("move-to-position");
 
@@ -64,41 +75,75 @@ function startAnimation() {
 
 async function guestLogin(path = "", data = {}) {
 
-  let guest = await fetch(BASE_URL + path + "guestUser.json", {
+  await fetch(BASE_URL + path + "guestUser.json", {
     method: "PUT",
-    headers: { "content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      name: "Guest"
+      name: "Guest",
     }),
   });
-
   window.location.href = "summary.html";
 }
 
 async function login() {
+  try {
+    let contact = await fetch(BASE_URL + ".json");
+    let contactAsJson = await contact.json();
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
 
-  let contact = await fetch(BASE_URL + ".json");
-  let contactAsJson = await contact.json();
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
-
-  let signedUpContact = Object.values(contactAsJson.contacts || {}).find(
-    (c) => c.email === email && c.password === password
-  );
-
-  if (signedUpContact) {
-    console.log("User gefunden:", signedUpContact.name);
-    alert("Login erfolgreich! Willkommen, " + signedUpContact.name)
-    window.location.href = "summary.html";
-  } else {
-    console.log("Benutzer nicht gefunden");
-    alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.")
+    let signedUpContact = Object.values(contactAsJson.contacts || {}).find(
+      (c) => c.email === email && c.password === password
+    );
+    await processLogin(signedUpContact);
+  } catch (error) {
+    alert("Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
   }
 }
 
-const msgBox = document.getElementById("msgBox");
-const urlParams = new URLSearchParams(window.location.search);
-const msg = urlParams.get("msg");
+async function processLogin(signedUpContact) {
+  if (signedUpContact) {
+    console.log("User gefunden:", signedUpContact.name);
+    alert("Login erfolgreich! Willkommen, " + signedUpContact.name);
+    try {
+      await fetch(BASE_URL + "contacts.json", {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: signedUpContact.email,
+          password: signedUpContact.password,
+          name: signedUpContact.name,
+        }),
+      });
+      window.location.href = "summary.html";
+    } catch (error) {
+      alert("Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
+    }
+  } else {
+    alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
+  }
+}
+
+function ShowPassword() {
+  let passwordField = document.getElementById("password");
+  let togglePasswordIcon = document.getElementById("togglePassword");
+
+  if (passwordField.type === "password") {
+    passwordField.type = "text"; 
+    togglePasswordIcon.classList.remove("lock"); 
+    togglePasswordIcon.classList.add("eye"); 
+  } else {
+    passwordField.type = "password"; 
+    togglePasswordIcon.classList.remove("eye"); 
+    togglePasswordIcon.classList.add("lock"); 
+  }
+}
+
+let msgBox = document.getElementById("msgBox");
+let urlParams = new URLSearchParams(window.location.search);
+let msg = urlParams.get("msg");
 if (msg) {
   msgBox.innerHTML = msg;
 } else {
@@ -108,3 +153,5 @@ if (msg) {
 function navigateToSignup() {
   window.location.href = "signup.html";
 }
+
+

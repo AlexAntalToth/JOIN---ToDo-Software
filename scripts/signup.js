@@ -10,6 +10,7 @@ function renderSignup() {
   let wrapDiv = document.getElementById("wrapDiv");
 
   wrapDiv.innerHTML = `
+
     <img class="join_image" src="assets/img/logo_grey.png" alt="Join img" />
     <div class="signup_div">
       <img onclick="navigateToLogin()" class="arrow-img" src="assets/icons/arrow-left-line.png" alt="">
@@ -18,22 +19,38 @@ function renderSignup() {
         <div class="separator"></div>
       </div>
       
-  
    <form class="form" onsubmit="if (!checkPassword()) return false; addContact(); addCurrentUser(); return false;">
   <div class="inputfields_div">
-    <input class="input1" id="name" required placeholder="Name" type="text" />
-    <input class="input2" id="email" required placeholder="Email" type="email" />
-    <input class="input3" id="password" required placeholder="Password" type="password" />
-    <input class="input4" id="confirmPassword" required placeholder="Confirm Password" type="password" />
+
+    <div class="input-wrapper">
+      <input class="input1" id="name" required placeholder="Name" type="name" />
+      <i class="icon"><img src="assets/icons/person.png" /></i>
+    </div>
+
+   <div class="input-wrapper">
+      <input class="input2" id="email" required placeholder="Email" type="email" />
+      <i class="icon"><img src="assets/icons/mail.png" /></i>
+    </div>
+
+    <div class="input-wrapper">
+      <input class="input3" id="password" required placeholder="Password" type="Password" />
+      <i class="icon"><img src="assets/icons/lock.png" /></i>
+    </div>
+    
+    <div class="input-wrapper">
+      <input class="input4" id="confirmPassword" required placeholder="Confirm password" type="password" />
+      <i class="icon"><img src="assets/icons/mail.png" /></i>
+    </div>
   </div>
 
   <div class="checkbox_div">
+  
     <input
       id="acceptPolicy"
-      class="checkbox_input"
+      class="checkbox"
       type="checkbox"
-      style="height: 16px; width: 16px; border: 2px solid rgba(42, 54, 71, 1); border-radius: 3px;"
     />
+    
     <p>
       I accept the <a class="checkbox_input" href="pirvacy_policy.html">privacy policy</a>
     </p>
@@ -97,6 +114,8 @@ function checkPassword() {
 
   return true;
 }
+
+
 
 function navigateToLogin() {
   window.location.href = "index.html";
