@@ -75,7 +75,7 @@ function startAnimation() {
 
 async function guestLogin(path = "", data = {}) {
 
-  await fetch(BASE_URL + path + "guestUser.json", {
+  await fetch(BASE_URL + path + "currentUser.json", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
