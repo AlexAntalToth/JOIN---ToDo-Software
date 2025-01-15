@@ -1,5 +1,3 @@
-const BASE_URL =
-  "https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
 
 function renderLogin() {
   let wrapDivRef = document.getElementById("wrapDiv");
@@ -79,7 +77,7 @@ async function guestLogin(path = "", data = {}) {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      name: "Guest",
+      name: "guest",
     }),
   });
   window.location.href = "summary.html";
@@ -101,22 +99,12 @@ async function login() {
   }
 }
 
-async function processLogin(signedUpContact) { 
+async function processLogin(signedUpContact) {
 
   if (signedUpContact) {
     alert("Login erfolgreich! Willkommen, " + signedUpContact.name);
-      await fetch(BASE_URL + "contacts.json", {
-        method: "POST", 
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: signedUpContact.email,
-          password: signedUpContact.password,
-          name: signedUpContact.name,
-        }),
-      });
-      window.location.href = "summary.html";
+    putData( "currentUser",{name:signedUpContact.name} )
+    window.location.href = "summary.html";
   } else {
     alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
   }
@@ -127,13 +115,13 @@ function ShowPassword() {
   let togglePasswordIcon = document.getElementById("togglePassword");
 
   if (passwordField.type === "password") {
-    passwordField.type = "text"; 
-    togglePasswordIcon.classList.remove("lock"); 
-    togglePasswordIcon.classList.add("eye"); 
+    passwordField.type = "text";
+    togglePasswordIcon.classList.remove("lock");
+    togglePasswordIcon.classList.add("eye");
   } else {
-    passwordField.type = "password"; 
-    togglePasswordIcon.classList.remove("eye"); 
-    togglePasswordIcon.classList.add("lock"); 
+    passwordField.type = "password";
+    togglePasswordIcon.classList.remove("eye");
+    togglePasswordIcon.classList.add("lock");
   }
 }
 
