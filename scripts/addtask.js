@@ -219,7 +219,7 @@ function getAssignedContacts() {
             return assignedTo;
         }, {});
     }
-    return { contact1: "" };
+    return "";
 }
 
 
