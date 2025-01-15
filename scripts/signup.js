@@ -1,14 +1,31 @@
 const BASE_URL =
   "https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
 
-
-// getting data from database
+/**
+ * getContacts - This asynchronous function fetches contact data from a remote Firebase database.
+ * It makes a GET request to the base URL, retrieves the response, and parses it into a JSON object.
+ * 
+ * Example:
+ * ```js
+ * await getContacts();
+ * ```
+ */
 async function getContacts() {
   let contact = await fetch(BASE_URL + ".json");
   let contactAsJson = await contact.json();
 }
-
-//rendering page
+/**
+ * renderSignup - This function dynamically renders the sign-up form on the web page.
+ * It manipulates the DOM by setting the inner HTML of the "wrapDiv" element.
+ * It includes various form fields such as name, email, password, confirm password, 
+ * and a checkbox for accepting the privacy policy. The form also includes icons and 
+ * a navigation link to the login page.
+ *
+ * Example:
+ * ```js
+ * renderSignup();
+ * ```
+ */
 function renderSignup() {
   let wrapDiv = document.getElementById("wrapDiv");
 
@@ -66,8 +83,21 @@ function renderSignup() {
       <a href="legal_notice.html">Legal Notice</a>
     </div>`;
 }
-
-//signup function
+/**
+ * addContact - This function asynchronously adds a new contact (user) to the database by making a POST request.
+ * It retrieves the user's name, email, and password from the form fields, then sends this data to the specified URL.
+ * After a successful registration, the user is redirected to the index page with a success message.
+ *
+ * @param {string} [path=""] - The URL path to append to the base URL for the request. Default is an empty string.
+ * @param {Object} [data={}] - The data to be sent with the request, although it isn't used in this function directly.
+ *
+ * @returns {Promise<Object>} - Returns the response data from the POST request after converting it to JSON.
+ *
+ * Example:
+ * ```js
+ * addContact("/user", {name: "John Doe", email: "john@example.com", password: "1234"});
+ * ```
+ */
 async function addContact(path = "", data = {}) {
   let name = document.getElementById("name");
   let email = document.getElementById("email");
@@ -85,8 +115,20 @@ async function addContact(path = "", data = {}) {
   window.location.href = "index.html?msg=Die Registrierung war erfolgreich";
   return (contactAsJson = await contact.json());
 }
-
-//push database 
+/**
+ * addCurrentUser - This function asynchronously adds the current user (from the signup form) to the database.
+ * It retrieves the user's name and email from the form fields and sends this data to the specified URL.
+ *
+ * @param {string} [path=""] - The URL path to append to the base URL for the request. Default is an empty string.
+ * @param {Object} [data={}] - The data to be sent with the request, although it isn't used in this function directly.
+ *
+ * @returns {Promise<void>} - This function doesn't return any value, but it performs a POST request to save the current user data.
+ *
+ * Example:
+ * ```js
+ * addCurrentUser("/user", {name: "John Doe", email: "john@example.com"});
+ * ```
+ */
 async function addCurrentUser(path = "", data = {}) {
 
   let name = document.getElementById("name");
@@ -101,8 +143,18 @@ async function addCurrentUser(path = "", data = {}) {
     }),
   });
 }
-
-//Controlling if password is correct
+/**
+ * checkPassword - This function validates the password and confirmation password fields during user signup.
+ * It checks if the password and confirmation password match, and if the user has accepted the privacy policy.
+ * 
+ * @returns {boolean} - Returns `true` if the password and confirmation password match, and the user has accepted the privacy policy.
+ *                      Returns `false` if there is a mismatch between the passwords or if the privacy policy is not accepted.
+ *
+ * Example:
+ * ```js
+ * checkPassword();
+ * ```
+ */
 function checkPassword() {
   let password = document.getElementById("password").value.trim();
   let confirmPassword = document.getElementById("confirmPassword").value.trim();
@@ -119,8 +171,42 @@ function checkPassword() {
   }
   return true;
 }
+/**
+ * ShowPassword - This function toggles the visibility of the password field when the user clicks on the password visibility icon.
+ * It changes the password field's type between "password" (hidden) and "text" (visible), and also swaps the icon between a lock and an eye.
+ * 
+ * @returns {void} - This function does not return anything. It only modifies the password field and the visibility icon.
+ * 
+ * Example:
+ * ```js
+ * ShowPassword();
+ * ```
+ */
+function ShowPassword() {
+  let passwordField = document.getElementById("password");
+  let togglePasswordIcon = document.getElementById("togglePassword");
 
-// navigate baack to log in page
+  if (passwordField.type === "password") {
+    passwordField.type = "text";
+    togglePasswordIcon.classList.remove("lock");
+    togglePasswordIcon.classList.add("eye");
+  } else {
+    passwordField.type = "password";
+    togglePasswordIcon.classList.remove("eye");
+    togglePasswordIcon.classList.add("lock");
+  }
+}
+/**
+ * navigateToLogin - This function navigates the user to the login page (index.html).
+ * It changes the current page's URL to "index.html", effectively redirecting the user to the login page.
+ * 
+ * @returns {void} - This function does not return anything. It only redirects the user to another page.
+ * 
+ * Example:
+ * ```js
+ * navigateToLogin();
+ * ```
+ */
 function navigateToLogin() {
   window.location.href = "index.html";
 }

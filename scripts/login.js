@@ -1,5 +1,16 @@
-
-// rendering page
+/**
+ * renderLogin - This function renders the login page, displaying the login form and buttons for signing up or logging in as a guest.
+ *
+ * 1. Sets the HTML content of the `wrapDiv` element.
+ * 2. Adds a login form with fields for email and password, along with buttons for logging in or guest login.
+ * 3. Adds a logo image wrapped in an animation container.
+ * 4. Calls `startAnimation()` to start animations (implementation of `startAnimation` is assumed to be elsewhere).
+ *
+ * Example:
+ * ```js
+ * renderLogin();
+ * ```
+ */
 function renderLogin() {
   let wrapDivRef = document.getElementById("wrapDiv");
 
@@ -56,8 +67,17 @@ function renderLogin() {
 
   startAnimation();
 }
-
-// fade in animation
+/**
+ * startAnimation - This function handles the animation of the logo image and reveals the content of the page after the animation ends.
+ *
+ * 1. Adds the `move-to-position` class to the `joinImage` element, which triggers its animation (presumably to move it to a specific position).
+ * 2. Once the animation ends, it waits for 200 milliseconds and then adds the `visible` class to the `.content` element, making it visible.
+ *
+ * Example:
+ * ```js
+ * startAnimation();
+ * ```
+ */
 function startAnimation() {
   let joinImage = document.getElementById("joinImage");
   let content = document.querySelector(".content");
@@ -72,8 +92,20 @@ function startAnimation() {
     }, 200);
   });
 }
-
-//Log in as a Guest
+/**
+ * guestLogin - This function allows a guest user to log in by setting the current user's name to "guest" in the backend and then redirects to a different page.
+ *
+ * 1. Makes an asynchronous HTTP PUT request to update the current user data with the name "guest".
+ * 2. After the request is completed, the page is redirected to `summary.html`.
+ *
+ * @param {string} [path=""] - The base path to the API endpoint (optional).
+ * @param {Object} [data={}] - Additional data to be sent in the request (optional).
+ * 
+ * Example:
+ * ```js
+ * guestLogin();
+ * ```
+ */
 async function guestLogin(path = "", data = {}) {
 
   await fetch(BASE_URL + path + "currentUser.json", {
@@ -85,8 +117,21 @@ async function guestLogin(path = "", data = {}) {
   });
   window.location.href = "summary.html";
 }
-
-//Log in as a signed user
+/**
+ * login - This function handles the login process by verifying the user's credentials (email and password) and then processes the login if the credentials are valid.
+ * 
+ * 1. Sends a GET request to the backend to fetch all contacts.
+ * 2. Searches for the contact that matches the entered email and password.
+ * 3. If a match is found, it calls the `processLogin` function to handle the login.
+ * 4. If an error occurs during the process, it shows an alert message.
+ * 
+ * @throws {Error} If there is an issue with the fetch request or any other operation, an error alert is shown.
+ * 
+ * Example:
+ * ```js
+ * login();
+ * ```
+ */
 async function login() {
   try {
     let contact = await fetch(BASE_URL + ".json");
@@ -102,8 +147,20 @@ async function login() {
     alert("Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
   }
 }
-
-//create a pop up if log in succesfull
+/**
+ * processLogin - This function handles the login process after verifying the user's credentials.
+ * It shows a popup if the login is successful and redirects to the summary page. If login fails, an error message is shown.
+ * 
+ * 1. If a valid user (signedUpContact) is provided, it displays a success popup and redirects to the "summary.html" page.
+ * 2. If no valid user is found, it shows an alert with an error message.
+ * 
+ * @param {Object} signedUpContact - The contact object representing the logged-in user, containing their information (e.g., name, email, password).
+ * 
+ * Example:
+ * ```js
+ * processLogin(signedUpContact);
+ * ```
+ */
 async function processLogin(signedUpContact) {
   if (signedUpContact) {
     let popup = document.getElementById('task-created-popup');
@@ -116,8 +173,18 @@ async function processLogin(signedUpContact) {
     alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
   }
 }
-
-//shows Passwort
+/**
+ * ShowPassword - This function toggles the visibility of the password field.
+ * It switches the input type of the password field between "password" (hidden text) and "text" (visible text).
+ * Additionally, it changes the icon to represent the current state of the password visibility (eye for visible, lock for hidden).
+ * 
+ * The function is triggered by clicking the icon to show or hide the password.
+ * 
+ * Example:
+ * ```js
+ * ShowPassword();
+ * ```
+ */
 function ShowPassword() {
   let passwordField = document.getElementById("password");
   let togglePasswordIcon = document.getElementById("togglePassword");
@@ -132,8 +199,15 @@ function ShowPassword() {
     togglePasswordIcon.classList.add("lock");
   }
 }
-
-//navigate to sign up page
+/**
+ * navigateToSignup - This function redirects the user to the "signup.html" page.
+ * It changes the current page URL to the signup page, effectively navigating the user to the sign-up form.
+ * 
+ * Example:
+ * ```js
+ * navigateToSignup();
+ * ```
+ */
 function navigateToSignup() {
   window.location.href = "signup.html";
 }

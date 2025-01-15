@@ -230,31 +230,6 @@ h1 {
   margin-top: 150px;
 }
 
-
-
-.input-wrapper input[type="password"]:valid + .icon {
-  background-image: url("/assets/icons/eyeClosed.webp");
-}
-
-
-.icon.lock {
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  background-image: url("../assets/icons/lock.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-  cursor: pointer;
-}
-
-.icon.eye {
-  background-image: url("../assets/icons/eyeClosed.webp");
-}
-
-.icon.disabled {
-  pointer-events: none; 
-}
-
 .checkbox_input:hover {
   cursor: pointer;
   text-decoration: underline;
@@ -299,27 +274,3 @@ a:hover {
   border: 1px solid black;
 }
 
-.popup {
-  position: fixed;
-  top: 600px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color:#2a3647;
-  color: white;
-  padding: 15px 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  font-size: 16px;
-  font-family: inter;
-  text-align: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: 1000;
-}
-
-.popup.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0); 
-}
