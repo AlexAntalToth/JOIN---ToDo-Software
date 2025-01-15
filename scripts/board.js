@@ -486,11 +486,10 @@ function editTask() {
 function populateSelectedContacts() {
     let selectedContacts = document.getElementById("selectedContacts");
     selectedContacts.innerHTML = "";
-    if (!tasks[currentTaskIndex]?.task?.assignedTo) return;
-    Object.keys(tasks[currentTaskIndex].task.assignedTo).forEach((contactKey) => {
-        let contact = contacts[contactKey];
-        if (contact) {
-            let profileCircle = createProfileCircle(contact);
+    const assignedTo = tasks[currentTaskIndex]?.task?.assignedTo || {};
+    Object.values(assignedTo).forEach(({ name, color }) => {
+        if (name && color) {
+            let profileCircle = createProfileCircle({ name, color });
             selectedContacts.appendChild(profileCircle);
         }
     });
