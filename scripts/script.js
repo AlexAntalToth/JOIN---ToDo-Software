@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //script to fetch GET, PUT and DELETE
 async function getData(path) {
-    const response = await fetch(BASE_URL + path + ".json");
+    const response = await fetch(`${BASE_URL}/${path}.json`);
     return data = await response.json();
 }
 

@@ -1,5 +1,5 @@
 let tasks = [];
-let contacts = {};
+let contacts = [];
 let currentDraggedElement;
 let searchTimeout;
 let currentTaskIndex = null;
@@ -14,12 +14,10 @@ let subtaskCounter = 0;
 async function onloadFunc() {
     await includeHTML();
     await initApp();
-    contacts = await getData("/contacts");
-    let userResponse = await getData("/tasks");
-    tasks = Object.entries(userResponse).map(([key, task]) => ({ id: key, task }));
-    tasks.forEach((taskObj, index) => insertTaskIntoDOM(taskObj.task, index));
-    checkEmptyCategories();
+    contacts = await getData("contacts");
+    await refreshTaskList();
 }
+
 
 /**
   * Inserts a task into the DOM within its corresponding category container.
@@ -32,7 +30,7 @@ async function onloadFunc() {
  */
 function insertTaskIntoDOM(task, index){
     let catContainer = getCatContainerId(task);
-    let taskHTML = generateTaskHtml(task, index, contacts);
+    let taskHTML = generateTaskHtml(task, index);
     let taskList = catContainer.querySelector(".task-list");
     if (taskList) {
         taskList.innerHTML += taskHTML;
@@ -78,12 +76,12 @@ function getCatContainerId(task) {
     return document.getElementById(task.category);
 }
 
-function generateTaskHtml(task, index, contacts){
+function generateTaskHtml(task, index) {
     let subtasks = task.subtasks || {}; 
     let { completed, total } = calculateSubtaskProgress(subtasks);
     return `
         <div class="task" id="task-${index}" draggable="true" ondragstart="startDragging(${index})">
-             ${generateTaskBadge(task.badge)}
+            ${generateTaskBadge(task.badge)}
             <div class="task-title" onclick="openTaskPopup(${index})">${task.title}</div>
             <div class="task-desc">${task.description}</div>
             <div class="subtask-bar" id="subtaskBar-${index}">
@@ -96,21 +94,19 @@ function generateTaskHtml(task, index, contacts){
             </div>
             <div class="task-footer">
                 <div class="contacts">
-                ${task.assignedTo ? Object.keys(task.assignedTo).map(contactKey => {
-                    let contact = contacts[contactKey];
-                    if (contact) {
-                        let [firstName, lastName] = contact.name.split(" ");
-                        let initials = `${firstName[0]}${lastName ? lastName[0] : ""}`;
-                        let bgColor = contact.color || "#cccccc";
-                        return `
-                            <div class="profile-circle" style="background-color: ${bgColor};">
-                              ${initials}
-                            </div>
-                        `;
-                    }
-                    return "";
-                }).join("") : ""}
-                </div>
+                    ${task.assignedTo ? Object.keys(task.assignedTo)
+                        .filter(contactKey => task.assignedTo[contactKey].name && task.assignedTo[contactKey].name.trim() !== "")
+                        .map(contactKey => {
+                            let contactName = task.assignedTo[contactKey].name;
+                            let bgColor = task.assignedTo[contactKey].color;
+                            let initials = contactName.split(" ").map(name => name[0]).join("");
+                            return `
+                                <div class="profile-circle" style="background-color: ${bgColor};">
+                                    ${initials}
+                                </div>
+                            `;
+                        }).join("") : ""}
+                </div>          
                 ${task.priority ? `
                     <div class="priority">
                         <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">
@@ -121,6 +117,7 @@ function generateTaskHtml(task, index, contacts){
     `;
 }
 
+
 function calculateSubtaskProgress(subtasks) {
     let subtaskArray = Object.values(subtasks);
     if (!subtaskArray || subtaskArray.length === 0) return { completed: 0, total: 0 };
@@ -128,6 +125,28 @@ function calculateSubtaskProgress(subtasks) {
     let completed = subtaskArray.filter(subtask => subtask.completed === true).length;
     return { completed, total };
 }
+
+function openAddTaskModal(){
+    let addTaskModal = document.getElementById("add-task-modal");
+    addTaskModal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+}
+
+function closeAddTaskModal() {
+    let addTaskModal = document.getElementById("add-task-modal");
+    addTaskModal.classList.add("hidden");
+    document.body.style.overflow = "";
+    refreshTaskList();
+}
+
+async function refreshTaskList() {
+    let userResponse = await getData("tasks");
+    tasks = Object.entries(userResponse).map(([key, task]) => ({ id: key, task }));
+    document.querySelectorAll(".task-list").forEach(taskList => (taskList.innerHTML = ""));
+    tasks.forEach((taskObj, index) => insertTaskIntoDOM(taskObj.task, index));
+    checkEmptyCategories();
+}
+
 
 function openTaskPopup(index){
     currentTaskIndex = index;
@@ -194,31 +213,31 @@ function closeTaskPopup() {
     }
 
 
-function generateContactsHtml(assignedTo, contacts) {
-    if (!assignedTo) return "";
-    let contactsHtml = "";
-    Object.keys(assignedTo).forEach(contactKey => {
-        let contact = contacts[contactKey];
-        if (contact) {
-            let [firstName, lastName] = contact.name.split(" ");
-            let initials = `${firstName[0]}${lastName ? lastName[0] : ""}`;
-            let bgColor = contact.color || "#cccccc";
-            contactsHtml += contactsHtmlTemplate(initials, contact, bgColor);
-        }
-    });
-    return contactsHtml;
-}
-
-function contactsHtmlTemplate(initials, contact, bgColor){
-    return `
+    function generateContactsHtml(assignedTo) {
+        if (!assignedTo) return "";
+        let contactsHtml = "";
+        Object.keys(assignedTo).forEach(contactKey => {
+            let contactName = assignedTo[contactKey].name;
+            if (contactName && contactName.trim() !== "") {
+                let [firstName, lastName] = contactName.split(" ");
+                let initials = `${firstName[0]}${lastName ? lastName[0] : ""}`;
+                let bgColor = assignedTo[contactKey].color ||"#cccccc";
+                contactsHtml += contactsHtmlTemplate(initials, contactName, bgColor);
+            }
+        });
+        return contactsHtml;
+    }
+    
+    function contactsHtmlTemplate(initials, contactName, bgColor) {
+        return `
             <div class="task-contact">
                 <div class="profile-circle" style="background-color: ${bgColor};">
-                ${initials}
+                    ${initials}
                 </div>
-                <span>${contact.name}</span>
+                <span>${contactName}</span>
             </div>
-            `
-}
+        `;
+    }
 
 function generateTaskBadge(badgeType) {
     let badgeClass = "bg-orange";
@@ -397,7 +416,7 @@ function editTask() {
                         <button type="button" class="priority-btn ${task.priority === priority ? "active" : ""}" 
                                 onclick="setPriority('${priority}')"
                                 data-priority="${priority}">
-                                ${capitalizeFirstLetter(priority)}
+                                <p>${capitalizeFirstLetter(priority)}</p>
                                 <img src="./assets/icons/priority_${priority}.png" alt="${priority}">
                                 </button>
                     `).join("")}
@@ -759,19 +778,6 @@ function updateItemStyle(item, isChecked) {
     item.classList.toggle("checked", isChecked);
 }
 
-function saveTaskChanges() {
-    let task = tasks[currentTaskIndex].task;
-    task.title = document.getElementById("editTaskTitle").value;
-    task.description = document.getElementById("editTaskDescription").value;
-    task.dueDate = document.getElementById("editTaskDueDate").value;
-    task.priority = document.querySelector(".priority-btn.active")?.getAttribute("data-priority");
-    task.assignedTo = getAssignedContacts();
-    task.subtasks = getCurrentSubtasks();
-    tasks[currentTaskIndex].task = task;
-    isEditing = false;
-    refreshTaskPopup();
-    updateTaskHtml(currentTaskIndex);
-}
 
 function updateTaskHtml(taskIndex) {
     let task = tasks[taskIndex].task;
@@ -781,6 +787,28 @@ function updateTaskHtml(taskIndex) {
     }
 }
 
+async function saveTaskChanges() {
+    let taskObj = tasks[currentTaskIndex];
+    if (!taskObj || !taskObj.id) {
+        console.error("Task ID is undefined. Cannot update task.");
+        return;
+    }
+    let task = taskObj.task;
+    let taskId = taskObj.id;
+    task.title = document.getElementById("editTaskTitle").value;
+    task.description = document.getElementById("editTaskDescription").value;
+    task.dueDate = document.getElementById("editTaskDueDate").value;
+    task.priority = document.querySelector(".priority-btn.active")?.getAttribute("data-priority");
+    task.assignedTo = getAssignedContacts();
+    task.subtasks = getCurrentSubtasks();
+    await putData(`tasks/${taskId}`, task);
+    tasks[currentTaskIndex].task = task;
+    isEditing = false;
+    refreshTaskPopup();
+    updateTaskHtml(currentTaskIndex);
+}
+
+
 function getAssignedContacts() {
     let assignedContacts = {};
     let dropdownItems = document.querySelectorAll(".dropdown-item");
@@ -789,7 +817,10 @@ function getAssignedContacts() {
         if (checkbox && checkbox.checked) {
             let contactKey = checkbox.value;
             if (contacts[contactKey]) {
-                assignedContacts[contactKey] = contacts[contactKey];
+                assignedContacts[contactKey] = {
+                    name: contacts[contactKey].name,
+                    color: contacts[contactKey].color
+                };
             } else {
                 console.warn(`Kontakt mit ID "${contactKey}" existiert nicht in contacts.`);
             }
@@ -797,6 +828,7 @@ function getAssignedContacts() {
     });
     return assignedContacts;
 }
+
 
 
 function getCurrentSubtasks() {

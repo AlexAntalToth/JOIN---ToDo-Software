@@ -207,20 +207,29 @@ function getSubtasks() {
 
 
 /**
- * Retrieves the list of assigned contacts from the selectedContacts array.
+ * Generates an object representing the assigned contacts.
  * 
- * @returns {Object} An object with keys `contact1`, `contact2`, etc., representing the assigned contacts.
- *                   If no contacts are selected, the object will contain `contact1` with an empty string value.
+ * This function iterates over the `selectedContacts` array and builds an object
+ * where each key is a unique contact identifier (e.g., `contact1`, `contact2`),
+ * and the value is an object containing the contact's `name` and `color`.
+ * 
+ * @returns {Object} An object mapping contact identifiers to their respective
+ *                   name and color properties. Returns an empty string if 
+ *                   `selectedContacts` is empty.
  */
 function getAssignedContacts() {
     if (selectedContacts.length > 0) {
         return selectedContacts.reduce((assignedTo, contact, index) => {
-            assignedTo[`contact${index + 1}`] = contact.name;
+            assignedTo[`contact${index + 1}`] = {
+                name: contact.name,
+                color: contact.color
+            };
             return assignedTo;
         }, {});
     }
     return "";
 }
+
 
 
 /**
