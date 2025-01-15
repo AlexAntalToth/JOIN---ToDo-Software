@@ -236,21 +236,7 @@ function createContactElement(contact, initials) {
 }
 
 
-/**
- * Generates a random hex color code.
- * This function generates a random 6-character hex color code 
- * prefixed with a '#' character (e.g., "#A3C5D8").
- *
- * @returns {string} A random hex color code.
- */
-function generateRandomColor() {
-    let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
+
 
 
 /**
