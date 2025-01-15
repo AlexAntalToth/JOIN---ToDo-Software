@@ -15,8 +15,9 @@
     <div w3-include-html="./assets/templates/header.html"></div>
     <div w3-include-html="./assets/templates/sidebar.html"></div>
 
-    <div class="add-task-container hidden">
+    <div id="add-task-modal" class="add-task-modal hidden">
         <div class="add-task-popup">
+            <button class="close-modal-btn" onclick="closeAddTaskModal()">✖</button>
             <iframe id="addTaskIframe" src="./addtask.html" onload="hideIframeElements('addTaskIframe')" frameborder="0"></iframe>
         </div>
     </div>
@@ -64,7 +65,7 @@
                     <div class="search-separator"></div>
                     <span onclick="findTask()" class="search-icon"><img src="./assets/icons/search.png" alt=""></span>
                 </div>
-                <button class="add-task">Add task +</button>
+                <button class="add-task" onclick="openAddTaskModal()">Add task +</button>
             </div>
         </div>
         <div class="board">
