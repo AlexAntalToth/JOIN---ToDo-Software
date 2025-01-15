@@ -103,7 +103,7 @@ async function processLogin(signedUpContact) {
 
   if (signedUpContact) {
     alert("Login erfolgreich! Willkommen, " + signedUpContact.name);
-    putData( "currentUser", signedUpContact.name )
+    putData( "currentUser",{name:signedUpContact.name} )
     window.location.href = "summary.html";
   } else {
     alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
