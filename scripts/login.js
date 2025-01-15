@@ -79,7 +79,7 @@ async function guestLogin(path = "", data = {}) {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      name: "Guest",
+      name: "guest",
     }),
   });
   window.location.href = "summary.html";
