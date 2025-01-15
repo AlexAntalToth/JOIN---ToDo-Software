@@ -101,11 +101,10 @@ async function login() {
   }
 }
 
-async function processLogin(signedUpContact) {
+async function processLogin(signedUpContact) { 
+
   if (signedUpContact) {
-    console.log("User gefunden:", signedUpContact.name);
     alert("Login erfolgreich! Willkommen, " + signedUpContact.name);
-    try {
       await fetch(BASE_URL + "contacts.json", {
         method: "POST", 
         headers: {
@@ -118,9 +117,6 @@ async function processLogin(signedUpContact) {
         }),
       });
       window.location.href = "summary.html";
-    } catch (error) {
-      alert("Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
-    }
   } else {
     alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
   }

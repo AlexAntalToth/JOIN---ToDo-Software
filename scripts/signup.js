@@ -111,7 +111,6 @@ function checkPassword() {
     alert("Bitte akzeptiere die Datenschutzrichtlinie.");
     return false;
   }
-
   return true;
 }
 
