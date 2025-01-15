@@ -1,72 +1,135 @@
 /**
- * Asynchronously loads contacts from a JSON file, processes them, 
- * and renders the list of contacts. If any contact doesn't have a color, 
- * it generates a random color and saves it to the database.
- *
+ * Loads contacts from the database, processes them, ensures colors are saved, 
+ * and renders the contacts list. Returns the sorted contacts.
+ * 
  * @async
  * @function loadContacts
- * @returns {Promise<Object[]>} A promise that resolves to an array of sorted and processed contact objects.
- * If the contacts could not be loaded, the promise resolves to an empty array.
- *
- * @throws {Error} Throws an error if the fetch operation fails or if there are issues with the data processing.
+ * @returns {Promise<Object[]>} A promise that resolves to a sorted array of contact objects.
  */
 async function loadContacts() {
     try {
-        let response = await fetch(BASE_URL + "contacts.json");
-        let data = await response.json();
+        let data = await fetchContactsFromDatabase();
         if (data) {
-            let sortedContacts = Object.entries(data)
-                .map(([id, contact]) => ({
-                    id,
-                    ...contact,
-                    color: contact.color || generateRandomColor()
-                }))
-                .sort((a, b) => a.name.localeCompare(b.name));
-            for (let contact of sortedContacts) {
-                if (!data[contact.id].color) {
-                    await saveColorToDatabase(contact.id, contact.color);
-                }
-            }
+            let sortedContacts = processContacts(data);
+            await ensureColorsInDatabase(sortedContacts, data);
             renderContactsList(sortedContacts);
             return sortedContacts;
         }
     } catch (error) {
+        console.error("Error loading contacts:", error);
         return [];
     }
 }
 
 
 /**
- * Asynchronously loads contacts from a JSON file, processes them, 
- * and returns a sorted list of contacts. If a contact does not have a color, 
- * a random color is generated for it.
- *
+ * Fetches contact data from the database.
+ * 
+ * @async
+ * @function fetchContactsFromDatabase
+ * @returns {Promise<Object>} A promise that resolves to the raw contact data from the database.
+ */
+async function fetchContactsFromDatabase() {
+    let response = await fetch(BASE_URL + "contacts.json");
+    return await response.json();
+}
+
+
+/**
+ * Processes raw contact data by converting it into an array, adding missing colors, 
+ * and sorting the contacts alphabetically by name.
+ * 
+ * @function processContacts
+ * @param {Object} data - The raw contact data from the database, where keys are contact IDs 
+ * and values are contact details.
+ * @returns {Object[]} An array of processed contact objects, each containing an `id`, 
+ * the original contact details, and a `color`.
+ */
+function processContacts(data) {
+    return Object.entries(data)
+        .map(([id, contact]) => ({
+            id,
+            ...contact,
+            color: contact.color || generateRandomColor()
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+
+/**
+ * Ensures that all contacts have a color saved in the database.
+ * If a contact is missing a color, it will generate a color and save it.
+ * 
+ * @async
+ * @function ensureColorsInDatabase
+ * @param {Object[]} sortedContacts - An array of processed contact objects, each containing an `id` and `color`.
+ * @param {Object} data - The raw contact data from the database, where keys are contact IDs and values are contact details.
+ * @returns {Promise<void>} A promise that resolves once all missing colors have been saved to the database.
+ */
+async function ensureColorsInDatabase(sortedContacts, data) {
+    for (let contact of sortedContacts) {
+        if (!data[contact.id].color) {
+            await saveColorToDatabase(contact.id, contact.color);
+        }
+    }
+}
+
+
+/**
+ * Loads task contacts by fetching data from the database, processing it, 
+ * and returning a sorted array of contact objects.
+ * 
  * @async
  * @function loadTaskContacts
- * @returns {Promise<Object[]>} A promise that resolves to an array of sorted and processed contact objects.
- * If the contacts could not be loaded, the promise resolves to an empty array.
- *
- * @throws {Error} Throws an error if the fetch operation fails or if there are issues with processing the data.
+ * @returns {Promise<Object[]>} A promise that resolves to a sorted array of contact objects, 
+ * or an empty array if no data is available or an error occurs.
+ * @throws {Error} Logs an error message to the console if the fetch or processing fails.
  */
 async function loadTaskContacts() {
     try {
-        let response = await fetch(BASE_URL + "contacts.json");
-        let data = await response.json();
+        let data = await fetchContacts();
         if (data) {
-            let sortedContacts = Object.entries(data)
-                .map(([id, contact]) => ({
-                    id,
-                    ...contact,
-                    color: contact.color || generateRandomColor()
-                }))
-                .sort((a, b) => a.name.localeCompare(b.name));
+            let sortedContacts = prepareSortedContacts(data);
             return sortedContacts;
         } else {
             return [];
         }
     } catch (error) {
+        console.error("Error loading task contacts:", error);
         return [];
     }
+}
+
+
+/**
+ * Fetches contact data from the database by making a request to the contacts API.
+ * 
+ * @async
+ * @function fetchContacts
+ * @returns {Promise<Object>} A promise that resolves to the raw contact data from the database.
+ * @throws {Error} Throws an error if the fetch operation fails (e.g., network error, invalid URL).
+ */
+async function fetchContacts() {
+    let response = await fetch(BASE_URL + "contacts.json");
+    return await response.json();
+}
+
+
+/**
+ * Processes and sorts the contact data by adding missing colors and sorting contacts alphabetically by name.
+ * 
+ * @function prepareSortedContacts
+ * @param {Object} data - The raw contact data, where keys are contact IDs and values are contact details.
+ * @returns {Object[]} An array of processed and sorted contact objects, each containing `id`, `name`, and `color`.
+ */
+function prepareSortedContacts(data) {
+    return Object.entries(data)
+        .map(([id, contact]) => ({
+            id,
+            ...contact,
+            color: contact.color || generateRandomColor()
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 
@@ -98,31 +161,51 @@ async function saveColorToDatabase(contactId, color) {
 
 
 /**
- * Asynchronously loads tasks from a JSON file, processes them, 
- * and returns a list of tasks with their associated IDs.
- *
+ * Loads tasks from the database, processes them, and returns an array of tasks with IDs.
+ * 
  * @async
  * @function loadTasks
- * @returns {Promise<Object[]>} A promise that resolves to an array of tasks, each with an associated `id` property.
- * If the tasks could not be loaded, the promise resolves to an empty array.
- *
- * @throws {Error} Throws an error if the fetch operation fails or if there are issues with processing the data.
+ * @returns {Promise<Object[]>} A promise that resolves to an array of tasks with IDs, or an empty array if no data is found or an error occurs.
  */
 async function loadTasks() {
     try {
-        let response = await fetch(BASE_URL + "tasks.json");
-        let data = await response.json();
-
+        let data = await fetchTasks();
         if (data) {
-            let tasksWithIds = Object.entries(data).map(([id, task]) => ({
-                id,
-                ...task
-            }));
+            let tasksWithIds = mapTasksWithIds(data);
             return tasksWithIds;
         } else {
             return [];
         }
     } catch (error) {
+        console.error("Error loading tasks:", error);
         return [];
     }
+}
+
+
+/**
+ * Fetches task data from the database.
+ * 
+ * @async
+ * @function fetchTasks
+ * @returns {Promise<Object>} A promise that resolves to the raw task data from the database.
+ */
+async function fetchTasks() {
+    let response = await fetch(BASE_URL + "tasks.json");
+    return await response.json();
+}
+
+
+/**
+ * Maps the raw task data into an array of task objects with IDs.
+ * 
+ * @function mapTasksWithIds
+ * @param {Object} data - The raw task data from the database, where keys are task IDs and values are task details.
+ * @returns {Object[]} An array of task objects, each containing the task `id` and its corresponding details.
+ */
+function mapTasksWithIds(data) {
+    return Object.entries(data).map(([id, task]) => ({
+        id,
+        ...task
+    }));
 }
