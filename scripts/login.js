@@ -154,28 +154,21 @@ async function login() {
 }
 
 /**
- * processLogin - This function handles the login process after verifying the user's credentials.
- * It shows a popup if the login is successful and redirects to the summary page. If login fails, an error message is shown.
+ * Processes the login for a signed-up contact. If the login is successful, displays a success popup, 
+ * updates the user data, and redirects to the summary page. If the login fails, shows an alert.
  * 
- * 1. If a valid user (signedUpContact) is provided, it displays a success popup and redirects to the "summary.html" page.
- * 2. If no valid user is found, it shows an alert with an error message.
- * 
- * @param {Object} signedUpContact - The contact object representing the logged-in user, containing their information (e.g., name, email, password).
- * 
- * Example:
- * ```js
- * processLogin(signedUpContact);
- * ```
+ * @param {Object} signedUpContact - The contact object containing the details of the signed-up user.
+ * @param {string} signedUpContact.name - The name of the signed-up user.
+ * @returns {void}
  */
 async function processLogin(signedUpContact) {
-  putData(currentUser, {name:signedUpContact.name})
-
   if (signedUpContact) {
     let popup = document.getElementById('task-created-popup');
     popup.classList.add('show'); 
     setTimeout(() => {
       popup.classList.remove('show');
     }, 1500);
+    await putData('currentUser', {name:signedUpContact.name})
     window.location.href = "summary.html";
   } else {
     alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
