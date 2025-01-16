@@ -1,4 +1,7 @@
-
+/**
+ * Edits the currently selected task by toggling between task view and edit view.
+ * Sets up subtasks, populates selected contacts, and initializes the task editing interface.
+ */
 function editTask() {
     if (currentTaskIndex === null) return;
     let task = tasks[currentTaskIndex].task;
@@ -15,7 +18,10 @@ function editTask() {
 }
 
 
-
+/**
+ * Populates the selected contacts section with the assigned contacts of the current task.
+ * Creates a profile circle for each contact.
+ */
 function populateSelectedContacts() {
     let selectedContacts = document.getElementById("selectedContacts");
     selectedContacts.innerHTML = "";
@@ -28,157 +34,34 @@ function populateSelectedContacts() {
     });
 }
 
-function setupSubtaskInput() {
-    let subtaskInput = document.getElementById("newSubtaskInput");
-    let addIcon = document.getElementById("addSubtaskButton");
-    let iconsContainer = document.getElementById("subtaskIcons");
 
-    if (subtaskInput && addIcon && iconsContainer) {
-        initializeSubtaskUI(addIcon, iconsContainer);
-        addSubtaskInputListeners(subtaskInput, addIcon, iconsContainer);
-    }
-}
-
-function initializeSubtaskUI(addIcon, iconsContainer) {
-    addIcon.classList.remove("hidden");
-    iconsContainer.classList.add("hidden");
-}
-
-function addSubtaskInputListeners(subtaskInput, addIcon, iconsContainer) {
-    subtaskInput.addEventListener("focus", () => toggleSubtaskIcons(addIcon, iconsContainer, true));
-    subtaskInput.addEventListener("blur", () => {
-        if (!subtaskInput.value.trim()) {
-            toggleSubtaskIcons(addIcon, iconsContainer, false);
-        }
-    });
-    subtaskInput.addEventListener("keydown", (event) => handleSubtaskInputKeydown(event));
-}
-
-function toggleSubtaskIcons(addIcon, iconsContainer, isFocused) {
-    addIcon.classList.toggle("hidden", isFocused);
-    iconsContainer.classList.toggle("hidden", !isFocused);
-}
-
-function handleSubtaskInputKeydown(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        addSubtask(event);
-    }
-}
-
-
-
-
-function cancelSubtaskInput() {
-    let newSubtaskInput = document.getElementById("newSubtaskInput");
-    newSubtaskInput.value = "";
-    document.getElementById("addSubtaskButton").classList.remove("hidden");
-    document.getElementById("subtaskIcons").classList.add("hidden");
-}
-
-function addSubtask(event) {
-    event.preventDefault();
-    let task = tasks[currentTaskIndex]?.task;
-    let subtaskName = getSubtaskName();
-    if (subtaskName === "") return;
-    if (canAddSubtask(task)) {
-        addNewSubtask(task, subtaskName);
-        updateSubtasksList(task);
-        clearSubtaskInput();
-        unfocusInput();
-    } else {
-        alert("Es können nur maximal 3 Subtasks hinzugefügt werden.");
-    }
-}
-
-function getSubtaskName() {
-    return document.getElementById('newSubtaskInput').value.trim();
-}
-
-function canAddSubtask(task) {
-    return Object.keys(task.subtasks || {}).length < 3;
-}
-
-function addNewSubtask(task, subtaskName) {
-    task.subtasks = task.subtasks || {};
-    let subtaskId = `subtask-${subtaskCounter++}`;
-    task.subtasks[subtaskId] = { name: subtaskName, completed: false };
-}
-
-function clearSubtaskInput() {
-    document.getElementById('newSubtaskInput').value = "";
-}
-
-function unfocusInput() {
-    document.getElementById('newSubtaskInput').blur();
-}
-
-
-
-function editSubtask(subtaskId) {
-    let task = tasks[currentTaskIndex].task;
-    let subtask = task.subtasks[subtaskId];
-    let subtaskElement = document.getElementById(subtaskId);
-    if (!subtask || !subtaskElement) return;
-    setupSubtaskEditUI(subtask, subtaskElement, task);
-}
-
-function setupSubtaskEditUI(subtask, subtaskElement, task) {
-    let inputField = createInputField(subtask);
-    let checkIcon = createCheckIcon();
-    subtaskElement.innerHTML = '';
-    subtaskElement.appendChild(inputField);
-    subtaskElement.appendChild(checkIcon);
-    checkIcon.addEventListener('click', function () {
-        handleSubtaskSave(inputField, subtask, task);
-    });
-}
-
-function handleSubtaskSave(inputField, subtask, task) {
-    let newSubtaskName = inputField.value.trim();
-    if (newSubtaskName) {
-        subtask.name = newSubtaskName;
-        updateSubtasksList(task);
-    }
-}
-
-
-
-function createCheckIcon() {
-    let checkIcon = document.createElement('img');
-    checkIcon.src = './assets/icons/contact_create.png';
-    checkIcon.alt = 'Bestätigen';
-    checkIcon.className = 'confirm-img';
-    return checkIcon;
-}
-
-function createInputField(subtask){
-    let inputField = document.createElement('input');
-    inputField.type = 'text';
-    inputField.value = subtask.name;
-    inputField.maxLength = '30';
-    return inputField;
-}
-
-function deleteSubtask(subtaskId) {
-    let task = tasks[currentTaskIndex].task;
-    if (!task.subtasks[subtaskId]) return;
-    delete task.subtasks[subtaskId];
-    updateSubtasksList(task);
-}
+/**
+ * Capitalizes the first letter of a given string.
+ * @param {string} str The string to capitalize.
+ * @returns {string} The string with the first letter capitalized.
+ */
 function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+
+/**
+ * Sets the priority of a task by toggling the active state of the priority buttons.
+ * @param {string} priority The priority level to set.
+ */
 function setPriority(priority) {
     let activeButton = getActivePriorityButton();
     let clickedButton = document.querySelector(`.priority-btn[data-priority="${priority}"]`);
-
     if (clickedButton !== activeButton) {
         updatePriorityButtonState(clickedButton);
     }
 }
 
+
+/**
+ * Retrieves the currently active priority button.
+ * @returns {HTMLElement} The active priority button.
+ */
 function getActivePriorityButton() {
     let activeButton = null;
     let priorityButtons = document.querySelectorAll(".priority-btn");
@@ -191,6 +74,11 @@ function getActivePriorityButton() {
     return activeButton;
 }
 
+
+/**
+ * Updates the state of the priority button by marking it as active.
+ * @param {HTMLElement} clickedButton The priority button to mark as active.
+ */
 function updatePriorityButtonState(clickedButton) {
     if (clickedButton) {
         clickedButton.classList.add("active");
@@ -198,6 +86,10 @@ function updatePriorityButtonState(clickedButton) {
 }
 
 
+/**
+ * Toggles the dropdown visibility and icon rotation. 
+ * Handles opening and closing of the dropdown and adds/removes event listeners accordingly.
+ */
 function toggleDropdown() {
     let dropdown = document.querySelector(".dropdown");
     let dropdownToggle = document.querySelector(".dropdown-toggle");
@@ -211,12 +103,25 @@ function toggleDropdown() {
     }
 }
 
+
+/**
+ * Handles the actions when the dropdown is opened.
+ * Switches to the search input, updates dropdown items, and adds an event listener for clicks outside the dropdown.
+ * @param {HTMLElement} dropdown The dropdown element.
+ * @param {HTMLElement} dropdownToggle The dropdown toggle button element.
+ */
 function handleDropdownOpen(dropdown, dropdownToggle) {
     switchToSearchInput(dropdownToggle);
     updateDropdownItems(dropdown);
     document.addEventListener("click", handleOutsideClick);
 }
 
+
+/**
+ * Handles the actions when the dropdown is closed.
+ * Removes focus from the toggle button and resets its state.
+ * @param {HTMLElement} dropdownToggle The dropdown toggle button element.
+ */
 function handleDropdownClose(dropdownToggle) {
     dropdownToggle.blur();
     resetToDropdownButton(dropdownToggle);
@@ -224,6 +129,10 @@ function handleDropdownClose(dropdownToggle) {
 }
 
 
+/**
+ * Handles clicks outside the dropdown to close it if clicked outside.
+ * @param {Event} event The click event.
+ */
 function handleOutsideClick(event) {
     let dropdown = document.querySelector(".dropdown");
     let dropdownToggle = document.querySelector(".dropdown-toggle");
@@ -237,9 +146,10 @@ function handleOutsideClick(event) {
 }
 
 
-
-
-
+/**
+ * Toggles the checked state of a dropdown item and updates the task assignment and item style accordingly.
+ * @param {HTMLElement} item The dropdown item element.
+ */
 function toggleDropdownItem(item) {
     let checkbox = item.querySelector("input[type='checkbox']");
     if (!checkbox) return;
@@ -251,6 +161,12 @@ function toggleDropdownItem(item) {
     updateSelectedContactsDisplay(contact, checkbox.checked);
 }
 
+
+/**
+ * Updates the task's assignment of a contact based on the checkbox state.
+ * @param {string} contactKey The key of the contact.
+ * @param {boolean} isChecked The checked state of the checkbox.
+ */
 function updateTaskAssignment(contactKey, isChecked) {
     let task = tasks[currentTaskIndex].task;
     task.assignedTo = task.assignedTo || {};
@@ -266,6 +182,11 @@ function updateTaskAssignment(contactKey, isChecked) {
 }
 
 
+/**
+ * Updates the display of selected contacts by either adding or removing their profile circle.
+ * @param {Object} contact The contact object containing the contact's details.
+ * @param {boolean} isSelected Whether the contact is selected or not.
+ */
 function updateSelectedContactsDisplay(contact, isSelected) {
     let selectedContacts = document.getElementById("selectedContacts");
     if (isSelected) {
@@ -276,20 +197,11 @@ function updateSelectedContactsDisplay(contact, isSelected) {
     }
 }
 
-function createProfileCircle(contact) {
-    let fullName = contact.name.split(" ");
-    let firstName = fullName[0] || "";
-    let lastName = fullName[1] || "";
-    let initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
-    let bgColor = contact.color || "#cccccc";
-    let profileCircle = document.createElement("div");
-    profileCircle.className = "profile-circle";
-    profileCircle.style.backgroundColor = bgColor;
-    profileCircle.textContent = initials;
-    profileCircle.dataset.contactKey = contact.id;
-    return profileCircle;
-}
 
+/**
+ * Removes a profile circle from the display based on the contact's key.
+ * @param {string} contactKey The unique identifier of the contact.
+ */
 function removeProfileCircle(contactKey) {
     let selectedContacts = document.getElementById("selectedContacts");
     let profileCircle = selectedContacts.querySelector(`[data-contact-key="${contactKey}"]`);
@@ -298,6 +210,11 @@ function removeProfileCircle(contactKey) {
     }
 }
 
+
+/**
+ * Filters the dropdown items based on the search input value.
+ * Items whose contact name includes the search term will remain visible.
+ */
 function filterDropdownItems() {
     let searchInput = document.getElementById("dropdownSearchInput")
     let searchTerm = searchInput.value.toLowerCase();
@@ -312,6 +229,11 @@ function filterDropdownItems() {
     });
 }
 
+
+/**
+ * Updates the style of dropdown items based on the checked state of their associated checkbox.
+ * @param {HTMLElement} dropdown The dropdown element containing the items.
+ */
 function updateDropdownItems(dropdown) {
     let items = dropdown.querySelectorAll(".dropdown-item");
     items.forEach(item => {
@@ -322,11 +244,21 @@ function updateDropdownItems(dropdown) {
     });
 }
 
+
+/**
+ * Toggles the style of an item based on its checked state.
+ * @param {HTMLElement} item The dropdown item element.
+ * @param {boolean} isChecked Whether the item is checked or not.
+ */
 function updateItemStyle(item, isChecked) {
     item.classList.toggle("checked", isChecked);
 }
 
 
+/**
+ * Updates the HTML content of a task by replacing its task div with the newly generated task HTML.
+ * @param {number} taskIndex The index of the task in the tasks array.
+ */
 function updateTaskHtml(taskIndex) {
     let task = tasks[taskIndex].task;
     let taskDiv = document.getElementById(`task-${taskIndex}`);
@@ -335,6 +267,11 @@ function updateTaskHtml(taskIndex) {
     }
 }
 
+
+/**
+ * Saves the changes made to the current task by updating its fields and saving the data to the database.
+ * Refreshes the task popup and updates the task HTML after saving the changes.
+ */
 async function saveTaskChanges() {
     let taskObj = tasks[currentTaskIndex];
     if (!taskObj || !taskObj.id) return handleError();
@@ -345,10 +282,12 @@ async function saveTaskChanges() {
     updateTaskHtml(currentTaskIndex);
 }
 
-function handleError() {
-    console.error("Task ID is undefined. Cannot update task.");
-}
 
+/**
+ * Updates the fields of the task object with the current values from the task edit form.
+ * @param {Object} task The task object to be updated.
+ * @returns {Object} The updated task object.
+ */
 function updateTaskFields(task) {
     task.title = document.getElementById("editTaskTitle").value;
     task.description = document.getElementById("editTaskDescription").value;
@@ -359,6 +298,12 @@ function updateTaskFields(task) {
     return task;
 }
 
+
+/**
+ * Updates the task data in the database by sending a PUT request with the updated task information.
+ * @param {string} taskId The ID of the task to be updated.
+ * @param {Object} task The updated task object.
+ */
 async function updateTaskData(taskId, task) {
     await putData(`tasks/${taskId}`, task);
     tasks[currentTaskIndex].task = task;
@@ -366,7 +311,10 @@ async function updateTaskData(taskId, task) {
 }
 
 
-
+/**
+ * Gets the list of assigned contacts for the current task from the dropdown items.
+ * @returns {Object} An object containing the assigned contacts with their names and colors.
+ */
 function getAssignedContacts() {
     let assignedContacts = {};
     let dropdownItems = document.querySelectorAll(".dropdown-item");
@@ -374,6 +322,13 @@ function getAssignedContacts() {
     return assignedContacts;
 }
 
+
+/**
+ * Processes each dropdown item to check if a contact is selected (checked).
+ * If the contact is selected, it adds the contact to the assigned contacts list.
+ * @param {Element} item The dropdown item element to process.
+ * @param {Object} assignedContacts The object to store the assigned contacts.
+ */
 function processDropdownItem(item, assignedContacts) {
     let checkbox = item.querySelector("input[type='checkbox']");
     if (checkbox && checkbox.checked) {
@@ -382,6 +337,13 @@ function processDropdownItem(item, assignedContacts) {
     }
 }
 
+
+/**
+ * Adds a contact to the assigned contacts object by its key.
+ * If the contact exists in the `contacts` object, it adds the contact's name and color to the assigned contacts.
+ * @param {string} contactKey The key of the contact to add.
+ * @param {Object} assignedContacts The object to store the assigned contacts.
+ */
 function addContactToAssigned(contactKey, assignedContacts) {
     if (contacts[contactKey]) {
         assignedContacts[contactKey] = {
@@ -394,26 +356,19 @@ function addContactToAssigned(contactKey, assignedContacts) {
 }
 
 
-
-
-function getCurrentSubtasks() {
-    let subtasksList = document.querySelectorAll(".subtasks-list .subtask-item");
-    let subtasks = {};
-    subtasksList.forEach((subtaskElement, index) => {
-        let subtaskName = subtaskElement.querySelector(".subtask-item-name span").textContent.trim();
-        if (subtaskName) {
-            subtasks[index] = { name: subtaskName, completed: false };
-        }
-    });
-    return subtasks;
-}
-
+/**
+ * Refreshes the task popup by showing the task view and updating the task details.
+ */
 function refreshTaskPopup() {
     showTaskView();
     let task = tasks[currentTaskIndex].task;
     updateTaskDetails(task);
 }
 
+
+/**
+ * Shows the task view and hides the task edit view in the task popup.
+ */
 function showTaskView() {
     let taskView = document.getElementById("taskView");
     let taskEdit = document.getElementById("taskEdit");
@@ -425,6 +380,11 @@ function showTaskView() {
     }
 }
 
+
+/**
+ * Updates the task details in the task popup with the current task's data.
+ * @param {Object} task The task object containing the task's details.
+ */
 function updateTaskDetails(task) {
     document.getElementById("taskBadge").innerHTML = generateTaskBadge(task.badge);
     document.getElementById("taskTitle").innerHTML = task.title;

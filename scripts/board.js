@@ -74,22 +74,6 @@ function getCatContainerId(task) {
 
 
 /**
- * Calculates the progress of subtasks for a given task.
- * Returns the count of completed and total subtasks.
- * 
- * @param {Object} subtasks - An object where the keys are subtask IDs and the values are subtask objects.
- * @returns {Object} An object containing the completed and total subtask counts.
- */
-function calculateSubtaskProgress(subtasks) {
-    let subtaskArray = Object.values(subtasks);
-    if (!subtaskArray || subtaskArray.length === 0) return { completed: 0, total: 0 };
-    let total = subtaskArray.length;
-    let completed = subtaskArray.filter(subtask => subtask.completed === true).length;
-    return { completed, total };
-}
-
-
-/**
  * Opens the modal for adding a new task by making it visible and disabling page scroll.
  */
 function openAddTaskModal(){
@@ -229,56 +213,6 @@ function generateContactsHtml(assignedTo) {
 
 
 /**
- * Toggles the completion status of a subtask for a specific task.
- * Updates the task's subtasks and the corresponding UI elements.
- * 
- * @param {number} taskIndex - The index of the task in the tasks array.
- * @param {string} subtaskId - The ID of the subtask to toggle.
- */
-function toggleSubtask(taskIndex, subtaskId) {
-    let task = tasks[taskIndex];
-    let subtask = task.task.subtasks[subtaskId];
-    subtask.completed = !subtask.completed;
-    updateSubtaskBar(taskIndex);
-    updatePopupSubtasks(taskIndex);
-}
-
-
-/**
- * Updates the subtask progress bar in the task's UI.
- * It recalculates the progress and updates the width of the progress bar.
- * 
- * @param {number} taskIndex - The index of the task in the tasks array.
- */
-function updateSubtaskBar(taskIndex) {
-    let task = tasks[taskIndex];
-    let subtasks = task.task.subtasks;
-    let total = Object.keys(subtasks).length;
-    let completed = Object.values(subtasks).filter(subtask => subtask.completed).length;
-    let subtaskBar = document.querySelector(`#subtaskBar-${taskIndex}`);
-    if (subtaskBar) {
-        subtaskBar.querySelector(".pb-blue").style.width = `${(completed / total) * 100}%`;
-        subtaskBar.querySelector("span").innerText = `${completed}/${total} Subtasks`;
-    }
-}
-
-
-/**
- * Updates the list of subtasks displayed in the task popup.
- * It regenerates the HTML for the subtasks and updates the UI.
- * 
- * @param {number} taskIndex - The index of the task in the tasks array.
- */
-function updatePopupSubtasks(taskIndex) {
-    let task = tasks[taskIndex].task;
-    let subtasksList = document.getElementById("subtasksList");
-    if (subtasksList) {
-        subtasksList.innerHTML = generateSubtasksHtml(task.subtasks, taskIndex);
-    }
-}
-
-
-/**
  * Prevents the default behavior of the dragover event to allow for dropping.
  * 
  * @param {Event} ev - The dragover event.
@@ -397,18 +331,6 @@ function clearTaskLists() {
     taskLists.forEach(taskList => {
         taskList.innerHTML = "";
     });
-}
-
-
-/**
- * Formats a date string from "YYYY-MM-DD" to "DD/MM/YYYY".
- * 
- * @param {string} dateString - The date string in "YYYY-MM-DD" format.
- * @returns {string} - The formatted date string in "DD/MM/YYYY" format.
- */
-function formatDateToDDMMYYYY(dateString) {
-    let [year, month, day] = dateString.split("-");
-    return `${day}/${month}/${year}`;
 }
 
 

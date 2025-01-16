@@ -153,3 +153,24 @@ async function onLoadInit() {
     await includeHTML();
     await initApp();
 }
+
+
+/**
+ * Handles the error when the task ID is undefined or invalid.
+ * Logs an error message to the console.
+ */
+function handleError() {
+    console.error("Task ID is undefined. Cannot update task.");
+}
+
+
+/**
+ * Formats a date string from "YYYY-MM-DD" to "DD/MM/YYYY".
+ * 
+ * @param {string} dateString - The date string in "YYYY-MM-DD" format.
+ * @returns {string} - The formatted date string in "DD/MM/YYYY" format.
+ */
+function formatDateToDDMMYYYY(dateString) {
+    let [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+}
