@@ -69,6 +69,7 @@ function renderLogin() {
 
   startAnimation();
 }
+
 /**
  * startAnimation - This function handles the animation of the logo image and reveals the content of the page after the animation ends.
  *
@@ -94,6 +95,7 @@ function startAnimation() {
     }, 200);
   });
 }
+
 /**
  * guestLogin - This function allows a guest user to log in by setting the current user's name to "guest" in the backend and then redirects to a different page.
  *
@@ -119,6 +121,7 @@ async function guestLogin(path = "", data = {}) {
   });
   window.location.href = "summary.html";
 }
+
 /**
  * login - This function handles the login process by verifying the user's credentials (email and password) and then processes the login if the credentials are valid.
  * 
@@ -149,6 +152,7 @@ async function login() {
     alert("Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
   }
 }
+
 /**
  * processLogin - This function handles the login process after verifying the user's credentials.
  * It shows a popup if the login is successful and redirects to the summary page. If login fails, an error message is shown.
@@ -164,6 +168,8 @@ async function login() {
  * ```
  */
 async function processLogin(signedUpContact) {
+  putData(currentUser, {name:signedupContact.name})
+  
   if (signedUpContact) {
     let popup = document.getElementById('task-created-popup');
     popup.classList.add('show'); 
@@ -175,6 +181,7 @@ async function processLogin(signedUpContact) {
     alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
   }
 }
+
 /**
  * ShowPassword - This function toggles the visibility of the password field.
  * It switches the input type of the password field between "password" (hidden text) and "text" (visible text).
@@ -201,6 +208,7 @@ function showPassword() {
     icon.alt = "hide password";
   }
 }
+
 /**
  * navigateToSignup - This function redirects the user to the "signup.html" page.
  * It changes the current page URL to the signup page, effectively navigating the user to the sign-up form.

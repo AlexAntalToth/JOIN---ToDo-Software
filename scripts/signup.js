@@ -113,6 +113,7 @@ async function addContact(path = "", data = {}) {
   window.location.href = "index.html?";
   return (contactAsJson = await contact.json());
 }
+
 /**
  * addCurrentUser - This function asynchronously adds the current user (from the signup form) to the database.
  * It retrieves the user's name and email from the form fields and sends this data to the specified URL.
