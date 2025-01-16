@@ -167,9 +167,9 @@ async function login() {
  * processLogin(signedUpContact);
  * ```
  */
-async function processLogin(signedUpContact) {
+async function processLogin(signedupContact) {
   putData(currentUser, {name:signedupContact.name})
-  
+
   if (signedUpContact) {
     let popup = document.getElementById('task-created-popup');
     popup.classList.add('show'); 
