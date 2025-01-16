@@ -275,45 +275,8 @@ a:hover {
   border: 1px solid black;
 }
 
-.input-wrapper input[type="password"] + .icon {
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  background-image: url("../assets/icons/lock.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-.input-wrapper input[type="email"] + .icon {
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  background-image: url("../assets/icons/mail.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-.input-wrapper input[type="password"]:valid + .icon {
-  background-image: url("/assets/icons/eyeClosed.webp");
-}
-
-
-.icon.lock {
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  background-image: url("../assets/icons/lock.png");
-  background-repeat: no-repeat;
-  background-size: contain;
+.lock-icon  {
   cursor: pointer;
-}
-
-.icon.eye {
-  background-image: url("../assets/icons/eyeClosed.webp");
-}
-
-.icon.disabled {
-  pointer-events: none; 
 }
 
 .popup {

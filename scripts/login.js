@@ -43,7 +43,7 @@ function renderLogin() {
     placeholder="Email"
     type="email"
   />
-  <i class="icon mail"></i> 
+  <i class="icon"><img src="assets/icons/mail.png" /></i> 
 </div>
 
 <div class="input-wrapper">
@@ -54,7 +54,9 @@ function renderLogin() {
     placeholder="Password"
     type="password"
   />
-  <i class="icon lock" id="togglePassword" onclick="ShowPassword()"></i>
+  <i class="icon" id="togglePassword" onclick="showPassword()">
+  <img class="lock-icon" src="assets/icons/lock.png" alt="hide password">
+</i>
 </div>
 
   <div class="login_guestlogin">
@@ -185,18 +187,18 @@ async function processLogin(signedUpContact) {
  * ShowPassword();
  * ```
  */
-function ShowPassword() {
+function showPassword() {
   let passwordField = document.getElementById("password");
-  let togglePasswordIcon = document.getElementById("togglePassword");
+  let icon = document.querySelector("#togglePassword img");
 
   if (passwordField.type === "password") {
     passwordField.type = "text";
-    togglePasswordIcon.classList.remove("lock");
-    togglePasswordIcon.classList.add("eye");
+    icon.src = "assets/icons/eye.png"; 
+    icon.alt = "show password";
   } else {
     passwordField.type = "password";
-    togglePasswordIcon.classList.remove("eye");
-    togglePasswordIcon.classList.add("lock");
+    icon.src = "assets/icons/lock.png"; 
+    icon.alt = "hide password";
   }
 }
 /**

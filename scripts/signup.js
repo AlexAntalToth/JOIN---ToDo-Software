@@ -30,7 +30,6 @@ function renderSignup() {
   let wrapDiv = document.getElementById("wrapDiv");
 
   wrapDiv.innerHTML = `
-
     <img class="join_image" src="assets/img/logo_grey.png" alt="Join img" />
     <div class="signup_div">
       <img onclick="navigateToLogin()" class="arrow-img" src="assets/icons/arrow-left-line.png" alt="">
@@ -39,50 +38,49 @@ function renderSignup() {
         <div class="separator"></div>
       </div>
       
-   <form class="form" onsubmit="if (!checkPassword()) return false; addContact(); addCurrentUser(); return false;">
-  <div class="inputfields_div">
+      <form class="form" onsubmit="if (!checkPassword()) return false; addContact(); addCurrentUser(); return false;">
+        <div class="inputfields_div">
+          <div class="input-wrapper">
+            <input class="input1" id="name" required placeholder="Name" type="text" />
+            <i class="icon"><img src="assets/icons/person.png" /></i>
+          </div>
 
-    <div class="input-wrapper">
-      <input class="input1" id="name" required placeholder="Name" type="name" />
-      <i class="icon"><img src="assets/icons/person.png" /></i>
-    </div>
+          <div class="input-wrapper">
+            <input class="input2" id="email" required placeholder="Email" type="email" />
+            <i class="icon"><img src="assets/icons/mail.png" /></i>
+          </div>
 
-   <div class="input-wrapper">
-      <input class="input2" id="email" required placeholder="Email" type="email" />
-      <i class="icon"><img src="assets/icons/mail.png" /></i>
-    </div>
+         <div class="input-wrapper">
+  <input class="input3" id="password" required placeholder="Password" type="password" />
+  <i class="icon" onclick="showPassword('password', 'passwordIcon')">
+    <img class="lock-icon" id="passwordIcon" src="assets/icons/lock.png" alt="toggle password">
+  </i>
+</div>
 
-    <div class="input-wrapper">
-      <input class="input3" id="password" required placeholder="Password" type="Password" />
-      <i class="icon"><img src="assets/icons/lock.png" /></i>
-    </div>
-    
-    <div class="input-wrapper">
-      <input class="input4" id="confirmPassword" required placeholder="Confirm password" type="password" />
-      <i class="icon"><img src="assets/icons/mail.png" /></i>
-    </div>
-  </div>
+          <div class="input-wrapper">
+            <input class="input4" id="confirmPassword" required placeholder="Confirm password" type="password" />
+            <i class="icon" onclick="showPassword('confirmPassword', 'confirmPasswordIcon')"><img class="lock-icon" id="confirmPasswordIcon" src="assets/icons/lock.png" alt="toggle password"></i>
+          </div>
+        </div>
 
-  <div class="checkbox_div">
-  
-    <input
-      id="acceptPolicy"
-      class="checkbox"
-      type="checkbox"
-    />
-    
-    <p>
-      I accept the <a class="checkbox_input" href="pirvacy_policy.html">privacy policy</a>
-    </p>
-  </div>
-  <button class="blue_button1">Sign up</button>
-</form>
+        <div class="checkbox_div">
+          <div class="checkbox-wrapper">
+            <input id="acceptPolicy" class="checkbox" type="checkbox" />
+            <label for="acceptPolicy" class="checkbox-label"></label>
+          </div>
+          <p>
+            I accept the <a class="checkbox_input" href="privacy_policy.html">privacy policy</a>
+          </p>
+        </div>
+        <button class="blue_button1">Sign up</button>
+      </form>
 
-    <div class="dataprotection_div">
-      <a href="privacy_policy.html">Privacy Policy</a>
-      <a href="legal_notice.html">Legal Notice</a>
-    </div>`;
+      <div class="dataprotection_div">
+        <a href="privacy_policy.html">Privacy Policy</a>
+        <a href="legal_notice.html">Legal Notice</a>
+      </div>`;
 }
+
 /**
  * addContact - This function asynchronously adds a new contact (user) to the database by making a POST request.
  * It retrieves the user's name, email, and password from the form fields, then sends this data to the specified URL.
@@ -112,7 +110,7 @@ async function addContact(path = "", data = {}) {
       password: password,
     }),
   });
-  window.location.href = "index.html?msg=Die Registrierung war erfolgreich";
+  window.location.href = "index.html?";
   return (contactAsJson = await contact.json());
 }
 /**
@@ -143,6 +141,7 @@ async function addCurrentUser(path = "", data = {}) {
     }),
   });
 }
+
 /**
  * checkPassword - This function validates the password and confirmation password fields during user signup.
  * It checks if the password and confirmation password match, and if the user has accepted the privacy policy.
@@ -171,6 +170,7 @@ function checkPassword() {
   }
   return true;
 }
+
 /**
  * ShowPassword - This function toggles the visibility of the password field when the user clicks on the password visibility icon.
  * It changes the password field's type between "password" (hidden) and "text" (visible), and also swaps the icon between a lock and an eye.
@@ -182,20 +182,19 @@ function checkPassword() {
  * ShowPassword();
  * ```
  */
-function ShowPassword() {
-  let passwordField = document.getElementById("password");
-  let togglePasswordIcon = document.getElementById("togglePassword");
+function showPassword(id, iconId) {
+  const passwordField = document.getElementById(id);
+  const icon = document.getElementById(iconId);
 
   if (passwordField.type === "password") {
     passwordField.type = "text";
-    togglePasswordIcon.classList.remove("lock");
-    togglePasswordIcon.classList.add("eye");
+    icon.src = "assets/icons/eye.png"; 
   } else {
     passwordField.type = "password";
-    togglePasswordIcon.classList.remove("eye");
-    togglePasswordIcon.classList.add("lock");
+    icon.src = "assets/icons/lock.png"; 
   }
 }
+
 /**
  * navigateToLogin - This function navigates the user to the login page (index.html).
  * It changes the current page's URL to "index.html", effectively redirecting the user to the login page.
