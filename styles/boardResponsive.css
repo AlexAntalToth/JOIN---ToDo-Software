@@ -1,0 +1,115 @@
+@media (max-width: 1230px) {
+    .board-container {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+    .board {
+      flex-direction: column;
+    }
+    .row {
+      width: 100%;
+      max-width: 100%;
+      padding-bottom: 12px;
+    }
+    .row h2 {
+      width: 100%;
+    }
+    .no-tasks {
+      width: 100%;
+    }
+    .task-list {
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      min-height: auto;
+      max-width: 100%;
+      overflow-x: scroll;
+      scrollbar-width: none;
+    }
+    .task-list::-webkit-scrollbar {
+      display: none;
+    }
+    .task-title {
+      font-size: 14px;
+    }
+    .task-desc {
+      font-size: 12px;
+    }
+    .task-badge {
+      font-size: 14px;
+      border-radius: 8px;
+      padding: 4px 16px;
+      color: white;
+      width: fit-content;
+    }
+    .task {
+      gap: 16px;
+      padding: 12px;
+      max-width: 196px;
+      flex-shrink: 0;
+    }
+    .row h2 {
+      font-size: 16px;
+    }
+  }
+  
+  @media (max-width: 1000px) {
+    .board-container {
+      padding: 40px 40px;
+    }
+    .board-headline {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      position: relative;
+    }
+    .board-headline #plusAddTaskM {
+      display: block;
+      position: absolute;
+      right: 0;
+      top: 10%;
+    }
+    .find-and-add {
+      width: 100%;
+    }
+    .find-and-add .add-task {
+      display: none;
+    }
+    .searchbar {
+      width: 100%;
+      margin-top: 40px;
+    }
+    .searchbar input {
+      flex: 1;
+    }
+    .add-task-modal {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 700px) {
+    .board-container {
+      margin-top: 80px;
+      margin-left: 0;
+      margin-bottom: 80px;
+    }
+    .popup-content h1 {
+      font-size: 46px;
+    }
+    .priority-btn p {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 420px) {
+    .searchbar input {
+      width: 100%;
+    }
+    .board-headline h1 {
+      font-size: 56px;
+    }
+    .board-headline #plusAddTaskM {
+      top: 8%;
+    }
+  }
+  
