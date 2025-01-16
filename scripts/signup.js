@@ -183,8 +183,8 @@ function checkPassword() {
  * ```
  */
 function showPassword(id, iconId) {
-  const passwordField = document.getElementById(id);
-  const icon = document.getElementById(iconId);
+  let passwordField = document.getElementById(id);
+  let icon = document.getElementById(iconId);
 
   if (passwordField.type === "password") {
     passwordField.type = "text";
