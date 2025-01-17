@@ -25,7 +25,7 @@ function generateTaskHtml(task, index) {
     let subtasks = task.subtasks || {}; 
     let { completed, total } = calculateSubtaskProgress(subtasks);
     return `
-        <div class="task" id="task-${index}" draggable="true" ondragstart="startDragging(${index})">
+        <div class="task" id="task-${index}" draggable="true"  ondragstart="startDragging(${index})">
             ${generateTaskBadge(task.badge)}
             <div class="task-title" onclick="openTaskPopup(${index})">${task.title}</div>
             <div class="task-desc">${task.description}</div>
@@ -39,9 +39,12 @@ function generateTaskHtml(task, index) {
             </div>
             <div class="task-footer">
                 <div class="contacts">
-                    ${task.assignedTo ? Object.keys(task.assignedTo)
-                        .filter(contactKey => task.assignedTo[contactKey].name && task.assignedTo[contactKey].name.trim() !== "")
-                        .map(contactKey => {
+                    ${task.assignedTo ? (() => {
+                        const contactKeys = Object.keys(task.assignedTo)
+                            .filter(contactKey => task.assignedTo[contactKey].name && task.assignedTo[contactKey].name.trim() !== "");
+                        const displayedContacts = contactKeys.slice(0, 3);
+                        const remainingCount = contactKeys.length - displayedContacts.length;
+                        return displayedContacts.map(contactKey => {
                             let contactName = task.assignedTo[contactKey].name;
                             let bgColor = task.assignedTo[contactKey].color;
                             let initials = contactName.split(" ").map(name => name[0]).join("");
@@ -50,8 +53,14 @@ function generateTaskHtml(task, index) {
                                     ${initials}
                                 </div>
                             `;
-                        }).join("") : ""}
-                </div>          
+                        }).join("") + 
+                        (remainingCount > 0 ? `
+                            <div class="profile-circle extra-count">
+                                +${remainingCount}
+                            </div>
+                        ` : "");
+                    })() : ""}
+                </div>      
                 ${task.priority ? `
                     <div class="priority">
                         <img src="./assets/icons/priority_${task.priority}.png" alt="Priority">

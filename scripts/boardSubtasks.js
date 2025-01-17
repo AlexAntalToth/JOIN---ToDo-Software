@@ -312,20 +312,24 @@ function createCheckIcon() {
 
 
 /**
- * Creates a profile circle element for a contact with initials and background color.
+ * Creates a profile circle element for the given contact. The profile circle will display the initials of the contact 
+ * and be styled with the contact's color.
+ * 
  * @param {Object} contact The contact object containing the contact's details.
- * @returns {HTMLElement} The created profile circle element.
+ * @param {string} contact.name The name of the contact. The initials will be derived from this.
+ * @param {string} contact.color The background color of the profile circle.
+ * @returns {HTMLElement} A div element representing the profile circle with the contact's initials and color.
+ * @throws {Error} If the contact object is invalid or missing required properties, an error is logged to the console.
  */
 function createProfileCircle(contact) {
-    let fullName = contact.name.split(" ");
-    let firstName = fullName[0] || "";
-    let lastName = fullName[1] || "";
-    let initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
-    let bgColor = contact.color || "#cccccc";
+    if (!contact || !contact.name || !contact.color) {
+        console.error("Invalid contact data:", contact);
+        return document.createElement("div");
+    }
+    let initials = contact.name.split(" ").map(name => name[0]).join("");
     let profileCircle = document.createElement("div");
-    profileCircle.className = "profile-circle";
-    profileCircle.style.backgroundColor = bgColor;
+    profileCircle.classList.add("profile-circle");
+    profileCircle.style.backgroundColor = contact.color;
     profileCircle.textContent = initials;
-    profileCircle.dataset.contactKey = contact.id;
     return profileCircle;
 }

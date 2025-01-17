@@ -83,7 +83,7 @@
       flex: 1;
     }
     .add-task-modal {
-      display: none;
+      display: none !important;
     }
   }
   
@@ -94,10 +94,14 @@
       margin-bottom: 80px;
     }
     .popup-content h1 {
-      font-size: 46px;
+      font-size: 40px !important;
     }
     .priority-btn p {
       display: none;
+    }
+    .popup-content {
+      border-radius: 15px !important;
+      gap: 8px !important;
     }
   }
   

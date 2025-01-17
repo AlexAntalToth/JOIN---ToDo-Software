@@ -19,19 +19,47 @@ function editTask() {
 
 
 /**
- * Populates the selected contacts section with the assigned contacts of the current task.
- * Creates a profile circle for each contact.
+ * Populates the selected contacts display by showing up to 3 contacts and a count of additional contacts if necessary.
+ * @function
  */
 function populateSelectedContacts() {
     let selectedContacts = document.getElementById("selectedContacts");
     selectedContacts.innerHTML = "";
-    const assignedTo = tasks[currentTaskIndex]?.task?.assignedTo || {};
-    Object.values(assignedTo).forEach(({ name, color }) => {
-        if (name && color) {
-            let profileCircle = createProfileCircle({ name, color });
-            selectedContacts.appendChild(profileCircle);
-        }
+    const contactsArray = filterAssignedContacts();
+    const displayedContacts = contactsArray.slice(0, 3);
+    const remainingCount = contactsArray.length - displayedContacts.length;
+    displayedContacts.forEach(({ name, color }) => {
+        let profileCircle = createProfileCircle({ name, color });
+        selectedContacts.appendChild(profileCircle);
     });
+    updateExtraCount(selectedContacts, remainingCount);
+}
+
+
+/**
+ * Filters the assigned contacts to return only those with valid names and colors.
+ * @function
+ * @returns {Array} An array of contact objects that have both a valid name and color.
+ */
+function filterAssignedContacts() {
+    const assignedTo = tasks[currentTaskIndex]?.task?.assignedTo || {};
+    return Object.values(assignedTo).filter(({ name, color }) => name && color);
+}
+
+
+/**
+ * Updates the display with a count of remaining contacts if there are more than 3 assigned contacts.
+ * @function
+ * @param {HTMLElement} container The DOM element where the count will be displayed.
+ * @param {number} remainingCount The number of additional contacts to display.
+ */
+function updateExtraCount(container, remainingCount) {
+    if (remainingCount > 0) {
+        let extraCountCircle = document.createElement("div");
+        extraCountCircle.classList.add("profile-circle", "extra-count");
+        extraCountCircle.textContent = `+${remainingCount}`;
+        container.appendChild(extraCountCircle);
+    }
 }
 
 
@@ -155,10 +183,9 @@ function toggleDropdownItem(item) {
     if (!checkbox) return;
     checkbox.checked = !checkbox.checked;
     let contactKey = checkbox.value;
-    let contact = contacts[contactKey];
     updateTaskAssignment(contactKey, checkbox.checked);
     updateItemStyle(item, checkbox.checked);
-    updateSelectedContactsDisplay(contact, checkbox.checked);
+    updateSelectedContactsDisplay();
 }
 
 
@@ -170,9 +197,8 @@ function toggleDropdownItem(item) {
 function updateTaskAssignment(contactKey, isChecked) {
     let task = tasks[currentTaskIndex].task;
     task.assignedTo = task.assignedTo || {};
-
     if (isChecked) {
-        task.assignedTo[contactKey] = true;
+        task.assignedTo[contactKey] = contacts[contactKey];
     } else {
         delete task.assignedTo[contactKey];
         if (Object.keys(task.assignedTo).length === 0) {
@@ -183,30 +209,52 @@ function updateTaskAssignment(contactKey, isChecked) {
 
 
 /**
- * Updates the display of selected contacts by either adding or removing their profile circle.
- * @param {Object} contact The contact object containing the contact's details.
- * @param {boolean} isSelected Whether the contact is selected or not.
+ * Updates the display of selected contacts by rendering the profile circles and the extra count if applicable.
+ * This function limits the number of displayed contacts to 3, and shows the remaining count if there are more than 3.
  */
-function updateSelectedContactsDisplay(contact, isSelected) {
+function updateSelectedContactsDisplay() {
     let selectedContacts = document.getElementById("selectedContacts");
-    if (isSelected) {
-        let profileCircle = createProfileCircle(contact);
-        selectedContacts.appendChild(profileCircle);
-    } else {
-        removeProfileCircle(contact.id);
-    }
+    let task = tasks[currentTaskIndex].task;
+    let assignedContacts = Object.values(task.assignedTo || {});
+    const displayedContacts = assignedContacts.slice(0, 3); // Zeige maximal 3 Kontakte
+    const remainingCount = assignedContacts.length - displayedContacts.length;
+
+    clearAndRenderProfileCircles(selectedContacts, displayedContacts);
+    updateExtraCount(selectedContacts, remainingCount);
 }
 
 
 /**
- * Removes a profile circle from the display based on the contact's key.
- * @param {string} contactKey The unique identifier of the contact.
+ * Clears the existing profile circles in the container and renders new ones for the given contacts.
+ * @param {HTMLElement} container The container element to hold the profile circles.
+ * @param {Array} contacts The array of contacts to render profile circles for.
  */
-function removeProfileCircle(contactKey) {
-    let selectedContacts = document.getElementById("selectedContacts");
-    let profileCircle = selectedContacts.querySelector(`[data-contact-key="${contactKey}"]`);
-    if (profileCircle) {
-        selectedContacts.removeChild(profileCircle);
+function clearAndRenderProfileCircles(container, contacts) {
+    container.innerHTML = "";
+    contacts.forEach(contact => {
+        let profileCircle = createProfileCircle(contact);
+        container.appendChild(profileCircle);
+    });
+}
+
+
+/**
+ * Updates the display of the extra count if there are more than 3 contacts. 
+ * It shows a circle with the remaining count of contacts.
+ * @param {HTMLElement} container The container element where the extra count will be displayed.
+ * @param {number} remainingCount The number of remaining contacts to display in the extra count circle.
+ */
+function updateExtraCount(container, remainingCount) {
+    let extraCountCircle = container.querySelector(".extra-count");
+    if (remainingCount > 0) {
+        if (!extraCountCircle) {
+            extraCountCircle = document.createElement("div");
+            extraCountCircle.classList.add("profile-circle", "extra-count");
+            container.appendChild(extraCountCircle);
+        }
+        extraCountCircle.textContent = `+${remainingCount}`;
+    } else if (extraCountCircle) {
+        extraCountCircle.remove();
     }
 }
 

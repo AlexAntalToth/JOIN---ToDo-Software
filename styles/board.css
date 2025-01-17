@@ -378,3 +378,12 @@ body {
 .dropdown.open .dropdown-menu {
   display: block;
 }
+
+.profile-circle.extra-count {
+  background-color: #ccc; 
+  color: #2A3647;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
