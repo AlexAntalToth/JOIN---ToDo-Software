@@ -176,6 +176,7 @@ function getContactFormValues() {
 }
 
 
+/***** */
 /**
  * Validates the input fields for a new contact.
  * 
@@ -198,7 +199,17 @@ function validateContactFields(name, email, phone) {
         showErrorMessage("Please enter your first and last name.");
         return false;
     }
+    if (!validateEmail(email)) {
+        showErrorMessage("Please enter a valid email address.");
+        return false;
+    }
     return true;
+}
+
+/***** */
+function validateEmail(email) {
+    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
 }
 
 

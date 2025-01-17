@@ -130,7 +130,7 @@ function addSubtask() {
     }
 }
 
-
+/***** */
 /**
  * Validates the input value for creating a new subtask.
  * Checks if the input is non-empty and if the task already has less than 3 subtasks.
@@ -143,10 +143,6 @@ function validateSubtask(inputValue) {
     let subtaskName = inputValue.trim();
     if (subtaskName === "") {
         showErrorMessage("Please enter a subtask.");
-        return null;
-    }
-    if (tasks[currentTaskIndex].subtasks.length >= 3) {
-        showErrorMessage("Maximum 3 subtasks are allowed.");
         return null;
     }
     return subtaskName;

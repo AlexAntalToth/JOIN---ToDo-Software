@@ -1,27 +1,47 @@
-//Due Date
-/**
- * Sets up the input event listener on the due date field to trigger validation 
- * whenever the user changes the value in the field.
- * 
- */
+/***** */
 function setupDueDateValidation() {
     let dueDateField = document.getElementById("task-dueDate");
+
     if (dueDateField) {
         dueDateField.addEventListener("input", () => {
+            // Formatierung während der Eingabe
+            let value = dueDateField.value.replace(/\D/g, ""); // Nur Zahlen behalten
+            let formatted = "";
+
+            if (value.length >= 1) formatted += value.substring(0, 2); // Tag
+            if (value.length >= 3) formatted += "/" + value.substring(2, 4); // Monat
+            if (value.length >= 5) formatted += "/" + value.substring(4, 8); // Jahr
+
+            dueDateField.value = formatted;
+
+            // Validierung des Felds
             validateFields();
+        });
+
+        dueDateField.addEventListener("focus", () => {
+            if (dueDateField.value.trim() === "") {
+                dueDateField.value = "dd/mm/yyyy";
+            }
+        });
+
+        dueDateField.addEventListener("blur", () => {
+            if (dueDateField.value === "dd/mm/yyyy") {
+                dueDateField.value = "";
+            }
         });
     }
 }
 
-
-/**
- * Sets up a click event listener on the document to detect when the date icon 
- * is clicked and trigger the corresponding handler.
- * 
- */
+/***** */
 function setupDateIconClickListener() {
     document.addEventListener("click", (event) => {
-        handleDateIconClick(event);
+        let dateIcon = event.target.closest(".addTask-date-icon");
+        if (dateIcon) {
+            let dateInput = document.getElementById("task-dueDate");
+            if (dateInput) {
+                dateInput.focus();
+            }
+        }
     });
 }
 
@@ -43,7 +63,7 @@ function handleDateIconClick(event) {
     }
 }
 
-
+/***** */
 // Prio-Buttons
 /**
  * Sets up event listeners on the priority buttons (urgent, medium, low) to 
@@ -59,6 +79,7 @@ function setupPriorityButtons() {
     let lowButton = document.getElementById('task-low');
     if (urgentButton && mediumButton && lowButton) {
         let priorityButtons = [urgentButton, mediumButton, lowButton];
+        activateButton(mediumButton);
         priorityButtons.forEach(button => {
             button.addEventListener('click', () => handlePriorityClick(button, priorityButtons));
         });
