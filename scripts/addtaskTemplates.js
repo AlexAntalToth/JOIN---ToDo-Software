@@ -215,30 +215,95 @@ function getAssignedToElements() {
 
 
 /**
- * Updates the displayed initials of selected contacts in the "assigned to" container.
- * This function first removes any existing selected contacts' initials, then adds new initials 
- * for the currently selected contacts. The initials are displayed in circles with background 
- * colors based on the contact's color.
- * 
- * @returns {void}
+ * Updates the initials of selected contacts and adds them to the assignedTo container.
  */
 function updateSelectedContactInitials() {
     let assignedToContainer = document.querySelector(".addTask-assignedTo-container");
     let selectedContactsDiv = document.querySelector(".selected-contacts");
+
     if (selectedContactsDiv) selectedContactsDiv.remove();
+    
     if (selectedContacts.length > 0) {
-        let initialsHTML = selectedContacts
-            .map(contact => `
-                <div class="contact-initials" style="background-color: ${contact.color};">
-                    ${contact.name.split(" ").map(name => name[0]).join("").toUpperCase()}
-                </div>
-            `)
-            .join("");
+        let initialsHTML = generateInitialsHTML(assignedToContainer);
         let newSelectedContactsDiv = document.createElement("div");
         newSelectedContactsDiv.className = "selected-contacts";
         newSelectedContactsDiv.innerHTML = initialsHTML;
         assignedToContainer.appendChild(newSelectedContactsDiv);
     }
+}
+
+/**
+ * Generates the HTML for the initials of selected contacts, considering the available width.
+ * @param {HTMLElement} assignedToContainer - The container where the initials will be displayed.
+ * @returns {string} The generated HTML for the contact initials.
+ */
+function generateInitialsHTML(assignedToContainer) {
+    let maxWidth = assignedToContainer.offsetWidth;
+    let usedWidth = 0;
+    let remainingContacts = 0;
+    let initialsHTML = "";
+
+    for (let i = 0; i < selectedContacts.length; i++) {
+        let contact = selectedContacts[i];
+        let contactInitial = createContactInitial(contact);
+        let tempWidth = getTempDivWidth(assignedToContainer, contactInitial);
+
+        if (usedWidth + tempWidth <= maxWidth) {
+            initialsHTML += contactInitial;
+            usedWidth += tempWidth;
+        } else {
+            remainingContacts = selectedContacts.length - i;
+            break;
+        }
+    }
+
+    if (remainingContacts > 0) {
+        initialsHTML += createMoreContactsInitial(remainingContacts);
+    }
+
+    return initialsHTML;
+}
+
+/**
+ * Creates the HTML for a contact's initials.
+ * @param {Object} contact - The contact object containing the name and color.
+ * @returns {string} The HTML string representing the contact's initials.
+ */
+function createContactInitial(contact) {
+    return `
+        <div class="contact-initials" style="background-color: ${contact.color};">
+            ${contact.name.split(" ").map(name => name[0]).join("").toUpperCase()}
+        </div>
+    `;
+}
+
+/**
+ * Creates the HTML for the "more contacts" initials display.
+ * @param {number} remainingContacts - The number of remaining contacts to be displayed.
+ * @returns {string} The HTML string for displaying the remaining contacts.
+ */
+function createMoreContactsInitial(remainingContacts) {
+    return `
+        <div class="contact-initials more-contacts">
+            +${remainingContacts}
+        </div>
+    `;
+}
+
+/**
+ * Calculates the width of a temporary div that wraps the contact initials.
+ * @param {HTMLElement} assignedToContainer - The container to calculate the width in.
+ * @param {string} contactInitial - The HTML string for the contact's initials.
+ * @returns {number} The width of the temporary div.
+ */
+function getTempDivWidth(assignedToContainer, contactInitial) {
+    let tempDiv = document.createElement("div");
+    tempDiv.style.display = "inline-block";
+    tempDiv.innerHTML = contactInitial;
+    assignedToContainer.appendChild(tempDiv);
+    let tempWidth = tempDiv.offsetWidth;
+    assignedToContainer.removeChild(tempDiv);
+    return tempWidth;
 }
 
 

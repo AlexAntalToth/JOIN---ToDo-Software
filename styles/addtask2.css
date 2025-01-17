@@ -84,12 +84,13 @@
 
 .selected-contacts {
     display: flex;
+    align-items: center;
+    overflow: hidden;
     padding-top: 8px;
 }
 
 .contact-item.selected {
     background-color: rgb(42, 54, 71);
-    /* Grau */
 }
 
 #searchContacts {

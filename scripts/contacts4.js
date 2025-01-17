@@ -248,33 +248,6 @@ function getFieldValue(fieldId) {
 
 
 /**
- * Validates the fields of a contact form to ensure all required fields are filled
- * and that the name contains both a first and last name.
- * 
- * This function checks if the provided name, email, and phone fields are not empty. 
- * It also ensures that the name contains both a first and last name. If any validation fails, 
- * an error message is shown, and the function returns `false`. Otherwise, it returns `true`.
- * 
- * @function validateContactFields
- * @param {string} name - The name of the contact, which should contain at least a first and last name.
- * @param {string} email - The email of the contact.
- * @param {string} phone - The phone number of the contact.
- * @returns {boolean} `true` if all fields are valid, `false` otherwise.
- */
-function validateContactFields(name, email, phone) {
-    if (!name || !email || !phone) {
-        showErrorMessage("Please complete all fields.");
-        return false;
-    }
-    if (name.split(" ").length < 2) {
-        showErrorMessage("Please enter your first and last name.");
-        return false;
-    }
-    return true;
-}
-
-
-/**
  * Fetches an existing contact's data from the database using the contact's ID.
  * 
  * This function sends a GET request to the server to retrieve the details of a contact 

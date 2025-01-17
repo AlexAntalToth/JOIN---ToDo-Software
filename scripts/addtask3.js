@@ -1,38 +1,104 @@
-/***** */
-function setupDueDateValidation() {
-    let dueDateField = document.getElementById("task-dueDate");
+/**
+ * Formats the given input value as a due date in the format "dd/mm/yyyy".
+ * If the value is shorter than the full date format, it will add slashes ("/") appropriately.
+ *
+ * @param {string} value - The raw input value (without slashes) to be formatted.
+ * @returns {string} The formatted date string in the "dd/mm/yyyy" format.
+ */
+function formatDueDateInput(value) {
+    let formatted = "";
+    if (value.length >= 1) formatted += value.substring(0, 2);
+    if (value.length >= 3) formatted += "/" + value.substring(2, 4);
+    if (value.length >= 5) formatted += "/" + value.substring(4, 8);
+    return formatted;
+}
 
-    if (dueDateField) {
-        dueDateField.addEventListener("input", () => {
-            // Formatierung während der Eingabe
-            let value = dueDateField.value.replace(/\D/g, ""); // Nur Zahlen behalten
-            let formatted = "";
 
-            if (value.length >= 1) formatted += value.substring(0, 2); // Tag
-            if (value.length >= 3) formatted += "/" + value.substring(2, 4); // Monat
-            if (value.length >= 5) formatted += "/" + value.substring(4, 8); // Jahr
-
-            dueDateField.value = formatted;
-
-            // Validierung des Felds
-            validateFields();
-        });
-
-        dueDateField.addEventListener("focus", () => {
-            if (dueDateField.value.trim() === "") {
-                dueDateField.value = "dd/mm/yyyy";
-            }
-        });
-
-        dueDateField.addEventListener("blur", () => {
-            if (dueDateField.value === "dd/mm/yyyy") {
-                dueDateField.value = "";
-            }
-        });
+/**
+ * Sets the value of the due date field to "dd/mm/yyyy" when the field is focused and is empty.
+ *
+ * @param {HTMLInputElement} dueDateField - The input field element for the due date.
+ */
+function handleDueDateFocus(dueDateField) {
+    if (dueDateField.value.trim() === "") {
+        dueDateField.value = "dd/mm/yyyy";
     }
 }
 
-/***** */
+
+/**
+ * Clears the value of the due date field if it is still set to the placeholder value "dd/mm/yyyy"
+ * when the field loses focus.
+ *
+ * @param {HTMLInputElement} dueDateField - The input field element for the due date.
+ */
+function handleDueDateBlur(dueDateField) {
+    if (dueDateField.value === "dd/mm/yyyy") {
+        dueDateField.value = "";
+    }
+}
+
+
+/**
+ * Sets up event listeners for the due date input field.
+ * - On input, it formats the due date.
+ * - On focus, it sets a placeholder.
+ * - On blur, it clears the placeholder if applicable.
+ */
+function setupDueDateValidation() {
+    let dueDateField = document.getElementById("task-dueDate");
+    if (dueDateField) {
+        setupDueDateInputListener(dueDateField);
+        setupDueDateFocusListener(dueDateField);
+        setupDueDateBlurListener(dueDateField);
+    }
+}
+
+
+/**
+ * Sets up the input event listener for the due date field to format the input.
+ * 
+ * @param {HTMLInputElement} dueDateField - The due date input field.
+ */
+function setupDueDateInputListener(dueDateField) {
+    dueDateField.addEventListener("input", () => {
+        let value = dueDateField.value.replace(/\D/g, "");
+        dueDateField.value = formatDueDateInput(value);
+        validateFields();
+    });
+}
+
+
+/**
+ * Sets up the focus event listener for the due date field to handle placeholder text.
+ * 
+ * @param {HTMLInputElement} dueDateField - The due date input field.
+ */
+function setupDueDateFocusListener(dueDateField) {
+    dueDateField.addEventListener("focus", () => {
+        handleDueDateFocus(dueDateField);
+    });
+}
+
+
+/**
+ * Sets up the blur event listener for the due date field to clear the placeholder if needed.
+ * 
+ * @param {HTMLInputElement} dueDateField - The due date input field.
+ */
+function setupDueDateBlurListener(dueDateField) {
+    dueDateField.addEventListener("blur", () => {
+        handleDueDateBlur(dueDateField);
+    });
+}
+
+
+/**
+ * Sets up an event listener for the document to handle clicks on the date icon.
+ * When the date icon is clicked, the associated due date input field is focused.
+ * 
+ * @listens document#click
+ */
 function setupDateIconClickListener() {
     document.addEventListener("click", (event) => {
         let dateIcon = event.target.closest(".addTask-date-icon");
@@ -63,15 +129,14 @@ function handleDateIconClick(event) {
     }
 }
 
-/***** */
-// Prio-Buttons
 /**
- * Sets up event listeners on the priority buttons (urgent, medium, low) to 
- * handle clicks and update the task's priority accordingly. When a button is 
- * clicked, it calls `handlePriorityClick` to update the priority and highlight 
- * the selected button.
+ * Sets up event listeners for the priority buttons (Urgent, Medium, Low).
+ * It also activates the Medium button by default when the page loads.
  * 
- * @function
+ * This function listens for click events on the priority buttons and triggers
+ * the `handlePriorityClick` function to handle the button selection.
+ * 
+ * @listens document#click
  */
 function setupPriorityButtons() {
     let urgentButton = document.getElementById('task-urgent');

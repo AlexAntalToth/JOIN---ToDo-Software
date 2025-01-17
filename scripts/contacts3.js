@@ -176,19 +176,15 @@ function getContactFormValues() {
 }
 
 
-/***** */
 /**
- * Validates the input fields for a new contact.
+ * Validates the contact form fields (name, email, and phone).
+ * Checks that all fields are filled, that the name contains both first and last name,
+ * and that the email address is valid.
  * 
- * This function checks if all required fields (name, email, and phone) are filled,
- * and validates the format of the name to ensure it contains both a first and a last name.
- * If any validation fails, an error message is shown and the function returns false.
- * 
- * @function validateContactFields
- * @param {string} name - The name of the contact.
+ * @param {string} name - The name of the contact (should contain first and last name).
  * @param {string} email - The email address of the contact.
  * @param {string} phone - The phone number of the contact.
- * @returns {boolean} Returns `true` if all validations pass, `false` otherwise.
+ * @returns {boolean} Returns `true` if all fields are valid, otherwise `false`.
  */
 function validateContactFields(name, email, phone) {
     if (!name || !email || !phone) {
@@ -206,7 +202,14 @@ function validateContactFields(name, email, phone) {
     return true;
 }
 
-/***** */
+
+/**
+ * Validates an email address using a regular expression pattern.
+ * Checks if the email follows the standard format: local-part@domain.
+ * 
+ * @param {string} email - The email address to validate.
+ * @returns {boolean} Returns `true` if the email is valid, otherwise `false`.
+ */
 function validateEmail(email) {
     let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email);
