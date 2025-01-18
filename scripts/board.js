@@ -133,14 +133,20 @@ function openTaskPopup(index){
 
 
 /**
- * Disables the close button if the task is being edited, preventing the user from closing the popup during the edit.
+ * Disables or enables the close button based on the editing state.
  */
 function disableButtonWhileEdit() {
+    updateCloseButtonState();
+}
+
+
+/**
+ * Updates the state of the close button based on the editing mode.
+ */
+function updateCloseButtonState() {
     let closeButton = document.querySelector(".close-btn");
     if (closeButton) {
-        if (isEditing) {
-            closeButton.disabled = isEditing;
-        }
+        closeButton.disabled = isEditing;
     }
 }
 
