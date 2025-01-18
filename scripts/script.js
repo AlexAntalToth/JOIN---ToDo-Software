@@ -86,8 +86,10 @@ async function initApp() {
     }
 }
 
+
 /**
  * Handles the UI behavior when no user is logged in.
+ * Redirects to the home page or adjusts the UI based on the current page.
  */
 function handleUnauthenticatedUser() {
     let currentPath = window.location.pathname;
@@ -99,6 +101,7 @@ function handleUnauthenticatedUser() {
     }
 }
 
+
 /**
  * Checks if the current page is the legal notice or privacy policy page.
  * @param {string} path - The current page path.
@@ -107,6 +110,7 @@ function handleUnauthenticatedUser() {
 function isLegalOrPrivacyPage(path) {
     return path.includes("privacy_policy.html") || path.includes("legal_notice.html");
 }
+
 
 /**
  * Adjusts the UI for the legal notice or privacy policy page when no user is logged in.
@@ -119,8 +123,9 @@ function adjustUIForLegalOrPrivacyPage() {
     ensureSidebarFooterVisible();
 }
 
+
 /**
- * Hides the header element.
+ * Hides the header element and adjusts the legal container's padding.
  */
 function hideHeader() {
     let legalContainer = document.querySelector(".legal-container");
@@ -131,9 +136,10 @@ function hideHeader() {
     }
 }
 
+
 /**
  * Customizes the sidebar to show only the footer with the active link highlighted.
- * @param {boolean} isTrue - Whether the current page is the legal notice/privacy policy page.
+ * @param {boolean} isLegalNotice - Whether the current page is the legal notice page.
  */
 function customizeSidebar() {
     let sidebar = document.querySelector("aside.sidebar");
@@ -147,7 +153,7 @@ function customizeSidebar() {
 
 
 /**
- * Hides the back button if no user is logged in.
+ * Hides the back button element.
  */
 function hideBackButton() {
     let backButton = document.querySelector(".back");
