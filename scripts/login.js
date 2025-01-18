@@ -15,7 +15,7 @@ function renderLogin() {
   let wrapDivRef = document.getElementById("wrapDiv");
 
   wrapDivRef.innerHTML = `
-   
+   <div id="wrapDiv">
   <div class="animation-wrapper">
     <img id="joinImage" class="join_image" <img src="assets/img/logo_grey.png" alt="join_img">
   </div>
@@ -64,7 +64,7 @@ function renderLogin() {
     <button onclick="guestLogin()" class="white_button">Guest Log in</button>
   </div>
 </form>
-    <div id="msgBox"></div>
+   </div>
   `;
 
   startAnimation();
