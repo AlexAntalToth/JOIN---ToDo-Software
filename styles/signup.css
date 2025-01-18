@@ -273,3 +273,24 @@ a:hover {
 .input4:not(:focus) {
   border: 1px solid black;
 }
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #2a3647;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  visibility: hidden; /* Standardmäßig unsichtbar */
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s linear;
+}
+
+.popup.show {
+  visibility: visible;
+  opacity: 1; /* Wird sichtbar, wenn "show" hinzugefügt wird */
+}

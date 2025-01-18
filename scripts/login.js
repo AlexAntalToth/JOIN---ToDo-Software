@@ -171,7 +171,11 @@ async function processLogin(signedUpContact) {
     await putData('currentUser', {name:signedUpContact.name})
     window.location.href = "summary.html";
   } else {
-    alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
+   let popup = document.getElementById('task-created-popup2');
+    popup.classList.add('show'); 
+    setTimeout(() => {
+      popup.classList.remove('show');
+    }, 1500);
   }
 }
 

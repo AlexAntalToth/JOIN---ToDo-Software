@@ -161,16 +161,27 @@ function checkPassword() {
   let acceptPolicy = document.getElementById("acceptPolicy").checked;
 
   if (password !== confirmPassword) {
-    alert("Die Passwörter stimmen nicht überein.");
+    let mismatchPopup = document.getElementById("popup-mismatch");
+    mismatchPopup.classList.add("show");
+    setTimeout(() => {
+      mismatchPopup.classList.remove("show");
+    }, 1500);
     return false;
   }
 
   if (!acceptPolicy) {
-    alert("Bitte akzeptiere die Datenschutzrichtlinie.");
+    let policyPopup = document.getElementById("popup-policy");
+    policyPopup.classList.add("show");
+    setTimeout(() => {
+      policyPopup.classList.remove("show");
+    }, 1500);
     return false;
   }
+
   return true;
 }
+
+
 
 /**
  * ShowPassword - This function toggles the visibility of the password field when the user clicks on the password visibility icon.
@@ -189,10 +200,10 @@ function showPassword(id, iconId) {
 
   if (passwordField.type === "password") {
     passwordField.type = "text";
-    icon.src = "assets/icons/eye.png"; 
+    icon.src = "assets/icons/eye.png";
   } else {
     passwordField.type = "password";
-    icon.src = "assets/icons/lock.png"; 
+    icon.src = "assets/icons/lock.png";
   }
 }
 
