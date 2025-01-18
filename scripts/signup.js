@@ -159,28 +159,25 @@ function checkPassword() {
   let password = document.getElementById("password").value.trim();
   let confirmPassword = document.getElementById("confirmPassword").value.trim();
   let acceptPolicy = document.getElementById("acceptPolicy").checked;
-
+  let popupMismatch = document.getElementById("popup-mismatch");
+  let popupPolicy = document.getElementById("popup-policy");
   if (password !== confirmPassword) {
-    let mismatchPopup = document.getElementById("popup-mismatch");
-    mismatchPopup.classList.add("show");
-    setTimeout(() => {
-      mismatchPopup.classList.remove("show");
-    }, 1500);
+    showPopup(popupMismatch); 
     return false;
   }
-
   if (!acceptPolicy) {
-    let policyPopup = document.getElementById("popup-policy");
-    policyPopup.classList.add("show");
-    setTimeout(() => {
-      policyPopup.classList.remove("show");
-    }, 1500);
+    showPopup(popupPolicy); 
     return false;
   }
-
-  return true;
+  return true; 
 }
 
+function showPopup(popup) {
+  popup.classList.add("show");
+  setTimeout(() => {
+    popup.classList.remove("show");
+  }, 1500);
+}
 
 
 /**

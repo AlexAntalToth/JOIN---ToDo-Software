@@ -276,21 +276,25 @@ a:hover {
 
 .popup {
   position: fixed;
-  top: 50%;
+  top: 600px;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #2a3647;
+  background-color:#2a3647;
   color: white;
   padding: 15px 30px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   font-size: 16px;
-  visibility: hidden; /* Standardmäßig unsichtbar */
+  font-family: inter;
+  text-align: center;
   opacity: 0;
-  transition: visibility 0s, opacity 0.3s linear;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1000;
 }
 
 .popup.show {
+  opacity: 1;
   visibility: visible;
-  opacity: 1; /* Wird sichtbar, wenn "show" hinzugefügt wird */
+  transform: translateX(-50%) translateY(0); 
 }
