@@ -6,6 +6,7 @@ function editTask() {
     if (currentTaskIndex === null) return;
     let task = tasks[currentTaskIndex].task;
     isEditing = true;
+    disableButtonWhileEdit();
     task.subtasks = task.subtasks || {};
     let taskView = document.getElementById("taskView");
     let taskEdit = document.getElementById("taskEdit");

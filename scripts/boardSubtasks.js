@@ -151,14 +151,10 @@ function addSubtask(event) {
     let task = tasks[currentTaskIndex]?.task;
     let subtaskName = getSubtaskName();
     if (subtaskName === "") return;
-    if (canAddSubtask(task)) {
         addNewSubtask(task, subtaskName);
         updateSubtasksList(task);
         clearSubtaskInput();
         unfocusInput();
-    } else {
-        alert("Es können nur maximal 3 Subtasks hinzugefügt werden.");
-    }
 }
 
 
@@ -168,16 +164,6 @@ function addSubtask(event) {
  */
 function getSubtaskName() {
     return document.getElementById('newSubtaskInput').value.trim();
-}
-
-
-/**
- * Checks if a subtask can be added to the task. A maximum of 3 subtasks are allowed.
- * @param {Object} task The task object.
- * @returns {boolean} Whether a new subtask can be added.
- */
-function canAddSubtask(task) {
-    return Object.keys(task.subtasks || {}).length < 3;
 }
 
 

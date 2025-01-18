@@ -74,11 +74,27 @@ async function deleteData(path) {
 
 
 /**
- * Initializes the application by fetching the current user and setting the header initials.
+ * Initializes the application by fetching the current user and setting up the header.
+ * 
+ * - If no user is logged in (i.e., `currentUser.name` is an empty string), it displays an error message 
+ *   and redirects the user to the home page after a 3-second delay.
+ * - If a user is logged in, it updates the header with the user's initials.
+ * 
  * @async
+ * @function
+ * @returns {Promise<void>} Resolves when the initialization process is complete.
  */
 async function initApp() {
     await fetchCurrentUser();
+
+    if (currentUser.name === "") {
+        showPopupMessage("No user logged in. Redirecting to the home page...", true);
+        setTimeout(() => {
+            window.location.href = "../../index.html";
+        }, 3000);
+        return;
+    }
+
     setHeaderInitials();
 }
 
@@ -129,19 +145,49 @@ function toggleHeaderPopUp() {
 
 
 /**
- * Logs out the current user by clearing their data and redirecting to the login page.
- * @async
+ * Logs out the current user and displays a confirmation popup.
+ * If successful, redirects to the index page after the popup disappears.
+ * If an error occurs, displays an error message in the popup.
  */
 async function logout() {
     try {
         await putData("currentUser", { name: "" });
         currentUser = { name: "" };
-        alert("You have been successfully logged out.");
-        window.location.href = "../../index.html";
+        showPopupMessage("You have been successfully logged out.");
+        setTimeout(() => {
+            window.location.href = "../../index.html";
+        }, 3000);
     } catch (error) {
         console.error("Logout failed:", error);
-        alert("An error occurred while logging out. Please try again.");
+        showPopupMessage("An error occurred while logging out. Please try again.");
     }
+}
+
+
+/**
+ * Displays a popup message with optional error styling.
+ * 
+ * @param {string} message - The message to display in the popup.
+ * @param {boolean} isError - Whether the message indicates an error.
+ */
+function showPopupMessage(message, isError = false) {
+    let popupBox = document.getElementById("popup-message-box");
+    popupBox.textContent = message;
+    if (isError) {
+        popupBox.style.backgroundColor = "#f8d7da"; 
+        popupBox.style.color = "#721c24";
+    } else {
+        popupBox.style.backgroundColor = "";
+        popupBox.style.color = "";
+    }
+    popupBox.classList.remove("hidden");
+    popupBox.classList.add("show");
+    setTimeout(() => {
+        popupBox.classList.remove("show");
+        setTimeout(() => {
+            popupBox.classList.add("hidden");
+        }, 500);
+    }, 2500);
 }
 
 

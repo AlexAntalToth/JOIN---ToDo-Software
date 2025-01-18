@@ -292,7 +292,7 @@ function updateSubtasksList(task) {
  */
 function switchToSearchInput(dropdownToggle) {
     dropdownToggle.innerHTML = `
-        <input type="text" id="dropdownSearchInput" placeholder="" oninput="filterDropdownItems()" />
+        <input type="text" id="dropdownSearchInput" placeholder="" oninput="filterDropdownItems()" maxlength="20" />
         <img class="dropdown-icon rotated" src="./assets/icons/addtask_arrowdown.png" alt="Arrow down">
     `;
     let searchInput = document.getElementById("dropdownSearchInput");

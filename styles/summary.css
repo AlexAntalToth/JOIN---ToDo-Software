@@ -324,3 +324,35 @@ h2 {
     }
   }
 }
+
+
+@media (max-width: 420px) {
+  .midsize-badge {
+    width: 136px;
+    height: 90px;
+  }
+  .big-badge {
+    width: 296px;
+    height: 96px;
+  }
+  .small-badge {
+    width: 86px;
+    height: 96px;
+  }
+  .count {
+    font-size: 36px;
+  }
+  .count-text {
+    font-size: 12px;
+  }
+  .midsize-badge img,
+  .big-badge img {
+    width: 32px;
+  }
+  .d-flex {
+    gap: 8px;
+  }
+  .date {
+    font-size: 18px;
+  }
+}

@@ -129,7 +129,6 @@ function openTaskPopup(index){
     document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks, index);
     document.getElementById("taskPopup").classList.add("show");
     document.body.style.overflow = "hidden";
-    disableButtonWhileEdit();
 }
 
 
@@ -139,7 +138,9 @@ function openTaskPopup(index){
 function disableButtonWhileEdit() {
     let closeButton = document.querySelector(".close-btn");
     if (closeButton) {
-        closeButton.disabled = isEditing;
+        if (isEditing) {
+            closeButton.disabled = isEditing;
+        }
     }
 }
 

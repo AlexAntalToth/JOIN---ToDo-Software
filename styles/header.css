@@ -110,6 +110,28 @@ header h1 {
   display: none;
 }
 
+#popup-message-box {
+  position: fixed;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2A3647;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  font-weight: bold;
+  opacity: 0;
+  transition: top 0.5s ease, opacity 0.5s ease;
+  z-index: 1000;
+}
+
+#popup-message-box.show {
+  top: 20px;
+  opacity: 1;
+}
+
 /* responsive */
 
 @media (max-width: 700px) {
