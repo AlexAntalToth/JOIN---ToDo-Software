@@ -245,3 +245,4 @@ function showErrorMessage(message) {
         errorBox.classList.remove("show");
     }, 2500);
 }
+
