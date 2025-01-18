@@ -1,3 +1,12 @@
+/**
+ * Includes external HTML content into the current document by replacing the element's innerHTML.
+ * The external file is specified using the "w3-include-html" attribute on the element.
+ * 
+ * This function iterates over all elements in the document, finds those with the "w3-include-html" 
+ * attribute, and makes an XMLHttpRequest to fetch the content of the specified file. The content 
+ * is then inserted into the element. If the file is not found, a "Page not found" message is shown.
+ * The function calls itself recursively to handle multiple inclusions.
+ */
 function includeHTML() {
     var z, i, elmnt, file, xhttp;
     z = document.getElementsByTagName("*");

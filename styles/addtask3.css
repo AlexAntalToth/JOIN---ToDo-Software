@@ -33,6 +33,13 @@
 
 .subtasks-list {
     padding-inline-start: 0px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.subtasks-list.scrollable {
+    border: 1px solid rgba(209, 209, 209, 1);
+    border-radius: 5px;
 }
 
 .subtasks-list li {

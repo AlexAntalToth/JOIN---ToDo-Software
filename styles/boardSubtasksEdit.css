@@ -1,0 +1,145 @@
+.subtask-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  position: relative;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.subtask-input-container:focus-within {
+  border-color: #8acce6;
+  box-shadow: 0px 2px 3px 1px #8acce6;
+}
+
+.subtask-input-container input {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.subtask-input-container input:focus {
+  outline: none;
+  border-color: none;
+  box-shadow: none;
+}
+
+#addSubtaskButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  padding: 8px;
+  color: #2a3647;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  transform: translateY(-50%);
+  transition: background-color 0.3s;
+}
+
+#addSubtaskButton:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.subtask-icons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  position: absolute;
+  right: 16px;
+}
+
+.subtask-vertical-line {
+  padding: 1px;
+  height: 24px;
+  background-color: rgba(209, 209, 209, 1);
+  margin: 0 auto;
+}
+
+.subtask-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.subtask-item:hover {
+  background-color: #f0f0f0;
+}
+
+.subtask-item input {
+  width: 95%;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #8acce6;
+  padding: 0;
+  font-size: 16px;
+}
+
+.subtask-item input:focus {
+  outline: none;
+  border-color: none;
+  box-shadow: none;
+}
+
+.confirm-img {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  filter: grayscale(100) brightness(0);
+}
+
+.confirm-img:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+}
+
+.subtask-icons .confirm-img {
+  width: 24px;
+  height: 24px;
+}
+
+.subtask-actions {
+  display: flex;
+  align-items: center;
+}
+
+.subtask-actions img {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.subtask-actions .separator {
+  width: 1px;
+  height: 16px;
+  background-color: #ccc;
+  margin: 0 5px;
+}
+
+.subtask-item-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ul-bullet {
+  transform: rotate(-90deg);
+  width: 8px;
+  height: 5px;
+}

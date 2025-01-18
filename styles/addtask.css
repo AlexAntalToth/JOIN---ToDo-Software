@@ -370,10 +370,17 @@
     justify-content: center;
     margin-right: 10px;
     font-size: 16px;
+    text-transform: uppercase;
+}
+
+.contact-initials.more-contacts {
+    background-color: gray;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .contact-name {
     flex: 1;
     font-size: 16px;
 }
-

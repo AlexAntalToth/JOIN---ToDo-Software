@@ -62,6 +62,17 @@
 }
 
 @media (max-width: 1100px) {
+    .contacts-card-content {
+        padding-inline-start: 0px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .contacts-card-content.scrollable {
+        border: 1px solid rgba(209, 209, 209, 1);
+        border-radius: 5px;
+    }
+
     .contacts-list {
         width: 100%;
         position: relative;
