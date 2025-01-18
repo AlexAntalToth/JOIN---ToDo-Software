@@ -269,11 +269,19 @@ function ContactSelection(selectedElement) {
  */
 function renderContactCard(contact) {
     let contactCardContainer = document.querySelector(".contacts-card");
+    if (!contactCardContainer) {
+        console.error("Contact card container not found.");
+        return;
+    }
     if (contactCardContainer.classList.contains('contacts-card-visible')) {
         contactCardContainer.classList.remove('contacts-card-visible');
     }
     contactCardContainer.innerHTML = "";
     let contactCard = createContactCard(contact);
+    if (!(contactCard instanceof Node)) {
+        console.error("Invalid contact card returned from createContactCard:", contactCard);
+        return;
+    }
     contactCardContainer.appendChild(contactCard);
     setTimeout(() => {
         contactCardContainer.classList.add('contacts-card-visible');
@@ -299,7 +307,7 @@ function renderEditedContactCard(contact) {
         contactCardContainer.classList.remove('contacts-card-visible');
     }
     contactCardContainer.innerHTML = "";
-    let contactCard = createContactCard(contact);
+    let contactCard = renderContactCard(contact);
     contactCardContainer.appendChild(contactCard);
     contactCardContainer.classList.add('contacts-card-visible');
 }

@@ -328,9 +328,13 @@ async function saveUpdatedContact(contactId, updatedContact) {
  * @param {Object} updatedContact - The contact object containing the updated information.
  */
 function updateViewAfterSave(updatedContact) {
+    if (!updatedContact) {
+        console.error("No updated contact provided.");
+        return;
+    }
     closeModalEditContact();
     loadContacts();
-    renderEditedContactCard(updatedContact);
+    renderContactCard(updatedContact);
     setTimeout(() => {
         let updatedContactElement = document.querySelector(`.contact-item[data-id="${updatedContact.id}"]`);
         if (updatedContactElement) {

@@ -216,6 +216,10 @@ function getAssignedToElements() {
 
 /**
  * Updates the initials of selected contacts and adds them to the assignedTo container.
+ * Removes the previous list of selected contacts and creates a new one based on the current selected contacts.
+ * If the number of contacts exceeds the available space, it shows a `+X` indicating the number of remaining contacts.
+ * 
+ * @function
  */
 function updateSelectedContactInitials() {
     let assignedToContainer = document.querySelector(".addTask-assignedTo-container");
@@ -232,6 +236,7 @@ function updateSelectedContactInitials() {
     }
 }
 
+
 /**
  * Generates the HTML for the initials of selected contacts, considering the available width.
  * @param {HTMLElement} assignedToContainer - The container where the initials will be displayed.
@@ -242,12 +247,10 @@ function generateInitialsHTML(assignedToContainer) {
     let usedWidth = 0;
     let remainingContacts = 0;
     let initialsHTML = "";
-
     for (let i = 0; i < selectedContacts.length; i++) {
         let contact = selectedContacts[i];
         let contactInitial = createContactInitial(contact);
         let tempWidth = getTempDivWidth(assignedToContainer, contactInitial);
-
         if (usedWidth + tempWidth <= maxWidth) {
             initialsHTML += contactInitial;
             usedWidth += tempWidth;
@@ -256,13 +259,12 @@ function generateInitialsHTML(assignedToContainer) {
             break;
         }
     }
-
     if (remainingContacts > 0) {
         initialsHTML += createMoreContactsInitial(remainingContacts);
     }
-
     return initialsHTML;
 }
+
 
 /**
  * Creates the HTML for a contact's initials.
@@ -277,6 +279,7 @@ function createContactInitial(contact) {
     `;
 }
 
+
 /**
  * Creates the HTML for the "more contacts" initials display.
  * @param {number} remainingContacts - The number of remaining contacts to be displayed.
@@ -289,6 +292,7 @@ function createMoreContactsInitial(remainingContacts) {
         </div>
     `;
 }
+
 
 /**
  * Calculates the width of a temporary div that wraps the contact initials.
