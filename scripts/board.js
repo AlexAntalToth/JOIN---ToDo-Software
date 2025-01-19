@@ -16,7 +16,27 @@ async function onloadFunc() {
     await initApp();
     contacts = await getData("contacts");
     await refreshTaskList();
+    updateAddTaskButtonBehavior();
+    window.addEventListener("resize", updateAddTaskButtonBehavior);
 }
+
+
+/**
+ * Passt das Verhalten des Add-Task-Buttons basierend auf der Fensterbreite an.
+ */
+function updateAddTaskButtonBehavior() {
+    const addTaskButtons = document.querySelectorAll(".add-task-btn");
+    addTaskButtons.forEach(button => {
+        if (window.innerWidth <= 1000) {
+            button.onclick = null;
+            button.setAttribute("onclick", "window.location.href='./addtask.html'");
+        } else {
+            button.onclick = null;
+            button.setAttribute("onclick", "openAddTaskModal()");
+        }
+    });
+}
+
 
 
 /**
