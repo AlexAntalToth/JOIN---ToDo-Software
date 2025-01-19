@@ -116,7 +116,7 @@ function isLegalOrPrivacyPage(path) {
  * @param {string} currentPath - The current page path.
  */
 function adjustUIForLegalOrPrivacyPage() {
-    hideHeader();
+    hideHeaderRight();
     customizeSidebar();
     hideBackButton();
     ensureSidebarFooterVisible();
@@ -126,12 +126,11 @@ function adjustUIForLegalOrPrivacyPage() {
 /**
  * Hides the header element and adjusts the legal container's padding.
  */
-function hideHeader() {
-    let legalContainer = document.querySelector(".legal-container");
+function hideHeaderRight() {
     let header = document.querySelector("header");
     if (header) {
-        header.style.display = "none";
-        legalContainer.style.paddingTop = "20px"
+        let headerRight = document.querySelector(".header-right")
+        headerRight.style.display = "none";
     }
 }
 
