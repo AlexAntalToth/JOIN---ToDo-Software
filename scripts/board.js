@@ -112,6 +112,29 @@ async function refreshTaskList() {
 
 
 /**
+ * Moves the task to the next category and updates the DOM.
+ * - From "To-Do" → "In Progress" → "Await Feedback" → "Done".
+ * - Removes the button if the task is in the "Done" category.
+ * 
+ * @param {number} taskIndex - The index of the task to move.
+ */
+function moveTaskToNextCategory(taskIndex) {
+    const categories = ["To-Do", "In Progress", "Await Feedback", "Done"];
+    let task = tasks[taskIndex];
+    let currentCategory = task.task.category;
+    let currentCategoryIndex = categories.indexOf(currentCategory);
+    if (currentCategoryIndex === -1 || currentCategoryIndex === categories.length - 1) {
+        return;
+    }
+    let nextCategory = categories[currentCategoryIndex + 1];
+    task.task.category = nextCategory;
+    document.querySelectorAll(".task-list").forEach(taskList => taskList.innerHTML = "");
+    tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
+    checkEmptyCategories();
+}
+
+
+/**
  * Opens the task popup modal by displaying the task details such as badge, title, description, due date, priority,
  * assigned contacts, and subtasks. Also disables the body scroll and the close button while editing.
  * 

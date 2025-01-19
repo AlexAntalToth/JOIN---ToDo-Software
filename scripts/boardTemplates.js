@@ -26,7 +26,14 @@ function generateTaskHtml(task, index) {
     let { completed, total } = calculateSubtaskProgress(subtasks);
     return `
         <div class="task" id="task-${index}" draggable="true"  ondragstart="startDragging(${index})">
-            ${generateTaskBadge(task.badge)}
+            <div class="task-header">
+                ${generateTaskBadge(task.badge)}
+                ${task.category !== "Done" ? `
+                    <button class="move-task-btn" onclick="moveTaskToNextCategory(${index})">
+                        <img src="./assets/icons/moveTask.png" alt="Move Task">
+                    </button>
+                ` : ""}
+            </div>
             <div class="task-title" onclick="openTaskPopup(${index})">${task.title}</div>
             <div class="task-desc">${task.description}</div>
             <div class="subtask-bar" id="subtaskBar-${index}">

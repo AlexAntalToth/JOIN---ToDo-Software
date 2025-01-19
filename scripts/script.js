@@ -78,7 +78,6 @@ async function deleteData(path) {
  */
 async function initApp() {
     await fetchCurrentUser();
-
     if (currentUser.name === "") {
         handleUnauthenticatedUser();
     } else {
