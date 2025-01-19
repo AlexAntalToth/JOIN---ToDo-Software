@@ -86,7 +86,7 @@ async function generateAddTaskCardHTML(task) {
                     <p>*</p>
                 </div>
                 <div class="addTask-dueDate-field">
-                    <input id="task-dueDate" type="text" value="${task.dueDate || ''}" placeholder="dd/mm/yyyy" maxlength="10">
+                    <input id="task-dueDate" type="date" value="${task.dueDate || ''}" placeholder="dd/mm/yyyy">
                     <img class="addTask-date-icon" src="../../assets/icons/addTask_date.png" alt="Logo Due Date">
                 </div>
             </div>

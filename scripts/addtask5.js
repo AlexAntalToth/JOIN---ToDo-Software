@@ -15,57 +15,7 @@ function validateFields() {
     let isTitleEmpty = titleField.value.trim() === "";
     let isCategoryEmpty = !categoryDropdown.getAttribute("data-selected");
     let isDueDateEmpty = dueDateField.value.trim() === "";
-    let isDueDateInvalid = false;
-    if (!isDueDateEmpty) {
-        isDueDateInvalid = validateDateInput();
-    }
-    updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty, isDueDateInvalid);
-}
-
-
-/**
- * Validates the date input field by checking both format and validity.
- * 
- * @function
- * @returns {boolean} True if the date input is invalid (either format or date), otherwise false.
- */
-function validateDateInput() {
-    if (validateDateFormat()) {
-        return true;
-    }
-    return validateDateValidity();
-}
-
-
-/**
- * Validates the date format to be in DD/MM/YYYY format.
- * 
- * @function
- * @returns {boolean} True if the date format is invalid, otherwise false.
- */
-function validateDateFormat() {
-    let dueDateField = document.getElementById("task-dueDate");
-    let dueDateValue = dueDateField.value.trim();
-    let datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
-    return !datePattern.test(dueDateValue);
-}
-
-
-/**
- * Validates if the date is valid.
- * 
- * @function
- * @returns {boolean} True if the date is invalid, otherwise false.
- */
-function validateDateValidity() {
-    let dueDateField = document.getElementById("task-dueDate");
-    let dueDateValue = dueDateField.value.trim();
-    let dueDateParts = dueDateValue.split("/");
-    let day = parseInt(dueDateParts[0], 10);
-    let month = parseInt(dueDateParts[1], 10) - 1;
-    let year = parseInt(dueDateParts[2], 10);
-    let date = new Date(year, month, day);
-    return isNaN(date.getTime()) || date.getDate() !== day || date.getMonth() !== month || date.getFullYear() !== year;
+    updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty);
 }
 
 

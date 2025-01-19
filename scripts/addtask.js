@@ -149,12 +149,12 @@ async function saveNewTask() {
     let { taskTitle, taskDescription, taskDueDate, taskBadge } = getTaskDetails();
     let taskSubtasks = getSubtasks();
     let assignedTo = getAssignedContacts();
-    let formattedDueDateISO = convertDateToISO(taskDueDate);
+    // let taskDueDate = document.getElementById('task-dueDate').value;
     let newTask = {
         title: taskTitle,
         description: taskDescription,
         assignedTo,
-        dueDate: formattedDueDateISO,
+        dueDate: taskDueDate,
         priority: taskPriority,
         badge: taskBadge,
         subtasks: taskSubtasks
@@ -177,18 +177,6 @@ function getTaskDetails() {
     let taskBadge = document.getElementById('categoryDropdown').getAttribute('data-selected');
 
     return { taskTitle, taskDescription, taskDueDate, taskBadge };
-}
-
-
-/**
- * Converts a date string from DD/MM/YYYY format to ISO format (YYYY-MM-DD).
- * 
- * @param {string} dateStr - The date string in DD/MM/YYYY format.
- * @returns {string} The date string in ISO format (YYYY-MM-DD).
- */
-function convertDateToISO(dateStr) {
-    let [day, month, year] = dateStr.split("/");
-    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 }
 
 
