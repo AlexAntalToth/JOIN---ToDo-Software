@@ -16,7 +16,27 @@ async function onloadFunc() {
     await initApp();
     contacts = await getData("contacts");
     await refreshTaskList();
+    updateAddTaskButtonBehavior();
+    window.addEventListener("resize", updateAddTaskButtonBehavior);
 }
+
+
+/**
+ * Passt das Verhalten des Add-Task-Buttons basierend auf der Fensterbreite an.
+ */
+function updateAddTaskButtonBehavior() {
+    const addTaskButtons = document.querySelectorAll(".add-task-btn");
+    addTaskButtons.forEach(button => {
+        if (window.innerWidth <= 1000) {
+            button.onclick = null;
+            button.setAttribute("onclick", "window.location.href='./addtask.html'");
+        } else {
+            button.onclick = null;
+            button.setAttribute("onclick", "openAddTaskModal()");
+        }
+    });
+}
+
 
 
 /**
@@ -107,6 +127,29 @@ async function refreshTaskList() {
     tasks = Object.entries(userResponse).map(([key, task]) => ({ id: key, task }));
     document.querySelectorAll(".task-list").forEach(taskList => (taskList.innerHTML = ""));
     tasks.forEach((taskObj, index) => insertTaskIntoDOM(taskObj.task, index));
+    checkEmptyCategories();
+}
+
+
+/**
+ * Moves the task to the next category and updates the DOM.
+ * - From "To-Do" → "In Progress" → "Await Feedback" → "Done".
+ * - Removes the button if the task is in the "Done" category.
+ * 
+ * @param {number} taskIndex - The index of the task to move.
+ */
+function moveTaskToNextCategory(taskIndex) {
+    const categories = ["To-Do", "In Progress", "Await Feedback", "Done"];
+    let task = tasks[taskIndex];
+    let currentCategory = task.task.category;
+    let currentCategoryIndex = categories.indexOf(currentCategory);
+    if (currentCategoryIndex === -1 || currentCategoryIndex === categories.length - 1) {
+        return;
+    }
+    let nextCategory = categories[currentCategoryIndex + 1];
+    task.task.category = nextCategory;
+    document.querySelectorAll(".task-list").forEach(taskList => taskList.innerHTML = "");
+    tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
     checkEmptyCategories();
 }
 

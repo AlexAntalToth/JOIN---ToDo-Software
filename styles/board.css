@@ -169,11 +169,35 @@ body {
   background-color: #0039fe;
 }
 
+.task-header{
+  display: flex;
+  justify-content: space-between;
+}
+
 .task-badge {
   border-radius: 8px;
   padding: 4px 16px;
   color: white;
   width: fit-content;
+}
+
+.move-task-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.move-task-btn img {
+  width: 20px;
+  height: 20px;
+  filter: contrast(0.5);
+}
+
+.move-task-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .task-title {
