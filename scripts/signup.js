@@ -38,7 +38,7 @@ function renderSignup() {
         <div class="separator"></div>
       </div>
       
-      <form class="form" onsubmit="if (!checkPassword()) return false; addContact(); addCurrentUser(); return false;">
+      <form class="form" onsubmit="if (!checkPassword()) return false; addContact(); return false;">
         <div class="inputfields_div">
           <div class="input-wrapper">
             <input class="input1" id="name" required placeholder="Name" type="text" />

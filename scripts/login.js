@@ -61,7 +61,7 @@ function renderLogin() {
 
   <div class="login_guestlogin">
     <button class="blue_button2">Log in</button>
-    <button onclick="guestLogin()" class="white_button">Guest Log in</button>
+    <button type="button" onclick="guestLogin()" class="white_button">Guest Log in</button>
   </div>
 </form>
    </div>
@@ -167,9 +167,9 @@ async function processLogin(signedUpContact) {
     popup.classList.add('show'); 
     setTimeout(() => {
       popup.classList.remove('show');
+      putData('currentUser', {name:signedUpContact.name})
+      window.location.href = "summary.html";
     }, 1500);
-    await putData('currentUser', {name:signedUpContact.name})
-    window.location.href = "summary.html";
   } else {
    let popup = document.getElementById('task-created-popup2');
     popup.classList.add('show'); 
