@@ -1,5 +1,4 @@
 let BASE_URL="https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
-let currentUser = { name: "guest" };
 
 /**
  * Highlights the current page in the sidebar based on the URL path.
@@ -74,29 +73,111 @@ async function deleteData(path) {
 
 
 /**
- * Initializes the application by fetching the current user and setting up the header.
- * 
- * - If no user is logged in (i.e., `currentUser.name` is an empty string), it displays an error message 
- *   and redirects the user to the home page after a 3-second delay.
- * - If a user is logged in, it updates the header with the user's initials.
- * 
- * @async
- * @function
- * @returns {Promise<void>} Resolves when the initialization process is complete.
+ * Initializes the application by checking the current user and page state.
+ * Redirects or adjusts UI as needed.
  */
 async function initApp() {
     await fetchCurrentUser();
-
     if (currentUser.name === "") {
-        showPopupMessage("No user logged in. Redirecting to the home page...", true);
-        setTimeout(() => {
-            window.location.href = "../../index.html";
-        }, 3000);
-        return;
+        handleUnauthenticatedUser();
+    } else {
+        setHeaderInitials();
     }
-
-    setHeaderInitials();
 }
+
+
+/**
+ * Handles the UI behavior when no user is logged in.
+ * Redirects to the home page or adjusts the UI based on the current page.
+ */
+function handleUnauthenticatedUser() {
+    let currentPath = window.location.pathname;
+
+    if (isLegalOrPrivacyPage(currentPath)) {
+        adjustUIForLegalOrPrivacyPage();
+    } else {
+        redirectToHomePage();
+    }
+}
+
+
+/**
+ * Checks if the current page is the legal notice or privacy policy page.
+ * @param {string} path - The current page path.
+ * @returns {boolean} True if the page is legal notice or privacy policy.
+ */
+function isLegalOrPrivacyPage(path) {
+    return path.includes("privacy_policy.html") || path.includes("legal_notice.html");
+}
+
+
+/**
+ * Adjusts the UI for the legal notice or privacy policy page when no user is logged in.
+ * @param {string} currentPath - The current page path.
+ */
+function adjustUIForLegalOrPrivacyPage() {
+    hideHeaderRight();
+    customizeSidebar();
+    hideBackButton();
+    ensureSidebarFooterVisible();
+}
+
+
+/**
+ * Hides the header element and adjusts the legal container's padding.
+ */
+function hideHeaderRight() {
+    let header = document.querySelector("header");
+    if (header) {
+        let headerRight = document.querySelector(".header-right")
+        headerRight.style.display = "none";
+    }
+}
+
+
+/**
+ * Customizes the sidebar to show only the footer with the active link highlighted.
+ * @param {boolean} isLegalNotice - Whether the current page is the legal notice page.
+ */
+function customizeSidebar() {
+    let sidebar = document.querySelector("aside.sidebar");
+    if (!sidebar) return;
+    Array.from(sidebar.children).forEach(child => {
+        if (!child.id || child.id !== "sidebar-footer") {
+            child.style.display = "none";
+        }
+    });
+}
+
+
+/**
+ * Hides the back button element.
+ */
+function hideBackButton() {
+    let backButton = document.querySelector(".back");
+    if (backButton) backButton.style.display = "none";
+}
+
+
+/**
+ * Ensures that the sidebar footer remains visible even at max-width: 700px.
+ */
+function ensureSidebarFooterVisible() {
+    let sidebarFooter = document.querySelector("#sidebar-footer");
+    if (sidebarFooter) sidebarFooter.style.display = "block";
+}
+
+
+/**
+ * Redirects the user to the home page with a popup message.
+ */
+function redirectToHomePage() {
+    showPopupMessage("No user logged in. Redirecting to the home page...", true);
+    setTimeout(() => {
+        window.location.href = "../../index.html";
+    }, 3000);
+}
+
 
 /**
  * Fetches the current user from the database and updates the `currentUser` object.

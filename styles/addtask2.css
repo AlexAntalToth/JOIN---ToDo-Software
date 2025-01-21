@@ -215,7 +215,7 @@
     right: 32px;
     top: 50%;
     transform: translateY(-50%);
-    cursor: none;
+    cursor: pointer;
     z-index: 2;
     pointer-events: auto;
 }

@@ -16,7 +16,27 @@ async function onloadFunc() {
     await initApp();
     contacts = await getData("contacts");
     await refreshTaskList();
+    updateAddTaskButtonBehavior();
+    window.addEventListener("resize", updateAddTaskButtonBehavior);
 }
+
+
+/**
+ * Passt das Verhalten des Add-Task-Buttons basierend auf der Fensterbreite an.
+ */
+function updateAddTaskButtonBehavior() {
+    const addTaskButtons = document.querySelectorAll(".add-task-btn");
+    addTaskButtons.forEach(button => {
+        if (window.innerWidth <= 1000) {
+            button.onclick = null;
+            button.setAttribute("onclick", "window.location.href='./addtask.html'");
+        } else {
+            button.onclick = null;
+            button.setAttribute("onclick", "openAddTaskModal()");
+        }
+    });
+}
+
 
 
 /**
@@ -112,6 +132,29 @@ async function refreshTaskList() {
 
 
 /**
+ * Moves the task to the next category and updates the DOM.
+ * - From "To-Do" → "In Progress" → "Await Feedback" → "Done".
+ * - Removes the button if the task is in the "Done" category.
+ * 
+ * @param {number} taskIndex - The index of the task to move.
+ */
+function moveTaskToNextCategory(taskIndex) {
+    const categories = ["To-Do", "In Progress", "Await Feedback", "Done"];
+    let task = tasks[taskIndex];
+    let currentCategory = task.task.category;
+    let currentCategoryIndex = categories.indexOf(currentCategory);
+    if (currentCategoryIndex === -1 || currentCategoryIndex === categories.length - 1) {
+        return;
+    }
+    let nextCategory = categories[currentCategoryIndex + 1];
+    task.task.category = nextCategory;
+    document.querySelectorAll(".task-list").forEach(taskList => taskList.innerHTML = "");
+    tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
+    checkEmptyCategories();
+}
+
+
+/**
  * Opens the task popup modal by displaying the task details such as badge, title, description, due date, priority,
  * assigned contacts, and subtasks. Also disables the body scroll and the close button while editing.
  * 
@@ -133,14 +176,20 @@ function openTaskPopup(index){
 
 
 /**
- * Disables the close button if the task is being edited, preventing the user from closing the popup during the edit.
+ * Disables or enables the close button based on the editing state.
  */
 function disableButtonWhileEdit() {
+    updateCloseButtonState();
+}
+
+
+/**
+ * Updates the state of the close button based on the editing mode.
+ */
+function updateCloseButtonState() {
     let closeButton = document.querySelector(".close-btn");
     if (closeButton) {
-        if (isEditing) {
-            closeButton.disabled = isEditing;
-        }
+        closeButton.disabled = isEditing;
     }
 }
 

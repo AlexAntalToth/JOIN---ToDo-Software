@@ -26,9 +26,9 @@ function editTask() {
 function populateSelectedContacts() {
     let selectedContacts = document.getElementById("selectedContacts");
     selectedContacts.innerHTML = "";
-    const contactsArray = filterAssignedContacts();
-    const displayedContacts = contactsArray.slice(0, 3);
-    const remainingCount = contactsArray.length - displayedContacts.length;
+    let contactsArray = filterAssignedContacts();
+    let displayedContacts = contactsArray.slice(0, 3);
+    let remainingCount = contactsArray.length - displayedContacts.length;
     displayedContacts.forEach(({ name, color }) => {
         let profileCircle = createProfileCircle({ name, color });
         selectedContacts.appendChild(profileCircle);
@@ -43,7 +43,7 @@ function populateSelectedContacts() {
  * @returns {Array} An array of contact objects that have both a valid name and color.
  */
 function filterAssignedContacts() {
-    const assignedTo = tasks[currentTaskIndex]?.task?.assignedTo || {};
+    let assignedTo = tasks[currentTaskIndex]?.task?.assignedTo || {};
     return Object.values(assignedTo).filter(({ name, color }) => name && color);
 }
 
@@ -217,8 +217,8 @@ function updateSelectedContactsDisplay() {
     let selectedContacts = document.getElementById("selectedContacts");
     let task = tasks[currentTaskIndex].task;
     let assignedContacts = Object.values(task.assignedTo || {});
-    const displayedContacts = assignedContacts.slice(0, 3); // Zeige maximal 3 Kontakte
-    const remainingCount = assignedContacts.length - displayedContacts.length;
+    let displayedContacts = assignedContacts.slice(0, 3); // Zeige maximal 3 Kontakte
+    let remainingCount = assignedContacts.length - displayedContacts.length;
 
     clearAndRenderProfileCircles(selectedContacts, displayedContacts);
     updateExtraCount(selectedContacts, remainingCount);
@@ -327,6 +327,7 @@ async function saveTaskChanges() {
     let task = taskObj.task;
     task = updateTaskFields(task);
     await updateTaskData(taskObj.id, task);
+    updateCloseButtonState();
     refreshTaskPopup();
     updateTaskHtml(currentTaskIndex);
 }
