@@ -275,6 +275,7 @@ a:hover {
 }
 
 .popup {
+  display: none;
   position: fixed;
   top: 600px;
   left: 50%;
@@ -294,6 +295,7 @@ a:hover {
 }
 
 .popup.show {
+  display: block;
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0); 
