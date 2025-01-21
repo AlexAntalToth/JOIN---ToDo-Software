@@ -92,7 +92,7 @@ function startAnimation() {
       if (content) {
         content.classList.add("visible");
       }
-    }, 200);
+    }, 100);
   });
 }
 

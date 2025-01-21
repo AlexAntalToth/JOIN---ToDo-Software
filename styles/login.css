@@ -34,11 +34,11 @@ body {
   position: absolute;
   width: 150px;
   height: auto;
-  animation: moveToTopLeft 2s forwards;
+  animation: moveToTopLeft 1s forwards;
 }
 
 .move-to-position {
-  animation: moveToTopLeft 2s forwards;
+  animation: moveToTopLeft 1s forwards;
 }
 
 @keyframes moveToTopLeft {
@@ -184,10 +184,13 @@ h1 {
 }
 
 .blue_button1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: 700px;
   font-size: 21px;
   background-color: #2a3647;
-  width: 107px;
+  width: 108px;
   height: 49px;
   padding: 15px 16px 15px 16px;
   gap: 10px;
@@ -220,6 +223,9 @@ a:hover {
 }
 
 .blue_button2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: 700px;
   font-size: 21px;
   background-color: #2a3647;
@@ -233,6 +239,9 @@ a:hover {
 }
 
 .white_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: 700px;
   font-size: 21px;
   border: 1px solid #2a3647;
