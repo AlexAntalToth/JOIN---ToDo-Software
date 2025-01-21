@@ -1,0 +1,378 @@
+.contact-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin-left: 10px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+    background-color: white;
+}
+
+.contact-checkbox:checked {
+    border-color: white;
+    background-color: rgb(42, 54, 71);
+}
+
+.contact-checkbox:checked::after {
+    content: "✔";
+    position: absolute;
+    top: -12px;
+    left: 2px;
+    color: white;
+    /* Hakenfarbe */
+    font-size: 23px;
+}
+
+.contact-checkbox::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 2px;
+    font-size: 16px;
+}
+
+.addTask-assignedTo-icon-wrapper {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    transition: background-color 0.3s, transform 0.3s;
+    transform: translateY(-50%) rotate(0deg);
+    z-index: 10;
+}
+
+.addTask-assignedTo-icon-wrapper.rotated {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.addTask-assignedTo-mainField {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.addTask-assignedTo-icon-wrapper:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+.addTask-assignedTo-field.open+.addTask-assignedTo-icon-wrapper {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.addTask-assignedTo-icon {
+    width: 7.21px;
+    height: 4.6px;
+    transform: rotate(0deg);
+    cursor: pointer;
+    z-index: 1;
+}
+
+.addTask-assignedTo-icon-wrapper.rotated {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.selected-contacts {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-top: 8px;
+}
+
+.contact-item.selected {
+    background-color: rgb(42, 54, 71);
+}
+
+#searchContacts {
+    display: block;
+    width: 100%;
+    height: 40px;
+    padding: 8px;
+    outline: none;
+    font-size: 16px;
+    border-radius: 8px;
+    border-style: unset;
+}
+
+#searchContacts:focus {
+    outline: none;
+    border-style: unset;
+
+}
+
+.addTask-prio {
+    margin-bottom: 12px;
+}
+
+.addTask-prio-header {
+    padding-bottom: 8px;
+}
+
+.addTask-prio-field {
+    width: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.addTask-prio-button {
+    width: 136px;
+    height: 56px;
+    border-radius: 10px;
+    padding-top: 16px;
+    padding-right: 10px;
+    padding-bottom: 16px;
+    padding-left: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    cursor: pointer;
+    background-color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.addTask-prio-button:not(.urgent-active):not(.middle-active):not(.low-active):hover {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.urgent-active {
+    background-color: red;
+    color: white;
+}
+
+.middle-active {
+    background-color: rgba(255, 168, 0, 1);
+    color: white;
+}
+
+.low-active {
+    background-color: rgba(122, 226, 41, 1);
+    color: white;
+}
+
+.addTask-dueDate {
+    display: flex;
+    flex-direction: column;
+}
+
+.addTask-dueDate-header {
+    display: flex;
+    padding-bottom: 8px;
+}
+
+.addTask-dueDate-field {
+    width: 440px;
+    height: 48px;
+    font-size: 20px;
+    border-width: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    padding-top: 12px;
+    padding-right: 16px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    gap: 4px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    background-color: white;
+    position: relative;
+    z-index: 10;
+}
+
+.addTask-dueDate-field input {
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    padding-right: 40px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.addTask-dueDate-field input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.addTask-date-icon {
+    position: absolute;
+    width: 18px;
+    height: 20px;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 2;
+    pointer-events: auto;
+}
+
+.addTask-category {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.addTask-category-header {
+    display: flex;
+    padding-bottom: 8px;
+}
+
+.addTask-category-container {
+    position: relative;
+}
+
+.addTask-category-field {
+    width: 440px;
+    height: 48px;
+    font-size: 20px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    border-radius: 10px;
+    padding-top: 12px;
+    padding-right: 40px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: white;
+}
+
+.addTask-category-field:hover {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.addTask-category-icon-wrapper {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.addTask-category-icon-wrapper:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+.addTask-category-field:focus+.addTask-category-icon-wrapper,
+.addTask-category-field.open+.addTask-category-icon-wrapper {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.addTask-category-icon {
+    width: 7.21px;
+    height: 4.6px;
+    transform: rotate(0deg);
+    cursor: pointer;
+    z-index: 1;
+}
+
+.addTask-category-dropdown {
+    position: absolute;
+    top: 100%;
+    width: 440px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    border-radius: 10px;
+    background-color: white;
+    z-index: 10;
+    display: none;
+}
+
+.addTask-category-dropdown .category-item {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.addTask-category-dropdown .category-item:hover {
+    background-color: rgba(240, 240, 240, 1);
+}
+
+.category-item {
+    padding: 10px 16px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.category-item:hover {
+    background-color: #f0f0f0;
+}
+
+.addTask-subtasks {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 8px;
+}
+
+.addTask-subtasks-field {
+    position: relative;
+    width: 440px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(209, 209, 209, 1);
+    border-radius: 10px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.addTask-subtasks-content {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    height: 100%;
+    padding-left: 16px;
+    padding-right: 48px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.addTask-subtasks-vertical-line {
+    padding: 1px;
+    height: 24px;
+    background-color: rgba(209, 209, 209, 1);
+    margin: 0 auto;
+}
+
+.addTask-subtasks-icon-add {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    fill: #2A3647;
+    transition: background-color 0.3s, fill 0.3s;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.addTask-subtasks-icon-add:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+}

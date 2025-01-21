@@ -4,23 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Board</title>
+    <title>JOIN - Board</title>
+    <link rel="icon" href="./assets/img/logo_white.png" sizes="48x48" />
     <link rel="stylesheet" href="./styles/board.css">
+    <link rel="stylesheet" href="./styles/boardResponsive.css">
+    <link rel="stylesheet" href="./styles/boardPopups.css">
+    <link rel="stylesheet" href="./styles/boardEditTask.css">
+    <link rel="stylesheet" href="./styles/boardSubtasksEdit.css">
     <script src="./scripts/w3include.js"></script>
     <script src="./scripts/script.js"></script>
     <script src="./scripts/board.js"></script>
+    <script src="./scripts/boardTemplates.js"></script>
+    <script src="./scripts/boardEditTask.js"></script>
+    <script src="./scripts/boardSubtasks.js"></script>
+    <!-- <script src="./scripts/touchEvents.js"></script> -->
 </head>
 
 <body onload="onloadFunc()">
-    <div w3-include-html="./assets/templates/header-tryout.html"></div>
-    <div w3-include-html="./assets/templates/sidebar-tryout.html"></div>
+    <div w3-include-html="./assets/templates/header.html"></div>
+    <div w3-include-html="./assets/templates/sidebar.html"></div>
 
-    <!-- <div class="add-task-container hidden">
+    <div id="add-task-modal" class="add-task-modal hidden">
         <div class="add-task-popup">
-            <iframe id="extFrame" src="./addtask.html"></iframe>
-            <div w3-include-html="./addtask.html"></div>
+            <button class="close-modal-btn" onclick="closeAddTaskModal()">✖</button>
+            <iframe id="addTaskIframe" src="./addtask.html" onload="hideIframeElements('addTaskIframe')"
+                frameborder="0"></iframe>
         </div>
-    </div> -->
+    </div>
 
     <div id="taskPopup" class="popup" onclick="closeTaskPopup()">
         <div id="taskView" class="popup-content" onclick="event.stopPropagation()">
@@ -54,9 +64,10 @@
         </div>
         <div id="taskEdit" class="popup-content hidden"></div>
     </div>
-    <div class="container">
+    <div class="board-container">
         <div class="board-headline">
-            <h1>Board</h1> <img onclick="window.location.href='./addtask.html'" id="plusAddTaskM" src="./assets/icons/plus-addtask-board.png" alt="Open Add Task">
+            <h1>Board</h1> <img onclick="window.location.href='./addtask.html'" id="plusAddTaskM"
+                src="./assets/icons/plus-addtask-board.png" alt="Open Add Task">
             <div class="find-and-add">
                 <div class="searchbar">
                     <input id="search-input" type="text" placeholder="Find Task" oninput="onSearchInput()"
@@ -64,12 +75,12 @@
                     <div class="search-separator"></div>
                     <span onclick="findTask()" class="search-icon"><img src="./assets/icons/search.png" alt=""></span>
                 </div>
-                <button class="add-task">Add task +</button>
+                <button class="add-task" onclick="openAddTaskModal()">Add task +</button>
             </div>
         </div>
         <div class="board">
             <div class="row">
-                <h2>To Do <button onclick="window.location.href='./addtask.html'" class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
+                <h2>To Do <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
                 <div id="To-Do" ondrop="moveTo('To-Do')" ondragleave="removeHighlight('To-Do')"
                     ondragover="allowDrop(event); highlight('To-Do')">
                     <div class="task-list">
@@ -77,7 +88,7 @@
                 </div>
             </div>
             <div class="row">
-                <h2>In Progress <button onclick="window.location.href='./addtask.html'" class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button>
+                <h2>In Progress <button class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button>
                 </h2>
                 <div id="In Progress" ondrop="moveTo('In Progress')" ondragleave="removeHighlight('In Progress')"
                     ondragover="allowDrop(event); highlight('In Progress')">
@@ -85,7 +96,7 @@
                 </div>
             </div>
             <div class="row">
-                <h2>Await Feedback <button onclick="window.location.href='./addtask.html'" class="add-task-btn"><img src="./assets/icons/plus.svg"
+                <h2>Await Feedback <button class="add-task-btn"><img src="./assets/icons/plus.svg"
                             alt="Add Task"></button></h2>
                 <div id="Await Feedback" ondrop="moveTo('Await Feedback')"
                     ondragleave="removeHighlight('Await Feedback')"
@@ -94,7 +105,7 @@
                 </div>
             </div>
             <div class="row">
-                <h2>Done <button onclick="window.location.href='./addtask.html'" class="add-task-btn"><img src="./assets/icons/plus.svg" alt="Add Task"></button></h2>
+                <h2>Done</h2>
                 <div id="Done" ondrop="moveTo('Done')" ondragleave="removeHighlight('Done')"
                     ondragover="allowDrop(event); highlight('Done')">
                     <div class="task-list"></div>

@@ -1,0 +1,139 @@
+.cancel-addTask-icon,
+.create-addTask-icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color 0.3s, fill 0.3s;
+}
+
+.cancel-addTask-icon:hover,
+.create-addTask-icon:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+.addTask-icons-input {
+    display: none;
+}
+
+.addTask-icons-input.active {
+    display: flex;
+    gap: 2px;
+    padding-right: 20px;
+}
+
+.addTask-subtasks-icon-add.hidden {
+    display: none;
+}
+
+.subtasks-list {
+    padding-inline-start: 0px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.subtasks-list.scrollable {
+    border: 1px solid rgba(209, 209, 209, 1);
+    border-radius: 5px;
+}
+
+.subtasks-list li {
+    position: relative;
+    padding-left: 24px;
+    margin: 8px 0;
+    height: 40px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.subtasks-list li::before {
+    content: "•";
+    position: absolute;
+    left: 8px;
+    font-size: 16px;
+    line-height: 40px;
+    color: black;
+}
+
+.subtasks-list li:hover {
+    background-color: rgba(238, 238, 238, 1);
+}
+
+.subtask-buttons {
+    border: none;
+    outline: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    display: contents;
+}
+
+.editing-subtask {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.subtask-detail-buttons {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    padding-right: 20px;
+}
+
+.subtasks-list li:hover .subtask-detail-buttons {
+    display: flex;
+    padding-right: 8px;
+}
+
+.addTask-subtasks-detail-vertical-line {
+    padding: 1px;
+    height: 24px;
+    background-color: rgba(209, 209, 209, 1);
+    margin: 0 auto;
+}
+
+#editSubtaskInput {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    padding: 0 8px;
+    border: none;
+    outline: none;
+    background: none;
+}
+
+.subtask-edit-mode {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-bottom: 2px solid lightblue;
+    padding: 0 12px;
+}
+
+.subtasks-list li.editing::before {
+    content: none;
+}
+
+.subtasks-list li.editing {
+    padding-left: 0;
+}
+
+.edit-subtask-icon,
+.delete-subtask-icon {
+    position: relative;
+    transition: transform 0.3s ease, fill 0.3s ease;
+}
+
+.edit-subtask-icon:hover,
+.delete-subtask-icon:hover {
+    transform: translateY(2px);
+}

@@ -12,7 +12,6 @@ body {
   src: url(../assets/fonts/inter.ttf);
 }
 
-
 .content {
   opacity: 0;
   visibility: hidden;
@@ -35,11 +34,11 @@ body {
   position: absolute;
   width: 150px;
   height: auto;
-  animation: moveToTopLeft 2s forwards;
+  animation: moveToTopLeft 1s forwards;
 }
 
 .move-to-position {
-  animation: moveToTopLeft 2s forwards;
+  animation: moveToTopLeft 1s forwards;
 }
 
 @keyframes moveToTopLeft {
@@ -118,10 +117,45 @@ h1 {
   gap: 20px;
 }
 
+.input-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 10px 40px 10px 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.input-wrapper .icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper .icon img {
+  height: 16px;
+  width: 20px;
+  object-fit: contain;
+}
+
+.login_guestlogin {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
 .input1 {
-  background-image: url(../assets/icons/contact_email.png);
-  background-repeat: no-repeat;
-  background-position: right;
   width: 422px;
   height: 48px;
   border-radius: 10px;
@@ -133,9 +167,6 @@ h1 {
 }
 
 .input2 {
-  background-image: url(../assets/icons/lock.png);
-  background-repeat: no-repeat;
-  background-position: right;
   width: 422px;
   height: 48px;
   border-radius: 10px;
@@ -144,7 +175,6 @@ h1 {
   gap: 10px;
   font-size: 20px;
   font-weight: 400;
-
 }
 
 .login_guestlogin {
@@ -154,10 +184,13 @@ h1 {
 }
 
 .blue_button1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: 700px;
   font-size: 21px;
   background-color: #2a3647;
-  width: 107px;
+  width: 108px;
   height: 49px;
   padding: 15px 16px 15px 16px;
   gap: 10px;
@@ -190,6 +223,9 @@ a:hover {
 }
 
 .blue_button2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: 700px;
   font-size: 21px;
   background-color: #2a3647;
@@ -203,6 +239,9 @@ a:hover {
 }
 
 .white_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: 700px;
   font-size: 21px;
   border: 1px solid #2a3647;
@@ -243,4 +282,40 @@ a:hover {
 .input1:not(:focus),
 .input2:not(:focus) {
   border: 1px solid black;
+}
+
+.lock-icon  {
+  cursor: pointer;
+}
+
+.popup {
+  position: fixed;
+  top: 600px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color:#2a3647;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-family: inter;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1000;
+}
+
+.popup.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0); 
+}
+
+.legal-links {
+  display: flex;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  gap: 40px;
 }

@@ -1,3 +1,35 @@
+//Header and Sidebar
+/**
+ * Loads the sidebar and header templates asynchronously and inserts them into 
+ * their respective containers in the DOM.
+ * 
+ * @async
+ * @function
+ * @returns {Promise<void>} A promise that resolves when the sidebar and header content 
+ *                          has been successfully fetched and inserted.
+ */
+async function loadSidebarAndHeader() {
+    let sidebarContent = await fetch('./assets/templates/sidebar.html').then(res => res.text());
+    document.getElementById('sidebar-container').innerHTML = sidebarContent;
+    let headerContent = await fetch('./assets/templates/header.html').then(res => res.text());
+    document.getElementById('header-container').innerHTML = headerContent;
+}
+
+
+//Main
+/**
+ * Generates the HTML for the "Add Task" card, including task details, contact assignments, 
+ * due date, priority, category and subtasks.
+ * 
+ * @async
+ * @function generateAddTaskCardHTML
+ * @param {Object} task - The task object containing task details.
+ * @param {string} task.title - The title of the task.
+ * @param {string} task.description - The description of the task.
+ * @param {string} task.dueDate - The due date for the task in 'yyyy-mm-dd' format.
+ * @param {string} task.priority - The priority level of the task (e.g., 'low', 'medium', 'high').
+ * @returns {Promise<string>} - A promise that resolves to a string containing the HTML structure for the "Add Task" card.
+ */
 async function generateAddTaskCardHTML(task) {
     let contacts = await loadTaskContacts();
     let contactList = contacts
@@ -54,7 +86,7 @@ async function generateAddTaskCardHTML(task) {
                     <p>*</p>
                 </div>
                 <div class="addTask-dueDate-field">
-                    <input id="task-dueDate" type="date" value="${task.dueDate}" placeholder="dd/mm/yyyy">
+                    <input id="task-dueDate" type="date" value="${task.dueDate || ''}" placeholder="dd/mm/yyyy">
                     <img class="addTask-date-icon" src="../../assets/icons/addTask_date.png" alt="Logo Due Date">
                 </div>
             </div>
@@ -146,6 +178,147 @@ async function generateAddTaskCardHTML(task) {
 }
 
 
+//AssignedTo
+/**
+ * Retrieves DOM elements related to the "assigned to" section of the task.
+ * This function checks if all required elements exist in the DOM and returns them
+ * as an object. If any of the elements are missing, it returns `null`.
+ * 
+ * @returns {Object|null} An object containing the DOM elements for the assignedTo section,
+ * or `null` if any of the elements are not found.
+ * @property {HTMLElement} assignedToField - The input field for assigned tasks.
+ * @property {HTMLElement} contactList - The list of contacts to assign to the task.
+ * @property {HTMLElement} assignedToContainer - The container wrapping the assignedTo section.
+ * @property {HTMLElement} assignedToIconWrapper - The wrapper for the assignedTo icon.
+ * @property {HTMLElement} searchContacts - The search input for finding contacts.
+ * @property {HTMLElement} assignedToText - The text element showing the current assigned contact.
+ */
+function getAssignedToElements() {
+    let assignedToField = document.getElementById("task-assignedTo");
+    let contactList = document.getElementById("contactList");
+    let assignedToContainer = document.querySelector(".addTask-assignedTo-container");
+    let assignedToIconWrapper = document.querySelector(".addTask-assignedTo-icon-wrapper");
+    let searchContacts = document.getElementById("searchContacts");
+    let assignedToText = document.getElementById("assignedToText");
+    if (!assignedToField || !contactList || !assignedToIconWrapper || !searchContacts || !assignedToText) {
+        return null;
+    }
+    return {
+        assignedToField,
+        contactList,
+        assignedToContainer,
+        assignedToIconWrapper,
+        searchContacts,
+        assignedToText,
+    };
+}
+
+
+/**
+ * Updates the initials of selected contacts and adds them to the assignedTo container.
+ * Removes the previous list of selected contacts and creates a new one based on the current selected contacts.
+ * If the number of contacts exceeds the available space, it shows a `+X` indicating the number of remaining contacts.
+ * 
+ * @function
+ */
+function updateSelectedContactInitials() {
+    let assignedToContainer = document.querySelector(".addTask-assignedTo-container");
+    let selectedContactsDiv = document.querySelector(".selected-contacts");
+
+    if (selectedContactsDiv) selectedContactsDiv.remove();
+    
+    if (selectedContacts.length > 0) {
+        let initialsHTML = generateInitialsHTML(assignedToContainer);
+        let newSelectedContactsDiv = document.createElement("div");
+        newSelectedContactsDiv.className = "selected-contacts";
+        newSelectedContactsDiv.innerHTML = initialsHTML;
+        assignedToContainer.appendChild(newSelectedContactsDiv);
+    }
+}
+
+
+/**
+ * Generates the HTML for the initials of selected contacts, considering the available width.
+ * @param {HTMLElement} assignedToContainer - The container where the initials will be displayed.
+ * @returns {string} The generated HTML for the contact initials.
+ */
+function generateInitialsHTML(assignedToContainer) {
+    let maxWidth = assignedToContainer.offsetWidth;
+    let usedWidth = 0;
+    let remainingContacts = 0;
+    let initialsHTML = "";
+    for (let i = 0; i < selectedContacts.length; i++) {
+        let contact = selectedContacts[i];
+        let contactInitial = createContactInitial(contact);
+        let tempWidth = getTempDivWidth(assignedToContainer, contactInitial);
+        if (usedWidth + tempWidth <= maxWidth) {
+            initialsHTML += contactInitial;
+            usedWidth += tempWidth;
+        } else {
+            remainingContacts = selectedContacts.length - i;
+            break;
+        }
+    }
+    if (remainingContacts > 0) {
+        initialsHTML += createMoreContactsInitial(remainingContacts);
+    }
+    return initialsHTML;
+}
+
+
+/**
+ * Creates the HTML for a contact's initials.
+ * @param {Object} contact - The contact object containing the name and color.
+ * @returns {string} The HTML string representing the contact's initials.
+ */
+function createContactInitial(contact) {
+    return `
+        <div class="contact-initials" style="background-color: ${contact.color};">
+            ${contact.name.split(" ").map(name => name[0]).join("").toUpperCase()}
+        </div>
+    `;
+}
+
+
+/**
+ * Creates the HTML for the "more contacts" initials display.
+ * @param {number} remainingContacts - The number of remaining contacts to be displayed.
+ * @returns {string} The HTML string for displaying the remaining contacts.
+ */
+function createMoreContactsInitial(remainingContacts) {
+    return `
+        <div class="contact-initials more-contacts">
+            +${remainingContacts}
+        </div>
+    `;
+}
+
+
+/**
+ * Calculates the width of a temporary div that wraps the contact initials.
+ * @param {HTMLElement} assignedToContainer - The container to calculate the width in.
+ * @param {string} contactInitial - The HTML string for the contact's initials.
+ * @returns {number} The width of the temporary div.
+ */
+function getTempDivWidth(assignedToContainer, contactInitial) {
+    let tempDiv = document.createElement("div");
+    tempDiv.style.display = "inline-block";
+    tempDiv.innerHTML = contactInitial;
+    assignedToContainer.appendChild(tempDiv);
+    let tempWidth = tempDiv.offsetWidth;
+    assignedToContainer.removeChild(tempDiv);
+    return tempWidth;
+}
+
+
+//Footer
+/**
+ * Generates the HTML structure for the footer section of the "Add Task" card.
+ * This includes a required field message on the left and action buttons (Clear and Create Task) on the right.
+ * The "Clear" button includes an icon for clearing, and the "Create Task" button includes an icon for task creation.
+ * 
+ * @returns {string} The generated HTML string representing the footer content of the "Add Task" card.
+ */
 function generateAddTaskCardFooterHTML() {
     return `
         <div class="addTask-footer-generated">
@@ -172,6 +345,14 @@ function generateAddTaskCardFooterHTML() {
 }
 
 
+//Subtasks
+/**
+ * Updates the list of subtasks by rendering the subtasks from the current task into the HTML.
+ * Each subtask is displayed with its name, an edit button, and a delete button.
+ * The edit and delete buttons trigger respective functions (`editSubtask` and `deleteSubtask`) when clicked.
+ * 
+ * @returns {void} This function doesn't return any value. It directly modifies the inner HTML of the subtasks list.
+ */
 function updateSubtasksList() {
     let list = document.getElementById("addTaskSubtasksList");
     let subtasks = tasks[currentTaskIndex].subtasks;
@@ -212,6 +393,15 @@ function updateSubtasksList() {
 }
 
 
+/**
+ * Initiates the editing mode for a subtask, allowing the user to modify its name.
+ * This function first checks if another subtask is being edited, and if so, it updates the list.
+ * Then, it sets the selected subtask into an editable state with an input field for the task's name.
+ * The subtask is displayed with options to save the changes or delete the subtask.
+ * 
+ * @param {number} index - The index of the subtask to be edited within the current task's subtasks array.
+ * @returns {void} This function doesn't return any value. It directly updates the HTML content for the specified subtask.
+ */
 function editSubtask(index) {
     let list = document.getElementById("addTaskSubtasksList");
     let subtasks = tasks[currentTaskIndex].subtasks;
