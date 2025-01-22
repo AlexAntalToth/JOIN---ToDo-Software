@@ -1,4 +1,27 @@
 @media (max-width: 882px) {
+  .join_image {
+    position: absolute;
+    height: 83px;
+    width: 76px;
+    top: 80px;
+    left: 77px;
+  }
+
+  .login_div {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 475px;
+    width: 396px;
+    border-radius: 30px;
+    gap: 32px;
+    border-radius: 30px;
+    padding: 48px 115px 48px 115px;
+    margin-top: 176px;
+  }
+
   #wrapDiv {
     display: flex;
     align-items: center;
@@ -7,10 +30,10 @@
   }
 
   .signup_div {
-    position: static; 
-    width: auto; 
-    padding: 0; 
-    text-align: center; 
+    position: static;
+    width: auto;
+    padding: 0;
+    text-align: center;
   }
 
   .login_guestlogin {
@@ -34,21 +57,6 @@
     color: white;
     transition: 0.3s;
   }
-
-  .login_div {
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 475px;
-    width: 396px;
-    border-radius: 30px;
-    gap: 32px;
-    border-radius: 30px;
-    padding: 48px 115px 48px 115px;
-    margin-top: 250px;
-  }
 }
 
 @media (max-width: 650px) {
@@ -71,13 +79,11 @@
     gap: 32px;
     border-radius: 30px;
     padding: 48px 115px 48px 115px;
-    margin-top: 250px;
+    margin-top: 175px;
   }
-
 }
 
 @media (max-width: 510px) {
-
   #wrapDiv {
     display: flex;
     align-items: center;
@@ -97,14 +103,11 @@
     gap: 32px;
     border-radius: 30px;
     padding: 48px 115px 48px 115px;
-    margin-top: 250px;
+    margin-top: 176px;
   }
-
- 
 }
 
 @media (max-width: 440px) {
-
   #wrapDiv {
     display: flex;
     align-items: center;
@@ -119,12 +122,12 @@
     justify-content: center;
     flex-direction: column;
     height: 475px;
-    width: 140px;
+    width: 100px;
     border-radius: 30px;
     gap: 32px;
     border-radius: 30px;
     padding: 48px 115px 48px 115px;
-    margin-top: 250px;
+    margin-top: 176px;
   }
 
   h1 {
@@ -136,12 +139,38 @@
 }
 
 @media (max-width: 390px) {
-
   #wrapDiv {
     display: flex;
     align-items: center;
     gap: 24px;
     flex-direction: column-reverse;
+  }
+
+  .blue_button2 {
+    font-weight: 700px;
+    font-size: 16px;
+    background-color: #2a3647;
+    width: 177px;
+    height: 48px;
+    padding: 15px 24px 15px 24px;
+    gap: 10px;
+    border-radius: 8px;
+    color: white;
+    transition: 0.3s;
+  }
+
+  h1 {
+    text-align: center;
+    font-weight: 700px;
+    font-size: 40px;
+    margin: 0px;
+  }
+
+  .input-wrapper input {
+    width: 250px;
+    padding: 10px 40px 10px 10px;
+    font-size: 16px;
+    box-sizing: border-box;
   }
 
   .login_div {
@@ -150,18 +179,52 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 475px;
-    width: 64px;
+    height: 382px;
+    width: 100px;
     border-radius: 30px;
     gap: 32px;
     border-radius: 30px;
-    padding: 48px 115px 48px 115px;
-    margin-top: 250px;
+    padding: 0px 104px 0px 115px;
+    margin-top: 69px;
+  }
+
+  .blue_button1 {
+    font-size: 16px;
+  }
+
+  .white_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700px;
+    font-size: 16px;
+    border: 1px solid #2a3647;
+    background-color: white;
+    height: 48px;
+    width: 177px;
+    padding: 15px 24px 15px 24px;
+    gap: 10px;
+    border-radius: 8px;
+    color: #2a3647;
+    transition: 0.3s;
+  }
+
+  .join_image {
+    position: absolute;
+    height: 50px;
+    width: 43px;
+    top: 66px;
+    left: 77px;
+  }
+
+  .signup_div {
+    font-size: 16px;
+    font-weight: 400;
   }
 }
 
 @media (max-width: 346px) {
-
+  
   #wrapDiv {
     display: flex;
     align-items: center;
@@ -175,12 +238,12 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 475px;
-    width: 64px;
+    height: 382px;
+    width: 100px;
     border-radius: 30px;
     gap: 32px;
     border-radius: 30px;
-    padding: 48px 115px 48px 115px;
-    margin-top: 250px;
+    padding: 0px 104px 0px 115px;
+    margin-top: 69px;
   }
 }

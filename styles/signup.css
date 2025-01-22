@@ -10,6 +10,10 @@ body {
   font-family: inter;
   src: url(../assets/fonts/inter.ttf);
 }
+  html, body {
+    height: 100%;       
+  }
+  
 
 .join_image {
   position: absolute;
@@ -227,7 +231,7 @@ h1 {
   font-weight: 400px;
   font-size: 16px;
   gap: 32px;
-  margin-top: 150px;
+  margin-top: 90px;
 }
 
 .checkbox_input:hover {
