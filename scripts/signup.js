@@ -82,8 +82,8 @@ function renderSignup() {
       </form>
 
       <div class="dataprotection_div">
-        <a href="privacy_policy.html">Privacy Policy</a>
-        <a href="legal_notice.html">Legal Notice</a>
+        <a href="privacy_policy.html" target="_blank">Privacy Policy</a>
+        <a href="legal_notice.html" target="_blank">Legal Notice</a>
       </div>`;
 }
 
