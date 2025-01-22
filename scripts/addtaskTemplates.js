@@ -390,6 +390,12 @@ function updateSubtasksList() {
     `
         )
         .join("");
+        if (subtasks.length > 0) {
+            let lastSubtask = list.lastElementChild;
+            if (lastSubtask) {
+                lastSubtask.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
 }
 
 

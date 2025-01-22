@@ -199,6 +199,10 @@ function validateContactFields(name, email, phone) {
         showErrorMessage("Please enter a valid email address.");
         return false;
     }
+    if (!validatePhone(phone)) {
+        showErrorMessage("Please enter a valid phone number.");
+        return false;
+    }
     return true;
 }
 
@@ -211,8 +215,21 @@ function validateContactFields(name, email, phone) {
  * @returns {boolean} Returns `true` if the email is valid, otherwise `false`.
  */
 function validateEmail(email) {
-    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let emailPattern = /^[^\s@]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,6}$/;
     return emailPattern.test(email);
+}
+
+
+/**
+ * Validiert eine Telefonnummer.
+ * Überprüft, ob die Eingabe nur aus Ziffern besteht.
+ * 
+ * @param {string} phone Die Telefonnummer als Zeichenkette, die validiert werden soll.
+ * @returns {boolean} `true`, wenn die Telefonnummer nur aus Ziffern besteht, sonst `false`.
+ */
+function validatePhone(phone) {
+    let phonePattern = /^[0-9]+$/;
+    return phonePattern.test(phone);
 }
 
 

@@ -149,7 +149,6 @@ async function saveNewTask() {
     let { taskTitle, taskDescription, taskDueDate, taskBadge } = getTaskDetails();
     let taskSubtasks = getSubtasks();
     let assignedTo = getAssignedContacts();
-    // let taskDueDate = document.getElementById('task-dueDate').value;
     let newTask = {
         title: taskTitle,
         description: taskDescription,

@@ -14,8 +14,8 @@ function validateFields() {
     let dueDateField = document.getElementById("task-dueDate");
     let isTitleEmpty = titleField.value.trim() === "";
     let isCategoryEmpty = !categoryDropdown.getAttribute("data-selected");
-    let isDueDateEmpty = dueDateField.value.trim() === "";
-    updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty);
+    let isDueDateInvalid = isDueDateEmptyOrPast(dueDateField.value.trim());
+    updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateInvalid);
 }
 
 
@@ -29,6 +29,26 @@ function attachEventListeners() {
     attachDueDateListener();
     attachTitleListener();
     attachCategoryListener();
+}
+
+
+/**
+ * Überprüft, ob das Fälligkeitsdatum leer oder in der Vergangenheit liegt.
+ * 
+ * Diese Funktion prüft, ob das eingegebene Datum leer ist oder ob es vor dem heutigen Datum liegt,
+ * wobei die Uhrzeit auf Mitternacht gesetzt wird, um nur das Datum zu berücksichtigen.
+ * 
+ * @param {string|Date} dueDate Das Fälligkeitsdatum als String oder Date-Objekt.
+ * @returns {boolean} `true`, wenn das Datum leer oder in der Vergangenheit liegt, sonst `false`.
+ */
+function isDueDateEmptyOrPast(dueDate) {
+    if (!dueDate) return true; // Datum ist leer
+
+    let today = new Date();
+    let inputDate = new Date(dueDate);
+
+    // Vergleiche, ob das eingegebene Datum in der Vergangenheit liegt
+    return inputDate < today.setHours(0, 0, 0, 0); // Setzt die Uhrzeit von "today" auf Mitternacht
 }
 
 
@@ -89,9 +109,13 @@ function validateAndSaveTask(event) {
     let dueDateField = document.getElementById("task-dueDate");
     let isTitleEmpty = isFieldEmpty(titleField, "value");
     let isCategoryEmpty = isFieldEmpty(categoryDropdown, "data-selected");
-    let isDueDateEmpty = isFieldEmpty(dueDateField, "value");
-    updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty);
-    if (!isTitleEmpty && !isCategoryEmpty && !isDueDateEmpty) saveNewTask();
+    let isDueDateInvalid = isDueDateEmptyOrPast(dueDateField.value);
+    updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateInvalid);
+    if (!isTitleEmpty && !isCategoryEmpty && !isDueDateInvalid) {
+        saveNewTask();
+    } else if (isDueDateInvalid) {
+        showErrorMessage("The due date must be today or in the future.");
+    }
 }
 
 

@@ -183,7 +183,7 @@ function saveSubtask(index) {
     let input = document.getElementById("editSubtaskInput");
     let newName = input.value.trim();
     if (newName === "") {
-        showErrorMessage("Please enter a valid name.");
+        showErrorMessage("Please enter a valid subtask.");
         return;
     }
     tasks[currentTaskIndex].subtasks[index].name = newName;

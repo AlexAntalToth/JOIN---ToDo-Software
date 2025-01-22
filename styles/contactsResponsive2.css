@@ -128,6 +128,15 @@
         top: -300px;
         right: 8px;
     }
+
+    .contacts-card-details h2 {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+
+    .contacts-card {
+        top: 180px;
+    }
 }
 
 @media (max-width: 370px) {
