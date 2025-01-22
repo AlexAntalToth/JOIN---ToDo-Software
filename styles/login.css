@@ -124,6 +124,7 @@ h1 {
 }
 
 .input-wrapper {
+  margin-top: 10px;
   position: relative;
   width: 100%;
 }

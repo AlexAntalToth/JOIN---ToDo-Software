@@ -38,17 +38,23 @@ function renderSignup() {
         <div class="separator"></div>
       </div>
       
-      <form class="form" onsubmit="if (!checkPassword()) return false; addContact(); return false;">
+      <form class="form" onsubmit="if (!validateEmail() || !checkPassword()) return false; addContact(); return false;">
         <div class="inputfields_div">
           <div class="input-wrapper">
             <input class="input1" id="name" required placeholder="Name" type="text" />
             <i class="icon"><img src="assets/icons/person.png" /></i>
           </div>
 
-          <div class="input-wrapper">
-            <input class="input2" id="email" required placeholder="Email" type="email" />
-            <i class="icon"><img src="assets/icons/mail.png" /></i>
-          </div>
+         <div class="input-wrapper">
+    <input
+      class="input1"
+      id="email"
+      required
+      placeholder="Email"
+      type="email"
+    />
+    <i class="icon"><img src="assets/icons/mail.png" /></i>
+  </div>
 
          <div class="input-wrapper">
   <input class="input3" id="password" required placeholder="Password" type="password" />
@@ -81,6 +87,26 @@ function renderSignup() {
       </div>`;
 }
 
+function validateEmail() {
+  let emailInput = document.getElementById("email");
+  let email = emailInput.value;
+  let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  let popupEmail= document.getElementById("popup-valid-email")
+
+  if (!emailPattern.test(email)) {
+    showPopupValidEmail(popupEmail);
+    emailInput.focus();
+    return false;
+  }
+  return true;
+}
+
+function showPopupValidEmail(popupEmail) {
+  popupEmail.classList.add("show");
+  setTimeout(() => {
+    popup.classList.remove("show");
+  }, 1500);
+}
 /**
  * addContact - This function asynchronously adds a new contact (user) to the database by making a POST request.
  * It retrieves the user's name, email, and password from the form fields, then sends this data to the specified URL.
@@ -178,7 +204,6 @@ function showPopup(popup) {
     popup.classList.remove("show");
   }, 1500);
 }
-
 
 /**
  * ShowPassword - This function toggles the visibility of the password field when the user clicks on the password visibility icon.

@@ -35,17 +35,16 @@ function renderLogin() {
 
 
 <form class="form" onsubmit="login(); return false;">
-  <div class="input-icon">
-    <div class="input-wrapper">
-  <input
-    class="input1"
-    id="email"
-    required
-    placeholder="Email"
-    type="email"
-  />
-  <i class="icon"><img src="assets/icons/mail.png" /></i> 
-</div>
+ <div class="input-wrapper">
+    <input
+      class="input1"
+      id="email"
+      required
+      placeholder="Email"
+      type="email"
+    />
+    <i class="icon"><img src="assets/icons/mail.png" /></i>
+  </div>
 
 <div class="input-wrapper">
   <input
@@ -95,6 +94,27 @@ function startAnimation() {
       }
     }, 100);
   });
+}
+
+function validateEmail() {
+  let emailInput = document.getElementById("email");
+  let email = emailInput.value;
+  let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  let popupEmail = document.getElementById("popup-valid-email")
+
+  if (!emailPattern.test(email)) {
+    showPopupValidEmail(popupEmail);
+    emailInput.focus();
+    return false;
+  }
+  return true;
+}
+
+function showPopupValidEmail(popupEmail) {
+  popupEmail.classList.add("show");
+  setTimeout(() => {
+    popupEmail.classList.remove("show");
+  }, 1500);
 }
 
 /**
@@ -165,15 +185,15 @@ async function login() {
 async function processLogin(signedUpContact) {
   if (signedUpContact) {
     let popup = document.getElementById('task-created-popup');
-    popup.classList.add('show'); 
+    popup.classList.add('show');
     setTimeout(() => {
       popup.classList.remove('show');
-      putData('currentUser', {name:signedUpContact.name})
+      putData('currentUser', { name: signedUpContact.name })
       window.location.href = "summary.html";
     }, 1500);
   } else {
-   let popup = document.getElementById('task-created-popup2');
-    popup.classList.add('show'); 
+    let popup = document.getElementById('task-created-popup2');
+    popup.classList.add('show');
     setTimeout(() => {
       popup.classList.remove('show');
     }, 1500);
@@ -198,11 +218,11 @@ function showPassword() {
 
   if (passwordField.type === "password") {
     passwordField.type = "text";
-    icon.src = "assets/icons/eye.png"; 
+    icon.src = "assets/icons/eye.png";
     icon.alt = "show password";
   } else {
     passwordField.type = "password";
-    icon.src = "assets/icons/lock.png"; 
+    icon.src = "assets/icons/lock.png";
     icon.alt = "hide password";
   }
 }

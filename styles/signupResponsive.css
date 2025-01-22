@@ -1,5 +1,4 @@
 @media (max-width: 790px) {
-
   .dataprotection_div {
     display: flex;
     justify-content: center;
@@ -27,8 +26,7 @@
 }
 
 @media (max-width: 590px) {
-
-.signup_div {
+  .signup_div {
     position: relative;
     margin-top: 118px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -168,20 +166,28 @@
 }
 
 @media (max-width: 411px) {
+  .join_image {
+    position: absolute;
+    height: 44px;
+    width: 36px;
+    top: 2px;
+    left: 12px;
+}
+
   h1 {
     margin: 0px;
     font-weight: 700px;
-    font-size: 50px;
+    font-size: 42px;
     text-align: center;
   }
 
   .signup_div {
     position: relative;
-    margin-top: 118px;
+    margin-top: -26px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     width: 144px;
     height: 502px;
-    padding: 48px 88px 65px 88px;
+    padding: 3px 88px 65px 88px;
     gap: 32px;
     border-radius: 30px;
     display: flex;
@@ -190,6 +196,29 @@
     flex-direction: column;
   }
 
+  .blue_button1 {
+    font-weight: 700px;
+    font-size: 16px;
+    background-color: #2a3647;
+    width: 108px;
+    height: 42px;
+    padding: 15px 16px 15px 16px;
+    gap: 10px;
+    border-radius: 8px;
+    color: white;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form {
+    height: 428px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
   .dataprotection_div {
     display: flex;
     justify-content: center;
@@ -200,17 +229,15 @@
     margin-top: 30px;
   }
 
-
   .inputfields_div {
-    width: 288px;
-    height: 326px;
-    gap: 24px;
+    width: 283px;
+    height: 305px;
+    gap: 13px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
   }
-
   .input1 {
     font-size: 20px;
     font-weight: 400;
@@ -278,14 +305,36 @@
     font-size: 50px;
     text-align: center;
   }
+  .join_image {
+    position: absolute;
+    height: 32px;
+    width: 28px;
+    top: 2px;
+    left: 12px;
+}
+  .blue_button1 {
+    font-weight: 700px;
+    font-size: 16px;
+    background-color: #2a3647;
+    width: 108px;
+    height: 42px;
+    padding: 15px 16px 15px 16px;
+    gap: 10px;
+    border-radius: 8px;
+    color: white;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   .signup_div {
     position: relative;
-    margin-top: 118px;
+    margin-top: -26px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     width: 144px;
     height: 502px;
-    padding: 48px 88px 65px 88px;
+    padding: 3px 88px 65px 88px;
     gap: 32px;
     border-radius: 30px;
     display: flex;

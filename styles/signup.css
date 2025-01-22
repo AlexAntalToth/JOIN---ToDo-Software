@@ -10,15 +10,15 @@ body {
   font-family: inter;
   src: url(../assets/fonts/inter.ttf);
 }
-  html, body {
-    height: 100%;       
-  }
-  
+html,
+body {
+  height: 100%;
+}
 
 .join_image {
   position: absolute;
-  height: 122px;
-  width: 100px;
+  height: 77px;
+  width: 73px;
   top: 80px;
   left: 77px;
 }
@@ -32,11 +32,11 @@ body {
 
 .signup_div {
   position: relative;
-  margin-top: 250px;
+  margin-top: 78px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   width: 598px;
-  height: 630px;
-  padding: 48px 88px 48px 88px;
+  height: 505px;
+  padding: 48px 88px 57px 88px;
   gap: 32px;
   border-radius: 30px;
   display: flex;
@@ -111,7 +111,7 @@ h1 {
   object-fit: contain;
 }
 
-.lock-icon:hover{
+.lock-icon:hover {
   cursor: pointer;
 }
 
@@ -192,7 +192,7 @@ h1 {
 }
 
 .checkbox {
-  display: none; 
+  display: none;
 }
 
 .checkbox-label {
@@ -284,7 +284,7 @@ a:hover {
   top: 600px;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color:#2a3647;
+  background-color: #2a3647;
   color: white;
   padding: 15px 30px;
   border-radius: 8px;
@@ -302,5 +302,5 @@ a:hover {
   display: block;
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0); 
+  transform: translateX(-50%) translateY(0);
 }
