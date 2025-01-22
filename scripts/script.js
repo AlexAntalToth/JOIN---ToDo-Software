@@ -1,4 +1,5 @@
 let BASE_URL="https://join-56225-default-rtdb.europe-west1.firebasedatabase.app/";
+let appInitialized = false;
 
 /**
  * Highlights the current page in the sidebar based on the URL path.
@@ -77,13 +78,16 @@ async function deleteData(path) {
  * Redirects or adjusts UI as needed.
  */
 async function initApp() {
+    if (appInitialized) return;
+    appInitialized = true;
     await fetchCurrentUser();
-    if (currentUser.name === "") {
-        handleUnauthenticatedUser();
-    } else {
-        setHeaderInitials();
-    }
+        if (currentUser.name === "") {
+            handleUnauthenticatedUser();
+        } else {
+            setHeaderInitials();
+        }
 }
+
 
 
 /**
@@ -92,7 +96,6 @@ async function initApp() {
  */
 function handleUnauthenticatedUser() {
     let currentPath = window.location.pathname;
-
     if (isLegalOrPrivacyPage(currentPath)) {
         adjustUIForLegalOrPrivacyPage();
     } else {
@@ -139,12 +142,15 @@ function hideHeaderRight() {
 function customizeSidebar() {
     let sidebar = document.querySelector("aside");
     if (sidebar) {
-    let logo = document.querySelector(".sidebar-logo");
-    let categories = document.querySelector("nav");
-    logo.style.display = "none";
-    categories.style.display = "none";
+        let logo = sidebar.querySelector(".sidebar-logo");
+        let categories = sidebar.querySelector("nav");
+        let footer = document.getElementById("sidebar-footer");
+        if(footer) footer.style.display = "block";
+        if (logo) logo.style.display = "none";
+        if (categories) categories.style.display = "none";
+    }
 }
-}
+
 
 
 /**
