@@ -115,10 +115,9 @@ function isLegalOrPrivacyPage(path) {
  * Adjusts the UI for the legal notice or privacy policy page when no user is logged in.
  */
 function adjustUIForLegalOrPrivacyPage() {
-    hideHeaderRight();
     customizeSidebar();
+    hideHeaderRight();
     hideBackButton();
-    ensureSidebarFooterVisible();
 }
 
 
@@ -138,7 +137,7 @@ function hideHeaderRight() {
  * Customizes the sidebar to show only the footer with the active link highlighted.
  */
 function customizeSidebar() {
-    let sidebar = document.querySelector(".sidebar");
+    let sidebar = document.querySelector("aside");
     if (sidebar) {
     let logo = document.querySelector(".sidebar-logo");
     let categories = document.querySelector("nav");
@@ -154,15 +153,6 @@ function customizeSidebar() {
 function hideBackButton() {
     let backButton = document.querySelector(".back");
     if (backButton) backButton.style.display = "none";
-}
-
-
-/**
- * Ensures that the sidebar footer remains visible even at max-width: 700px.
- */
-function ensureSidebarFooterVisible() {
-    let sidebarFooter = document.querySelector("#sidebar-footer");
-    if (sidebarFooter) sidebarFooter.style.display = "block";
 }
 
 
