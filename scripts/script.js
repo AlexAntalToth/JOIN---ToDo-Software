@@ -113,7 +113,6 @@ function isLegalOrPrivacyPage(path) {
 
 /**
  * Adjusts the UI for the legal notice or privacy policy page when no user is logged in.
- * @param {string} currentPath - The current page path.
  */
 function adjustUIForLegalOrPrivacyPage() {
     hideHeaderRight();
@@ -139,12 +138,13 @@ function hideHeaderRight() {
  * Customizes the sidebar to show only the footer with the active link highlighted.
  */
 function customizeSidebar() {
-    let sidebar = document.querySelector("aside.sidebar");
-    if (!sidebar) return;
+    let sidebar = document.querySelector(".sidebar");
+    if (sidebar) {
     let logo = document.querySelector(".sidebar-logo");
     let categories = document.querySelector("nav");
     logo.style.display = "none";
     categories.style.display = "none";
+}
 }
 
 
