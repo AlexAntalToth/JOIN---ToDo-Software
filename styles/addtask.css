@@ -338,6 +338,31 @@
     width: 100%;
 }
 
+.addTask-assignedTo-contactList::-webkit-scrollbar,
+.contact-list-scrollable::-webkit-scrollbar {
+    width: 6px;
+}
+
+.addTask-assignedTo-contactList::-webkit-scrollbar-thumb,
+.contact-list-scrollable::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+.addTask-assignedTo-contactList::-webkit-scrollbar-track,
+.contact-list-scrollable::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.addTask-assignedTo-contactList::-webkit-scrollbar-button,
+.contact-list-scrollable::-webkit-scrollbar-button {
+    background-color: white;
+    height: 16px;
+    width: 6px;
+    border-radius: 4px;
+}
+
+
 .addTask-assignedTo-field.open+.addTask-assignedTo-contactList {
     display: block;
 }
