@@ -139,6 +139,7 @@ async function refreshTaskList() {
  * @param {number} taskIndex - The index of the task to move.
  */
 function moveTaskToNextCategory(taskIndex) {
+    event.stopPropagation();
     const categories = ["To-Do", "In Progress", "Await Feedback", "Done"];
     let task = tasks[taskIndex];
     let currentCategory = task.task.category;

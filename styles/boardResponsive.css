@@ -96,6 +96,14 @@
   .popup-content h1 {
     font-size: 24px !important;
   }
+  .priority-buttons {
+    justify-content: space-evenly !important;
+  }
+  .priority-btn{
+    width: 80px !important;
+    height: 30px;
+    }
+  }
   .priority-btn p {
     display: none;
   }
@@ -115,7 +123,6 @@
   .move-task-btn {
     display: block;
   }
-}
 
 @media (max-width: 420px) {
   .searchbar input {

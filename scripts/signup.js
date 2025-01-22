@@ -75,7 +75,7 @@ function renderSignup() {
             <label for="acceptPolicy" class="checkbox-label"></label>
           </div>
           <p>
-            I accept the <a class="checkbox_input" href="privacy_policy.html">privacy policy</a>
+            I accept the <a class="checkbox_input" href="privacy_policy.html" target="_blank">privacy policy</a>
           </p>
         </div>
         <button class="blue_button1">Sign up</button>

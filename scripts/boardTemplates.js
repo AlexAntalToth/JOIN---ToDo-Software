@@ -25,16 +25,16 @@ function generateTaskHtml(task, index) {
     let subtasks = task.subtasks || {}; 
     let { completed, total } = calculateSubtaskProgress(subtasks);
     return `
-        <div class="task" id="task-${index}" draggable="true"  ondragstart="startDragging(${index})">
+        <div class="task" id="task-${index}" draggable="true" onclick="openTaskPopup(${index})" ondragstart="startDragging(${index})">
             <div class="task-header">
                 ${generateTaskBadge(task.badge)}
                 ${task.category !== "Done" ? `
-                    <button class="move-task-btn" onclick="moveTaskToNextCategory(${index})">
+                    <button class="move-task-btn" onclick="moveTaskToNextCategory(${index}, event)">
                         <img src="./assets/icons/moveTask.png" alt="Move Task">
                     </button>
                 ` : ""}
             </div>
-            <div class="task-title" onclick="openTaskPopup(${index})">${task.title}</div>
+            <div class="task-title">${task.title}</div>
             <div class="task-desc">${task.description}</div>
             <div class="subtask-bar" id="subtaskBar-${index}">
                 ${task.subtasks && total > 0 ? `
@@ -184,7 +184,6 @@ function generateTaskEditHTML(task) {
     return `
         <div class="popup-header">
             <div id="taskBadge">${generateTaskBadge(task.badge)}</div>
-            <button onclick="closeTaskPopup()" class="close-btn">X</button>
         </div>
         <form id="editTaskForm" class="edit-task-form">
             <div class="form-group">

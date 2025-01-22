@@ -137,16 +137,14 @@ function hideHeaderRight() {
 
 /**
  * Customizes the sidebar to show only the footer with the active link highlighted.
- * @param {boolean} isLegalNotice - Whether the current page is the legal notice page.
  */
 function customizeSidebar() {
     let sidebar = document.querySelector("aside.sidebar");
     if (!sidebar) return;
-    Array.from(sidebar.children).forEach(child => {
-        if (!child.id || child.id !== "sidebar-footer") {
-            child.style.display = "none";
-        }
-    });
+    let logo = document.querySelector(".sidebar-logo");
+    let categories = document.querySelector("nav");
+    logo.style.display = "none";
+    categories.style.display = "none";
 }
 
 
@@ -300,4 +298,27 @@ function handleError() {
 function formatDateToDDMMYYYY(dateString) {
     let [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
+}
+
+
+/**
+ * Returns today's date in YYYY-MM-DD format.
+ * @returns {string} The current date as a string in "YYYY-MM-DD" format.
+ */
+function getToday() {
+    let year = new Date().getFullYear();
+    let month = String(new Date().getMonth() + 1).padStart(2, '0');
+    let day = String(new Date().getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+/**
+ * Sets the minimum allowable date for an input of type "date" to today's date.
+ * This ensures that users cannot select a date earlier than the current day.
+ */
+function setDateInputMin() {
+    const dateInput = document.querySelector('input[type="date"]');
+    if (dateInput) {
+        dateInput.setAttribute("min", getToday());
+    }
 }

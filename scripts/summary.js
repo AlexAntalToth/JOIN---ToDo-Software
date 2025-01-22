@@ -46,16 +46,6 @@ function getUrgentDueDate(tasks) {
     return findClosestDueDate(tasks, today);
 }
 
-/**
- * Returns today's date in YYYY-MM-DD format.
- * @returns {string} The current date as a string in "YYYY-MM-DD" format.
- */
-function getToday() {
-    let year = new Date().getFullYear();
-    let month = String(new Date().getMonth() + 1).padStart(2, '0');
-    let day = String(new Date().getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
 
 /**
  * Finds the closest due date to today from the provided tasks.

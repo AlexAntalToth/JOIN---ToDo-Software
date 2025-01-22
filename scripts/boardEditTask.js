@@ -5,8 +5,6 @@
 function editTask() {
     if (currentTaskIndex === null) return;
     let task = tasks[currentTaskIndex].task;
-    isEditing = true;
-    disableButtonWhileEdit();
     task.subtasks = task.subtasks || {};
     let taskView = document.getElementById("taskView");
     let taskEdit = document.getElementById("taskEdit");
@@ -16,6 +14,7 @@ function editTask() {
     updateSubtasksList(task);
     setupSubtaskInput();
     populateSelectedContacts();
+    setDateInputMin();
 }
 
 
@@ -357,7 +356,6 @@ function updateTaskFields(task) {
 async function updateTaskData(taskId, task) {
     await putData(`tasks/${taskId}`, task);
     tasks[currentTaskIndex].task = task;
-    isEditing = false;
 }
 
 
