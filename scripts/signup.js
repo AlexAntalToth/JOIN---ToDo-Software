@@ -104,9 +104,10 @@ function validateEmail() {
 function showPopupValidEmail(popupEmail) {
   popupEmail.classList.add("show");
   setTimeout(() => {
-    popup.classList.remove("show");
-  }, 1500);
+    popupEmail.classList.remove("show"); 
+  }, 1500); 
 }
+
 /**
  * addContact - This function asynchronously adds a new contact (user) to the database by making a POST request.
  * It retrieves the user's name, email, and password from the form fields, then sends this data to the specified URL.
