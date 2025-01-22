@@ -162,8 +162,15 @@
   h1 {
     text-align: center;
     font-weight: 700px;
-    font-size: 50px;
+    font-size: 40px;
     margin: 0px;
+  }
+
+  .input-wrapper input {
+    width: 250px;
+    padding: 10px 40px 10px 10px;
+    font-size: 16px;
+    box-sizing: border-box;
   }
 
   .login_div {
@@ -172,13 +179,13 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 457px;
+    height: 382px;
     width: 100px;
     border-radius: 30px;
     gap: 32px;
     border-radius: 30px;
     padding: 0px 104px 0px 115px;
-    margin-top: 46px;
+    margin-top: 69px;
   }
 
   .blue_button1 {
@@ -201,14 +208,14 @@
     color: #2a3647;
     transition: 0.3s;
   }
-  
+
   .join_image {
     position: absolute;
     height: 50px;
     width: 43px;
     top: 66px;
     left: 77px;
-}
+  }
 
   .signup_div {
     font-size: 16px;
@@ -217,6 +224,7 @@
 }
 
 @media (max-width: 346px) {
+  
   #wrapDiv {
     display: flex;
     align-items: center;
@@ -230,12 +238,12 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 475px;
-    width: 80px;
+    height: 382px;
+    width: 100px;
     border-radius: 30px;
     gap: 32px;
     border-radius: 30px;
-    padding: 48px 115px 48px 115px;
-    margin-top: 176px;
+    padding: 0px 104px 0px 115px;
+    margin-top: 69px;
   }
 }
