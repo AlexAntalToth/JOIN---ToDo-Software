@@ -1,11 +1,22 @@
 @media (max-width: 790px) {
+
+  .dataprotection_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400px;
+    font-size: 16px;
+    gap: 32px;
+    margin-top: 45px;
+  }
+
   .signup_div {
     position: relative;
-    margin-top: 250px;
+    margin-top: 118px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     width: 396px;
-    height: 630px;
-    padding: 48px 88px 48px 88px;
+    height: 502px;
+    padding: 48px 88px 65px 88px;
     gap: 32px;
     border-radius: 30px;
     display: flex;
@@ -16,13 +27,14 @@
 }
 
 @media (max-width: 590px) {
-  .signup_div {
+
+.signup_div {
     position: relative;
-    margin-top: 250px;
+    margin-top: 118px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    width: 314px;
-    height: 630px;
-    padding: 48px 88px 48px 88px;
+    width: 286px;
+    height: 502px;
+    padding: 48px 88px 65px 88px;
     gap: 32px;
     border-radius: 30px;
     display: flex;
@@ -32,14 +44,24 @@
   }
 }
 
+.dataprotection_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 400px;
+  font-size: 16px;
+  gap: 32px;
+  margin-top: 45px;
+}
+
 @media (max-width: 510px) {
   .signup_div {
     position: relative;
-    margin-top: 250px;
+    margin-top: 118px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     width: 280px;
-    height: 630px;
-    padding: 48px 88px 48px 88px;
+    height: 502px;
+    padding: 48px 88px 65px 88px;
     gap: 32px;
     border-radius: 30px;
     display: flex;
@@ -52,17 +74,27 @@
 @media (max-width: 470px) {
   .signup_div {
     position: relative;
-    margin-top: 250px;
+    margin-top: 118px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    width: 220px;
-    height: 630px;
-    padding: 48px 88px 48px 88px;
+    width: 230px;
+    height: 502px;
+    padding: 48px 88px 65px 88px;
     gap: 32px;
     border-radius: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+  }
+
+  .dataprotection_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400px;
+    font-size: 16px;
+    gap: 32px;
+    margin-top: 30px;
   }
 
   .inputfields_div {
@@ -145,11 +177,11 @@
 
   .signup_div {
     position: relative;
-    margin-top: 250px;
+    margin-top: 118px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     width: 144px;
-    height: 630px;
-    padding: 48px 88px 48px 88px;
+    height: 502px;
+    padding: 48px 88px 65px 88px;
     gap: 32px;
     border-radius: 30px;
     display: flex;
@@ -157,6 +189,17 @@
     justify-content: center;
     flex-direction: column;
   }
+
+  .dataprotection_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400px;
+    font-size: 16px;
+    gap: 32px;
+    margin-top: 30px;
+  }
+
 
   .inputfields_div {
     width: 288px;
@@ -238,17 +281,27 @@
 
   .signup_div {
     position: relative;
-    margin-top: 250px;
+    margin-top: 118px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    width: 100px;
-    height: 630px;
-    padding: 48px 88px 48px 88px;
+    width: 144px;
+    height: 502px;
+    padding: 48px 88px 65px 88px;
     gap: 32px;
     border-radius: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+  }
+
+  .dataprotection_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400px;
+    font-size: 16px;
+    gap: 32px;
+    margin-top: 30px;
   }
 
   .inputfields_div {
@@ -311,4 +364,5 @@
   }
 }
 
-@media (max-width: 330px) {}
+@media (max-width: 330px) {
+}
