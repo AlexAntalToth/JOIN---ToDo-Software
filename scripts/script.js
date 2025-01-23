@@ -24,9 +24,6 @@ function waitForSidebar() {
         setTimeout(waitForSidebar, 100);
     }
 }
-document.addEventListener("DOMContentLoaded", () => {
-    waitForSidebar();
-});
 
 
 /**
@@ -85,6 +82,7 @@ async function initApp() {
             handleUnauthenticatedUser();
         } else {
             setHeaderInitials();
+            waitForSidebar();
         }
 }
 
