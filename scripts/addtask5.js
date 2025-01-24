@@ -15,6 +15,9 @@ function validateFields() {
     let isTitleEmpty = titleField.value.trim() === "";
     let isCategoryEmpty = !categoryDropdown.getAttribute("data-selected");
     let isDueDateInvalid = isDueDateEmptyOrPast(dueDateField.value.trim());
+    if (isDueDateInvalid && dueDateField.value.trim() !== "") {
+        showErrorMessage("The due date must be today or in the future.");
+    }
     updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateInvalid);
 }
 
@@ -42,13 +45,10 @@ function attachEventListeners() {
  * @returns {boolean} `true`, wenn das Datum leer oder in der Vergangenheit liegt, sonst `false`.
  */
 function isDueDateEmptyOrPast(dueDate) {
-    if (!dueDate) return true; // Datum ist leer
-
+    if (!dueDate) return true;
     let today = new Date();
     let inputDate = new Date(dueDate);
-
-    // Vergleiche, ob das eingegebene Datum in der Vergangenheit liegt
-    return inputDate < today.setHours(0, 0, 0, 0); // Setzt die Uhrzeit von "today" auf Mitternacht
+    return inputDate < today.setHours(0, 0, 0, 0);
 }
 
 
@@ -66,6 +66,7 @@ function attachDueDateListener() {
     }
 }
 
+
 /**
  * Attaches the input event listener to the title field to trigger validation.
  * 
@@ -79,6 +80,7 @@ function attachTitleListener() {
         });
     }
 }
+
 
 /**
  * Attaches the change event listener to the category dropdown to trigger validation.
@@ -153,6 +155,7 @@ function resetFormFields() {
     updateCreateButtonState(true, true, true);
 }
 
+
 /**
  * Updates the state and styling of the "Create" button based on input validation.
  *
@@ -176,33 +179,6 @@ function updateCreateButtonState(isTitleEmpty, isCategoryEmpty, isDueDateEmpty, 
 }
 
 
-/**
- * Attaches validation event listeners to form fields to ensure they are properly validated.
- * This function adds event listeners to the following fields:
- * - Task title (`input` event)
- * - Task category (`change` event)
- * - Task due date (`change` event)
- * When the value of any of these fields changes, the `validateAndSaveTask` function is called to validate the form.
- * 
- */
-function attachValidationListeners() {
-    let fields = [
-        { id: "task-title", event: "input" },
-        { id: "categoryDropdown", event: "change" },
-        { id: "task-dueDate", event: "change" },
-    ];
-    fields.forEach(({ id, event }) => {
-        let element = document.getElementById(id);
-        if (!element) {
-        } else {
-            element.addEventListener(event, () => {
-                validateAndSaveTask({ preventDefault: () => { } });
-            });
-        }
-    });
-}
-
-
 //Error message
 /**
  * Displays an error message in a designated error box.
@@ -219,4 +195,3 @@ function showErrorMessage(message) {
         errorBox.classList.remove("show");
     }, 2500);
 }
-

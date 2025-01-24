@@ -36,7 +36,6 @@ function setupPage() {
     setupCategoryDropdown();
     setupDueDateValidation();
     setupDateIconClickListener();
-    attachValidationListeners();
     resetFormFields();
     attachEventListeners();
 }
