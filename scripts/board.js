@@ -161,38 +161,29 @@ function moveTaskToNextCategory(taskIndex) {
  * 
  * @param {number} index - The index of the task to display in the popup.
  */
-function openTaskPopup(index){
+function openTaskPopup(index) {
+    if (isEditing) {
+        cancelTaskEditing();
+    }
     currentTaskIndex = index;
     let task = tasks[index].task;
+    populateTaskPopup(task);
+    document.getElementById("taskPopup").classList.add("show");
+    document.body.style.overflow = "hidden";
+}
+
+
+
+function populateTaskPopup(task) {
     document.getElementById("taskBadge").innerHTML = generateTaskBadge(task.badge);
     document.getElementById("taskTitle").innerHTML = task.title;
     document.getElementById("taskDescription").innerHTML = task.description;
     document.getElementById("taskDueDate").innerHTML = formatDateToDDMMYYYY(task.dueDate);
     generateTaskPriorityElement(task.priority);
     document.getElementById("taskContacts").innerHTML = generateContactsHtml(task.assignedTo, contacts);
-    document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks, index);
-    document.getElementById("taskPopup").classList.add("show");
-    document.body.style.overflow = "hidden";
+    document.getElementById("subtasksList").innerHTML = generateSubtasksHtml(task.subtasks, currentTaskIndex);
 }
 
-
-/**
- * Disables or enables the close button based on the editing state.
- */
-function disableButtonWhileEdit() {
-    updateCloseButtonState();
-}
-
-
-/**
- * Updates the state of the close button based on the editing mode.
- */
-function updateCloseButtonState() {
-    let closeButton = document.querySelector(".close-btn");
-    if (closeButton) {
-        closeButton.disabled = isEditing;
-    }
-}
 
 
 /**
@@ -220,10 +211,13 @@ async function deleteTask() {
  * Closes the task popup if the task is not being edited.
  */
 function closeTaskPopup() {
-    if (!isEditing) {
+    if (isEditing) {
+        cancelTaskEditing();
+    } else {
         hideTaskPopup();
     }
 }
+
 
 
 /**

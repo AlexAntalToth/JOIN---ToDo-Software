@@ -4,6 +4,7 @@
  */
 function editTask() {
     if (currentTaskIndex === null) return;
+    isEditing = true; // Bearbeitungsmodus aktivieren
     let task = tasks[currentTaskIndex].task;
     task.subtasks = task.subtasks || {};
     let taskView = document.getElementById("taskView");
@@ -16,6 +17,21 @@ function editTask() {
     populateSelectedContacts();
     setDateInputMin();
 }
+
+
+function cancelTaskEditing() {
+    if (!isEditing) return;
+    isEditing = false;
+    let taskView = document.getElementById("taskView");
+    let taskEdit = document.getElementById("taskEdit");
+    taskEdit.classList.add("hidden");
+    taskView.classList.remove("hidden");
+    if (currentTaskIndex !== null) {
+        let task = tasks[currentTaskIndex].task;
+        populateTaskPopup(task);
+    }
+}
+
 
 
 /**
@@ -326,10 +342,11 @@ async function saveTaskChanges() {
     let task = taskObj.task;
     task = updateTaskFields(task);
     await updateTaskData(taskObj.id, task);
-    updateCloseButtonState();
+    isEditing = false;
     refreshTaskPopup();
     updateTaskHtml(currentTaskIndex);
 }
+
 
 
 /**

@@ -184,6 +184,7 @@ function generateTaskEditHTML(task) {
     return `
         <div class="popup-header">
             <div id="taskBadge">${generateTaskBadge(task.badge)}</div>
+            <button class="close-btn" type="button" onclick="closeTaskPopup()">&#x2715</button>
         </div>
         <form id="editTaskForm" class="edit-task-form">
             <div class="form-group">
