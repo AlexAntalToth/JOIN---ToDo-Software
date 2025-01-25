@@ -1,6 +1,6 @@
 /**
- * Edits the currently selected task by toggling between task view and edit view.
- * Sets up subtasks, populates selected contacts, and initializes the task editing interface.
+ * Activates the edit mode for the current task.
+ * Displays the edit interface and pre-fills it with the task's current data.
  */
 function editTask() {
     if (currentTaskIndex === null) return;
@@ -19,6 +19,10 @@ function editTask() {
 }
 
 
+/**
+ * Cancels the editing process and exits the edit mode.
+ * Restores the original task details in the popup and hides the edit interface.
+ */
 function cancelTaskEditing() {
     if (!isEditing) return;
     isEditing = false;

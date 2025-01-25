@@ -156,8 +156,8 @@ function moveTaskToNextCategory(taskIndex) {
 
 
 /**
- * Opens the task popup modal by displaying the task details such as badge, title, description, due date, priority,
- * assigned contacts, and subtasks. Also disables the body scroll and the close button while editing.
+ * Opens the task popup for the specified task index.
+ * If the edit mode is active, it cancels the editing process before opening the popup.
  * 
  * @param {number} index - The index of the task to display in the popup.
  */
@@ -173,7 +173,12 @@ function openTaskPopup(index) {
 }
 
 
-
+/**
+ * Populates the task popup with the data of the specified task.
+ * This function updates all fields in the popup to display the task's details.
+ * 
+ * @param {Object} task - The task object containing details to populate in the popup.
+ */
 function populateTaskPopup(task) {
     document.getElementById("taskBadge").innerHTML = generateTaskBadge(task.badge);
     document.getElementById("taskTitle").innerHTML = task.title;
@@ -208,7 +213,8 @@ async function deleteTask() {
 
 
 /**
- * Closes the task popup if the task is not being edited.
+ * Closes the task popup.
+ * If the edit mode is active, it cancels the editing process before closing the popup.
  */
 function closeTaskPopup() {
     if (isEditing) {
