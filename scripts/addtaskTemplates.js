@@ -66,7 +66,7 @@ async function generateAddTaskCardHTML(task) {
                             <input type="text" id="searchContacts" class="addTask-contact-search" placeholder="Search contacts..." style="display: none;" />
                         </div>
                         <div class="addTask-assignedTo-icon-wrapper">
-                            <img class="addTask-assignedTo-icon" src="../../assets/icons/addtask_arrowdown.png" alt="Arrow Down">
+                            <img class="addTask-assignedTo-icon" src="../../assets/icons/addtask_arrowdown2.png" alt="Arrow Down">
                         </div>
                     </div>
                     <div class="addTask-assignedTo-contactList" id="contactList" style="display: none;">
@@ -128,7 +128,7 @@ async function generateAddTaskCardHTML(task) {
                     <span>Select task category</span>
                     </div>
                     <div class="addTask-category-icon-wrapper">
-                        <img class="addTask-category-icon" src="../../assets/icons/addtask_arrowdown.png" alt="Logo Arrow Down">
+                        <img class="addTask-category-icon" src="../../assets/icons/addtask_arrowdown2.png" alt="Logo Arrow Down">
                     </div>
                     <div class="addTask-category-dropdown" id="categoryDropdown" style="display: none;">
                         <div class="category-item" data-value="Technical Task">Technical Task</div>
