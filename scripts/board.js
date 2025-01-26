@@ -131,27 +131,48 @@ async function refreshTaskList() {
 }
 
 
-/**
- * Moves the task to the next category and updates the DOM.
- * - From "To-Do" → "In Progress" → "Await Feedback" → "Done".
- * - Removes the button if the task is in the "Done" category.
- * 
- * @param {number} taskIndex - The index of the task to move.
- */
-function moveTaskToNextCategory(taskIndex) {
+function showCategoryPopup(taskIndex, buttonElement, event) {
     event.stopPropagation();
+    const popup = buttonElement.querySelector(".category-popup");
+    const options = popup.querySelector(".category-options");
+    options.innerHTML = "";
     const categories = ["To-Do", "In Progress", "Await Feedback", "Done"];
-    let task = tasks[taskIndex];
-    let currentCategory = task.task.category;
-    let currentCategoryIndex = categories.indexOf(currentCategory);
-    if (currentCategoryIndex === -1 || currentCategoryIndex === categories.length - 1) {
-        return;
-    }
-    let nextCategory = categories[currentCategoryIndex + 1];
-    task.task.category = nextCategory;
-    document.querySelectorAll(".task-list").forEach(taskList => taskList.innerHTML = "");
+    const task = tasks[taskIndex];
+    const currentCategory = task.task.category;
+    categories.forEach(category => {
+        if (category !== currentCategory) {
+            const li = document.createElement("li");
+            li.textContent = category;
+            li.onclick = () => {
+                moveTaskToCategory(taskIndex, category);
+                popup.classList.add("hidden");
+            };
+            options.appendChild(li);
+        }
+    });
+    document.querySelectorAll(".category-popup").forEach(p => p.classList.add("hidden"));
+    popup.classList.remove("hidden");
+}
+document.addEventListener("click", () => {
+    document.querySelectorAll(".category-popup").forEach(p => p.classList.add("hidden"));
+});
+
+
+
+
+function moveTaskToCategory(taskIndex, newCategory) {
+    const task = tasks[taskIndex];
+    task.task.category = newCategory;
+    hideCategoryPopup();
+    document.querySelectorAll(".task-list").forEach((taskList) => (taskList.innerHTML = ""));
     tasks.forEach((task, index) => insertTaskIntoDOM(task.task, index));
     checkEmptyCategories();
+}
+
+
+function hideCategoryPopup() {
+    const popup = document.getElementById("category-popup");
+    popup.classList.add("hidden");
 }
 
 

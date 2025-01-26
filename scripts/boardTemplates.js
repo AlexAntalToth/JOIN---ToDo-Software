@@ -29,8 +29,11 @@ function generateTaskHtml(task, index) {
             <div class="task-header">
                 ${generateTaskBadge(task.badge)}
                 ${task.category !== "Done" ? `
-                    <button class="move-task-btn" onclick="moveTaskToNextCategory(${index}, event)">
+                    <button class="move-task-btn" onclick="showCategoryPopup(${index}, this, event)">
                         <img src="./assets/icons/moveTask.png" alt="Move Task">
+                        <div id="category-popup" class="category-popup hidden">
+                            <ul class="category-options"></ul>
+                        </div>    
                     </button>
                 ` : ""}
             </div>

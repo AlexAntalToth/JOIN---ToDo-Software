@@ -184,6 +184,7 @@ body {
 }
 
 .move-task-btn {
+  position: relative;
   display: none;
   background: none;
   border: none;
