@@ -433,7 +433,11 @@ function hideElementsInIframe(iframeDocument) {
     let header = iframeDocument.querySelector("header");
     let sidebar = iframeDocument.querySelector("aside.sidebar");
     let container = iframeDocument.querySelector(".addTask-container");
+    let content = iframeDocument.querySelector(".addTask-content");
     container.style.height = "100%";
+    container.style.alignItems = "center";
+    content.style.alignItems = "center";
+    content.style.padding = "0";
     if (header) {
         header.style.display = "none";
         container.style.marginTop = "0";
