@@ -198,8 +198,7 @@ function setupCategoryDropdown() {
     let dropdown = document.getElementById("categoryDropdown");
     let iconWrapper = document.querySelector(".addTask-category-icon-wrapper");
     if (categoryField && dropdown && iconWrapper) {
-        setupCategoryFieldToggle(categoryField, dropdown);
-        setupIconWrapperToggle(iconWrapper, categoryField, dropdown);
+        setupDropdownToggle(categoryField, iconWrapper, dropdown);
         setupDropdownSelection(dropdown, categoryField);
         setupClickOutsideDropdown(dropdown, categoryField);
     }
@@ -207,28 +206,19 @@ function setupCategoryDropdown() {
 
 
 /**
- * Sets up the click event listener for the category field to toggle the visibility of the dropdown.
+ * Sets up the click event listener for both the category field and the icon wrapper
+ * to toggle the visibility of the dropdown.
  * 
  * @param {HTMLElement} categoryField - The category field element.
- * @param {HTMLElement} dropdown - The category dropdown element.
- */
-function setupCategoryFieldToggle(categoryField, dropdown) {
-    categoryField.addEventListener("click", () => {
-        toggleDropdown(categoryField, dropdown);
-    });
-}
-
-
-/**
- * Sets up the click event listener for the icon wrapper to toggle the visibility of the dropdown.
- * 
  * @param {HTMLElement} iconWrapper - The icon wrapper element.
- * @param {HTMLElement} categoryField - The category field element.
  * @param {HTMLElement} dropdown - The category dropdown element.
  */
-function setupIconWrapperToggle(iconWrapper, categoryField, dropdown) {
-    iconWrapper.addEventListener("click", () => {
-        toggleDropdown(categoryField, dropdown);
+function setupDropdownToggle(categoryField, iconWrapper, dropdown) {
+    [categoryField, iconWrapper].forEach(element => {
+        element.addEventListener("click", (event) => {
+            event.stopPropagation();
+            toggleDropdown(categoryField, dropdown);
+        });
     });
 }
 
